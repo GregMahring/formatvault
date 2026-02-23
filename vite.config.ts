@@ -1,9 +1,12 @@
 import { defineConfig } from 'vite';
 import { reactRouter } from '@react-router/dev/vite';
+import tailwindcss from '@tailwindcss/vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   plugins: [
+    // Tailwind v4 runs as a Vite plugin — no postcss.config needed
+    tailwindcss(),
     reactRouter(),
     // Resolves @/* path aliases from tsconfig automatically
     tsconfigPaths(),
