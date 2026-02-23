@@ -8,12 +8,15 @@ Arguments: $ARGUMENTS
 (First argument: ComponentName in PascalCase. Second argument: directory path, defaults to `src/components/`)
 
 ## Step 1: Validate Input
+
 - Confirm the component name is PascalCase. If not, correct it and confirm with the user.
 - Confirm the target directory exists or ask where to place it.
 - Check if a component with this name already exists: search for `<ComponentName>.tsx` in `src/`.
 
 ## Step 2: Read Existing Conventions
+
 Before generating, read 2-3 existing components in the target directory to understand:
+
 - Import ordering convention
 - Props interface naming and structure
 - CSS module vs Tailwind vs styled-components usage
@@ -23,6 +26,7 @@ Before generating, read 2-3 existing components in the target directory to under
 ## Step 3: Generate Files
 
 **`<ComponentName>.tsx`**
+
 ```typescript
 import React from 'react'
 
@@ -43,6 +47,7 @@ export function <ComponentName>({ className, children, ...props }: <ComponentNam
 ```
 
 **`<ComponentName>.test.tsx`**
+
 ```typescript
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
@@ -61,6 +66,7 @@ describe('<ComponentName>', () => {
 ```
 
 **`index.ts`** (barrel export — only create if the directory already uses barrel files)
+
 ```typescript
 export { <ComponentName> } from './<ComponentName>'
 export type { <ComponentName>Props } from './<ComponentName>'
@@ -69,7 +75,9 @@ export type { <ComponentName>Props } from './<ComponentName>'
 Adapt the generated code to match the conventions you found in Step 2.
 
 ## Step 4: Confirm Before Writing
+
 Show the user:
+
 1. The full content of each file with syntax highlighting
 2. The exact paths where they will be created
 
