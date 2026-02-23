@@ -1,5 +1,6 @@
 import type { Route } from './+types/yaml-to-csv-converter';
-import { ToolPlaceholder } from '@/components/ToolPlaceholder';
+import { ConverterLayout } from '@/components/ConverterLayout';
+import { yamlToCsv } from '@/features/convert/converters';
 
 export function meta(_args: Route.MetaArgs) {
   return [
@@ -7,18 +8,24 @@ export function meta(_args: Route.MetaArgs) {
     {
       name: 'description',
       content:
-        'Convert YAML to CSV online for free. 100% client-side — no data leaves your browser.',
+        'Convert YAML to CSV online for free. YAML must be a sequence of mappings. Warns on nested values. 100% client-side — no data leaves your browser.',
+    },
+    { property: 'og:title', content: 'YAML to CSV Converter — formatvault' },
+    {
+      property: 'og:description',
+      content: 'Convert YAML sequences to CSV online. No data leaves your browser.',
     },
   ];
 }
 
 export default function YamlToCsvConverter() {
   return (
-    <ToolPlaceholder
+    <ConverterLayout
       title="YAML → CSV Converter"
-      description="Convert YAML to CSV format"
-      inputLabel="YAML Input"
-      outputLabel="CSV Output"
+      fromLanguage="yaml"
+      toLanguage="csv"
+      fromPlaceholder={'- name: Alice\n  age: 30\n- name: Bob\n  age: 25'}
+      convert={yamlToCsv}
     />
   );
 }

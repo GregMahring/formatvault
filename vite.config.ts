@@ -36,6 +36,13 @@ export default defineConfig({
           if (id.includes('node_modules/zustand')) {
             return 'vendor-state';
           }
+          if (
+            id.includes('node_modules/@codemirror') ||
+            id.includes('node_modules/@uiw/react-codemirror') ||
+            id.includes('node_modules/@lezer')
+          ) {
+            return 'vendor-codemirror';
+          }
         },
       },
     },

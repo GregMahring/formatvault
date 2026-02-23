@@ -1,5 +1,6 @@
 import type { Route } from './+types/json-to-yaml-converter';
-import { ToolPlaceholder } from '@/components/ToolPlaceholder';
+import { ConverterLayout } from '@/components/ConverterLayout';
+import { jsonToYaml } from '@/features/convert/converters';
 
 export function meta(_args: Route.MetaArgs) {
   return [
@@ -7,18 +8,24 @@ export function meta(_args: Route.MetaArgs) {
     {
       name: 'description',
       content:
-        'Convert JSON to YAML online for free. Instant, accurate conversion. 100% client-side — no data leaves your browser.',
+        'Convert JSON to YAML online for free. Instant, lossless conversion preserving all data types. 100% client-side — no data leaves your browser.',
+    },
+    { property: 'og:title', content: 'JSON to YAML Converter — formatvault' },
+    {
+      property: 'og:description',
+      content: 'Convert JSON to YAML online. Instant and lossless. No data leaves your browser.',
     },
   ];
 }
 
 export default function JsonToYamlConverter() {
   return (
-    <ToolPlaceholder
+    <ConverterLayout
       title="JSON → YAML Converter"
-      description="Convert JSON to YAML format"
-      inputLabel="JSON Input"
-      outputLabel="YAML Output"
+      fromLanguage="json"
+      toLanguage="yaml"
+      fromPlaceholder='{"name":"Alice","roles":["admin","user"]}'
+      convert={jsonToYaml}
     />
   );
 }
