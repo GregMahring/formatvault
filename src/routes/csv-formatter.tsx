@@ -1,11 +1,20 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import type { Route } from './+types/csv-formatter';
 import { SplitPane } from '@/components/SplitPane';
 import { CodeEditor } from '@/components/CodeEditor';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { FileUploadZone } from '@/components/FileUploadZone';
+import { PaneActions } from '@/components/PaneActions';
+import { DiffPanel } from '@/components/DiffPanel';
+import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
+import { ProgressBar } from '@/components/ProgressBar';
 import { useCsvFormatter } from '@/features/csv/useCsvFormatter';
+import { useFileParser } from '@/hooks/useFileParser';
+import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
 import type { Delimiter } from '@/features/csv/csvFormatter';
+import { cn } from '@/lib/utils';
+import { Keyboard } from 'lucide-react';
 
 export function meta(_args: Route.MetaArgs) {
   return [
@@ -34,8 +43,11 @@ const DELIMITERS: { value: Delimiter; label: string }[] = [
 
 export default function CsvFormatter() {
   const fmt = useCsvFormatter();
+  const fileParser = useFileParser();
+  const [showDiff, setShowDiff] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
 
-  // Auto-process on input change with debounce
+  // Auto-process on input/option changes with debounce
   useEffect(() => {
     if (!fmt.input.trim()) return;
     const timer = setTimeout(() => {
@@ -47,28 +59,67 @@ export default function CsvFormatter() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fmt.input, fmt.delimiter, fmt.hasHeader]);
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-        e.preventDefault();
-        fmt.process();
-      }
+  // Load parsed file into formatter
+  useEffect(() => {
+    if (fileParser.result?.output) {
+      fmt.setInput(fileParser.result.output);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fileParser.result]);
+
+  const handleFileUpload = useCallback(
+    (file: File) => {
+      fileParser.parseFile(file, 'csv');
     },
-    [fmt]
+    [fileParser]
   );
+
+  const shortcuts: Shortcut[] = [
+    {
+      label: 'Format',
+      display: '⌘ ↵',
+      key: 'Enter',
+      meta: true,
+      handler: fmt.process,
+    },
+    {
+      label: 'Toggle diff panel',
+      display: '⌘ D',
+      key: 'd',
+      meta: true,
+      handler: () => {
+        setShowDiff((v) => !v);
+      },
+    },
+    {
+      label: 'Clear input',
+      display: '⌘ K',
+      key: 'k',
+      meta: true,
+      handler: fmt.clear,
+    },
+    {
+      label: 'Show keyboard shortcuts',
+      display: '?',
+      key: '?',
+      handler: () => {
+        setShowShortcuts(true);
+      },
+    },
+  ];
+
+  useKeyboardShortcuts(shortcuts, !showShortcuts);
 
   const hasError = fmt.error !== null;
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-    <div className="flex h-full flex-col" onKeyDown={handleKeyDown}>
+    <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-gray-800 bg-gray-950 px-4 py-2">
         <h1 className="text-sm font-semibold text-gray-200">CSV Formatter</h1>
 
         <div className="h-4 w-px bg-gray-800" aria-hidden="true" />
 
-        {/* Delimiter selector */}
         <label htmlFor="delimiter-select" className="text-xs text-gray-400">
           Delimiter
         </label>
@@ -103,7 +154,6 @@ export default function CsvFormatter() {
 
         <div className="flex-1" />
 
-        {/* Stats */}
         {fmt.rowCount > 0 && (
           <Badge variant="secondary" className="text-xs">
             {String(fmt.rowCount)} rows × {String(fmt.columnCount)} cols
@@ -112,6 +162,23 @@ export default function CsvFormatter() {
               : ''}
           </Badge>
         )}
+
+        {/* Diff toggle */}
+        <button
+          type="button"
+          className={cn(
+            'rounded px-2 py-1 text-xs transition-colors',
+            showDiff
+              ? 'bg-accent-700/40 text-accent-300'
+              : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
+          )}
+          onClick={() => {
+            setShowDiff((v) => !v);
+          }}
+          aria-pressed={showDiff}
+        >
+          Diff
+        </button>
 
         {fmt.input.trim() && !hasError && (
           <Badge variant="default" className="text-xs">
@@ -143,9 +210,24 @@ export default function CsvFormatter() {
         >
           Clear
         </Button>
+
+        <button
+          type="button"
+          className="rounded p-1 text-gray-600 hover:bg-gray-800 hover:text-gray-400"
+          onClick={() => {
+            setShowShortcuts(true);
+          }}
+          aria-label="Keyboard shortcuts"
+          title="Keyboard shortcuts (?)"
+        >
+          <Keyboard className="h-3.5 w-3.5" aria-hidden="true" />
+        </button>
       </div>
 
-      {/* Error bar */}
+      {fileParser.showProgress && fileParser.isParsing && (
+        <ProgressBar percent={fileParser.progress} label="Parsing file…" />
+      )}
+
       {hasError && (
         <div
           role="alert"
@@ -156,7 +238,6 @@ export default function CsvFormatter() {
         </div>
       )}
 
-      {/* Warning bar */}
       {fmt.warning && !hasError && (
         <div
           role="status"
@@ -167,46 +248,61 @@ export default function CsvFormatter() {
         </div>
       )}
 
-      {/* Split pane */}
       <div className="flex min-h-0 flex-1">
-        <SplitPane leftLabel="CSV input editor" rightLabel="Formatted output" className="flex-1">
-          {/* Left: input */}
-          <div className="flex h-full flex-col">
-            <div className="flex items-center border-b border-gray-800 px-3 py-1">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
-                Input
-              </span>
+        {showDiff ? (
+          <DiffPanel original={fmt.input} modified={fmt.output} className="flex-1" />
+        ) : (
+          <SplitPane leftLabel="CSV input editor" rightLabel="Formatted output" className="flex-1">
+            <div className="flex h-full flex-col">
+              <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+                  Input
+                </span>
+                <FileUploadZone
+                  accept=".csv,text/csv"
+                  onFile={handleFileUpload}
+                  disabled={fileParser.isParsing}
+                />
+              </div>
+              <CodeEditor
+                value={fmt.input}
+                onChange={fmt.setInput}
+                language="csv"
+                label="CSV input"
+                placeholder="Paste or type CSV here…"
+                className="flex-1 rounded-none border-0"
+                minHeight="100%"
+              />
             </div>
-            <CodeEditor
-              value={fmt.input}
-              onChange={fmt.setInput}
-              language="csv"
-              label="CSV input"
-              placeholder="Paste or type CSV here…"
-              className="flex-1 rounded-none border-0"
-              minHeight="100%"
-            />
-          </div>
 
-          {/* Right: output */}
-          <div className="flex h-full flex-col">
-            <div className="flex items-center border-b border-gray-800 px-3 py-1">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
-                Output
-              </span>
+            <div className="flex h-full flex-col">
+              <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+                  Output
+                </span>
+                <PaneActions content={fmt.output} downloadFilename="output.csv" />
+              </div>
+              <CodeEditor
+                value={fmt.output}
+                language="csv"
+                label="Formatted CSV output"
+                readOnly
+                placeholder="Formatted output will appear here…"
+                className="flex-1 rounded-none border-0"
+                minHeight="100%"
+              />
             </div>
-            <CodeEditor
-              value={fmt.output}
-              language="csv"
-              label="Formatted CSV output"
-              readOnly
-              placeholder="Formatted output will appear here…"
-              className="flex-1 rounded-none border-0"
-              minHeight="100%"
-            />
-          </div>
-        </SplitPane>
+          </SplitPane>
+        )}
       </div>
+
+      <KeyboardShortcutsModal
+        shortcuts={shortcuts}
+        isOpen={showShortcuts}
+        onClose={() => {
+          setShowShortcuts(false);
+        }}
+      />
     </div>
   );
 }

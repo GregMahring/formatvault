@@ -1,12 +1,20 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import type { Route } from './+types/json-formatter';
 import { SplitPane } from '@/components/SplitPane';
 import { CodeEditor } from '@/components/CodeEditor';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { FileUploadZone } from '@/components/FileUploadZone';
+import { PaneActions } from '@/components/PaneActions';
+import { DiffPanel } from '@/components/DiffPanel';
+import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
+import { ProgressBar } from '@/components/ProgressBar';
 import { useJsonFormatter } from '@/features/json/useJsonFormatter';
+import { useFileParser } from '@/hooks/useFileParser';
+import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
 import { cn } from '@/lib/utils';
+import { Keyboard } from 'lucide-react';
 
 export function meta(_args: Route.MetaArgs) {
   return [
@@ -26,6 +34,9 @@ export function meta(_args: Route.MetaArgs) {
 
 export default function JsonFormatter() {
   const fmt = useJsonFormatter();
+  const fileParser = useFileParser();
+  const [showDiff, setShowDiff] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
 
   // Auto-process on input/option changes with 400ms debounce
   useEffect(() => {
@@ -37,27 +48,80 @@ export default function JsonFormatter() {
     return () => {
       clearTimeout(timer);
     };
-    // fmt.process is stable (useCallback), other deps are primitives
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fmt.input, fmt.mode, fmt.relaxed, fmt.sortKeys]);
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-        e.preventDefault();
+  // When file parse completes, load the text into the formatter input
+  useEffect(() => {
+    if (fileParser.result?.output) {
+      fmt.setInput(fileParser.result.output);
+    } else if (fileParser.result?.error) {
+      // Surface worker/file errors via the formatter's error state
+      fmt.setInput('');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fileParser.result]);
+
+  const handleFileUpload = useCallback(
+    (file: File) => {
+      fileParser.parseFile(file, 'json');
+    },
+    [fileParser]
+  );
+
+  const shortcuts: Shortcut[] = [
+    {
+      label: 'Format / Run query',
+      display: '⌘ ↵',
+      key: 'Enter',
+      meta: true,
+      handler: () => {
         if (fmt.isQueryMode) fmt.runQuery();
         else fmt.process();
-      }
+      },
     },
-    [fmt]
-  );
+    {
+      label: 'Toggle diff panel',
+      display: '⌘ D',
+      key: 'd',
+      meta: true,
+      handler: () => {
+        setShowDiff((v) => !v);
+      },
+    },
+    {
+      label: 'Toggle JSONPath mode',
+      display: '⌘ J',
+      key: 'j',
+      meta: true,
+      handler: () => {
+        fmt.setQueryMode(!fmt.isQueryMode);
+      },
+    },
+    {
+      label: 'Clear input',
+      display: '⌘ K',
+      key: 'k',
+      meta: true,
+      handler: fmt.clear,
+    },
+    {
+      label: 'Show keyboard shortcuts',
+      display: '?',
+      key: '?',
+      handler: () => {
+        setShowShortcuts(true);
+      },
+    },
+  ];
+
+  useKeyboardShortcuts(shortcuts, !showShortcuts);
 
   const hasError = fmt.error !== null;
   const isValid = fmt.validationResult === null && fmt.input.trim().length > 0;
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-    <div className="flex h-full flex-col" onKeyDown={handleKeyDown}>
+    <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-gray-800 bg-gray-950 px-4 py-2">
         <h1 className="text-sm font-semibold text-gray-200">JSON Formatter</h1>
@@ -112,6 +176,23 @@ export default function JsonFormatter() {
 
         <div className="flex-1" />
 
+        {/* Diff toggle */}
+        <button
+          type="button"
+          className={cn(
+            'rounded px-2 py-1 text-xs transition-colors',
+            showDiff
+              ? 'bg-accent-700/40 text-accent-300'
+              : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
+          )}
+          onClick={() => {
+            setShowDiff((v) => !v);
+          }}
+          aria-pressed={showDiff}
+        >
+          Diff
+        </button>
+
         {/* Validation badge */}
         {fmt.input.trim() && (
           <Badge
@@ -122,7 +203,7 @@ export default function JsonFormatter() {
           </Badge>
         )}
 
-        {/* Actions */}
+        {/* Format action */}
         <Button
           size="sm"
           variant="outline"
@@ -145,7 +226,25 @@ export default function JsonFormatter() {
         >
           Clear
         </Button>
+
+        {/* Shortcuts help */}
+        <button
+          type="button"
+          className="rounded p-1 text-gray-600 hover:bg-gray-800 hover:text-gray-400"
+          onClick={() => {
+            setShowShortcuts(true);
+          }}
+          aria-label="Keyboard shortcuts"
+          title="Keyboard shortcuts (?)"
+        >
+          <Keyboard className="h-3.5 w-3.5" aria-hidden="true" />
+        </button>
       </div>
+
+      {/* File parsing progress */}
+      {fileParser.showProgress && fileParser.isParsing && (
+        <ProgressBar percent={fileParser.progress} label="Parsing file…" />
+      )}
 
       {/* Error bar */}
       {hasError && (
@@ -161,6 +260,17 @@ export default function JsonFormatter() {
               {fmt.error.column ? `:${String(fmt.error.column)}` : ''}
             </span>
           )}
+        </div>
+      )}
+
+      {/* File parse error */}
+      {fileParser.result?.error && (
+        <div
+          role="alert"
+          className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
+        >
+          <span className="shrink-0 font-mono font-semibold">File error</span>
+          <span className="flex-1">{fileParser.result.error}</span>
         </div>
       )}
 
@@ -189,58 +299,79 @@ export default function JsonFormatter() {
         </div>
       )}
 
-      {/* Split pane: input | output */}
+      {/* Main area: split pane OR diff panel */}
       <div className="flex min-h-0 flex-1">
-        <SplitPane leftLabel="JSON input editor" rightLabel="Formatted output" className="flex-1">
-          {/* Left: input */}
-          <div className="flex h-full flex-col">
-            <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
-                Input
-              </span>
-              <button
-                type="button"
-                className={cn(
-                  'text-[11px] text-gray-500 hover:text-gray-300',
-                  fmt.isQueryMode && 'text-accent-400'
-                )}
-                onClick={() => {
-                  fmt.setQueryMode(!fmt.isQueryMode);
-                }}
-              >
-                {fmt.isQueryMode ? 'JSONPath ✓' : 'JSONPath'}
-              </button>
+        {showDiff ? (
+          <DiffPanel original={fmt.input} modified={fmt.output} className="flex-1" />
+        ) : (
+          <SplitPane leftLabel="JSON input editor" rightLabel="Formatted output" className="flex-1">
+            {/* Left: input */}
+            <div className="flex h-full flex-col">
+              <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+                  Input
+                </span>
+                <div className="flex items-center gap-1">
+                  <FileUploadZone
+                    accept=".json,application/json,.json5"
+                    onFile={handleFileUpload}
+                    disabled={fileParser.isParsing}
+                  />
+                  <button
+                    type="button"
+                    className={cn(
+                      'rounded px-1.5 py-0.5 text-[11px] transition-colors hover:bg-gray-800',
+                      fmt.isQueryMode ? 'text-accent-400' : 'text-gray-500 hover:text-gray-300'
+                    )}
+                    onClick={() => {
+                      fmt.setQueryMode(!fmt.isQueryMode);
+                    }}
+                  >
+                    {fmt.isQueryMode ? 'JSONPath ✓' : 'JSONPath'}
+                  </button>
+                </div>
+              </div>
+              <CodeEditor
+                value={fmt.input}
+                onChange={fmt.setInput}
+                language="json"
+                label="JSON input"
+                placeholder="Paste or type JSON here…"
+                className="flex-1 rounded-none border-0"
+                minHeight="100%"
+              />
             </div>
-            <CodeEditor
-              value={fmt.input}
-              onChange={fmt.setInput}
-              language="json"
-              label="JSON input"
-              placeholder="Paste or type JSON here…"
-              className="flex-1 rounded-none border-0"
-              minHeight="100%"
-            />
-          </div>
 
-          {/* Right: output */}
-          <div className="flex h-full flex-col">
-            <div className="flex items-center border-b border-gray-800 px-3 py-1">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
-                Output
-              </span>
+            {/* Right: output */}
+            <div className="flex h-full flex-col">
+              <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+                  Output
+                </span>
+                <PaneActions content={fmt.output} downloadFilename="output.json" />
+              </div>
+              <CodeEditor
+                value={fmt.output}
+                language="json"
+                label="Formatted JSON output"
+                readOnly
+                placeholder="Formatted output will appear here…"
+                className="flex-1 rounded-none border-0"
+                minHeight="100%"
+              />
             </div>
-            <CodeEditor
-              value={fmt.output}
-              language="json"
-              label="Formatted JSON output"
-              readOnly
-              placeholder="Formatted output will appear here…"
-              className="flex-1 rounded-none border-0"
-              minHeight="100%"
-            />
-          </div>
-        </SplitPane>
+          </SplitPane>
+        )}
       </div>
+
+      {/* Keyboard shortcuts modal */}
+      <KeyboardShortcutsModal
+        shortcuts={shortcuts}
+        isOpen={showShortcuts}
+        onClose={() => {
+          setShowShortcuts(false);
+        }}
+      />
     </div>
   );
 }

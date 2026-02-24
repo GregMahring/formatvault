@@ -2,36 +2,38 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 export interface SplitPaneProps {
-  /** Left panel content — typically the input editor */
-  left: React.ReactNode;
-  /** Right panel content — typically the output editor */
-  right: React.ReactNode;
-  /** Optional label for the left panel (accessibility) */
+  /**
+   * Exactly two children: the first becomes the left pane, the second the right pane.
+   * Using children (rather than `left`/`right` props) lets callers compose toolbar
+   * slots, copy buttons, and upload overlays naturally inside each pane.
+   */
+  children: [React.ReactNode, React.ReactNode];
+  /** Accessible label for the left panel */
   leftLabel?: string;
-  /** Optional label for the right panel (accessibility) */
+  /** Accessible label for the right panel */
   rightLabel?: string;
   className?: string;
+  /** Initial split percentage (20–80). Defaults to 50. */
+  defaultSplit?: number;
 }
 
 /**
  * Resizable split pane — left (input) and right (output) side by side.
  *
- * Uses a CSS Grid layout with a draggable divider. The split ratio is stored
- * in a CSS custom property on the element so it survives re-renders without
- * React state churn.
- *
+ * Drag the handle or use ArrowLeft/ArrowRight keys to resize.
  * No external library — keeps bundle lean and avoids SSR hydration mismatches.
  */
 export function SplitPane({
-  left,
-  right,
+  children,
   leftLabel = 'Input',
   rightLabel = 'Output',
   className,
+  defaultSplit = 50,
 }: SplitPaneProps) {
+  const [left, right] = children;
   const containerRef = React.useRef<HTMLDivElement>(null);
   const isDragging = React.useRef(false);
-  const [splitPct, setSplitPct] = React.useState(50);
+  const [splitPct, setSplitPct] = React.useState(defaultSplit);
 
   const handleDragStart = React.useCallback((e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
@@ -52,7 +54,9 @@ export function SplitPane({
       handleMove(e.clientX);
     };
     const onTouchMove = (e: TouchEvent) => {
-      if (e.touches[0]) handleMove(e.touches[0].clientX);
+      if (e.touches[0]) {
+        handleMove(e.touches[0].clientX);
+      }
     };
     const onEnd = () => {
       if (!isDragging.current) return;
@@ -89,7 +93,7 @@ export function SplitPane({
         {left}
       </section>
 
-      {/* Drag handle — uses role="slider" so keyboard/pointer interactions are semantically valid */}
+      {/* Drag handle — role="slider" makes keyboard/pointer interactions semantically valid */}
       <button
         type="button"
         role="slider"
@@ -102,7 +106,6 @@ export function SplitPane({
         onMouseDown={handleDragStart}
         onTouchStart={handleDragStart}
         onKeyDown={(e) => {
-          // Allow keyboard resizing with arrow keys
           if (e.key === 'ArrowLeft') {
             setSplitPct((p) => Math.max(20, p - 1));
           }
@@ -111,7 +114,7 @@ export function SplitPane({
           }
         }}
       >
-        {/* Visual grip indicator */}
+        {/* Visual grip dots */}
         <div className="flex flex-col gap-0.5 opacity-40 group-hover:opacity-70">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="h-1 w-1 rounded-full bg-gray-400" aria-hidden="true" />

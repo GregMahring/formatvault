@@ -3,7 +3,14 @@ import { SplitPane } from '@/components/SplitPane';
 import { CodeEditor, type EditorLanguage } from '@/components/CodeEditor';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { FileUploadZone } from '@/components/FileUploadZone';
+import { PaneActions } from '@/components/PaneActions';
+import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
+import { ProgressBar } from '@/components/ProgressBar';
+import { useFileParser } from '@/hooks/useFileParser';
+import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
 import type { ConversionResult, ConvertResult, ConvertError } from '@/features/convert/converters';
+import { Keyboard } from 'lucide-react';
 
 function isConvertError(r: ConversionResult): r is ConvertError {
   return r.error !== null;
@@ -26,7 +33,8 @@ export interface ConverterLayoutProps {
 
 /**
  * Shared layout for all 6 converter pages.
- * Handles input/output state, auto-conversion on input change, error display.
+ * Handles input/output state, auto-conversion on input change, error display,
+ * file upload, copy/download, and keyboard shortcuts.
  */
 export function ConverterLayout({
   title,
@@ -41,6 +49,9 @@ export function ConverterLayout({
   const [output, setOutput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
+  const [showShortcuts, setShowShortcuts] = useState(false);
+
+  const fileParser = useFileParser();
 
   const runConvert = useCallback(
     (value: string) => {
@@ -80,14 +91,22 @@ export function ConverterLayout({
     };
   }, [input, runConvert]);
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-        e.preventDefault();
-        runConvert(input);
-      }
+  // Load parsed file into input
+  useEffect(() => {
+    if (fileParser.result?.output) {
+      setInputRaw(fileParser.result.output);
+      setError(null);
+    }
+  }, [fileParser.result]);
+
+  const handleFileUpload = useCallback(
+    (file: File) => {
+      fileParser.parseFile(
+        file,
+        fromLanguage === 'json' ? 'json' : fromLanguage === 'yaml' ? 'yaml' : 'csv'
+      );
     },
-    [input, runConvert]
+    [fileParser, fromLanguage]
   );
 
   const setInput = useCallback((v: string) => {
@@ -102,11 +121,39 @@ export function ConverterLayout({
     setWarning(null);
   }, []);
 
+  const shortcuts: Shortcut[] = [
+    {
+      label: 'Convert',
+      display: '⌘ ↵',
+      key: 'Enter',
+      meta: true,
+      handler: () => {
+        runConvert(input);
+      },
+    },
+    {
+      label: 'Clear input',
+      display: '⌘ K',
+      key: 'k',
+      meta: true,
+      handler: clear,
+    },
+    {
+      label: 'Show keyboard shortcuts',
+      display: '?',
+      key: '?',
+      handler: () => {
+        setShowShortcuts(true);
+      },
+    },
+  ];
+
+  useKeyboardShortcuts(shortcuts, !showShortcuts);
+
   const hasError = error !== null;
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-    <div className="flex h-full flex-col" onKeyDown={handleKeyDown}>
+    <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-gray-800 bg-gray-950 px-4 py-2">
         <h1 className="text-sm font-semibold text-gray-200">{title}</h1>
@@ -152,7 +199,23 @@ export function ConverterLayout({
         >
           Clear
         </Button>
+
+        <button
+          type="button"
+          className="rounded p-1 text-gray-600 hover:bg-gray-800 hover:text-gray-400"
+          onClick={() => {
+            setShowShortcuts(true);
+          }}
+          aria-label="Keyboard shortcuts"
+          title="Keyboard shortcuts (?)"
+        >
+          <Keyboard className="h-3.5 w-3.5" aria-hidden="true" />
+        </button>
       </div>
+
+      {fileParser.showProgress && fileParser.isParsing && (
+        <ProgressBar percent={fileParser.progress} label="Parsing file…" />
+      )}
 
       {/* Error bar */}
       {hasError && (
@@ -185,10 +248,21 @@ export function ConverterLayout({
         >
           {/* Left: input */}
           <div className="flex h-full flex-col">
-            <div className="flex items-center border-b border-gray-800 px-3 py-1">
+            <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
               <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
                 {fromLanguage.toUpperCase()} Input
               </span>
+              <FileUploadZone
+                accept={
+                  fromLanguage === 'json'
+                    ? '.json,application/json'
+                    : fromLanguage === 'yaml'
+                      ? '.yaml,.yml,text/yaml'
+                      : '.csv,text/csv'
+                }
+                onFile={handleFileUpload}
+                disabled={fileParser.isParsing}
+              />
             </div>
             <CodeEditor
               value={input}
@@ -203,10 +277,14 @@ export function ConverterLayout({
 
           {/* Right: output */}
           <div className="flex h-full flex-col">
-            <div className="flex items-center border-b border-gray-800 px-3 py-1">
+            <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
               <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
                 {toLanguage.toUpperCase()} Output
               </span>
+              <PaneActions
+                content={output}
+                downloadFilename={`output.${toLanguage === 'json' ? 'json' : toLanguage === 'yaml' ? 'yaml' : 'csv'}`}
+              />
             </div>
             <CodeEditor
               value={output}
@@ -220,6 +298,14 @@ export function ConverterLayout({
           </div>
         </SplitPane>
       </div>
+
+      <KeyboardShortcutsModal
+        shortcuts={shortcuts}
+        isOpen={showShortcuts}
+        onClose={() => {
+          setShowShortcuts(false);
+        }}
+      />
     </div>
   );
 }

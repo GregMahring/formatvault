@@ -5,12 +5,19 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import './app.css';
 
+/** Inline script to restore persisted theme before first paint — prevents flash of wrong theme. */
+const themeInitScript = `
+(function(){try{var s=JSON.parse(localStorage.getItem('formatvault-settings')||'{}');var t=s.state&&s.state.theme==='light'?'light':'dark';document.documentElement.classList.remove('dark','light');document.documentElement.classList.add(t);}catch(e){}})();
+`.trim();
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="dark">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* Restore persisted theme before paint to avoid flash of wrong theme */}
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <Meta />
         <Links />
       </head>
