@@ -1,5 +1,6 @@
 import { useEffect, useCallback, useState } from 'react';
 import type { Route } from './+types/csv-formatter';
+import { buildMeta } from '@/lib/meta';
 import { SplitPane } from '@/components/SplitPane';
 import { CodeEditor } from '@/components/CodeEditor';
 import { Button } from '@/components/ui/button';
@@ -17,21 +18,15 @@ import type { Delimiter } from '@/features/csv/csvFormatter';
 import { cn } from '@/lib/utils';
 import { Keyboard } from 'lucide-react';
 
+export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
+
 export function meta(_args: Route.MetaArgs) {
-  return [
-    { title: 'CSV Formatter & Validator — formatvault' },
-    {
-      name: 'description',
-      content:
-        'Free online CSV formatter and validator. Format and validate CSV with automatic delimiter detection (comma, tab, pipe, semicolon). 100% client-side.',
-    },
-    { property: 'og:title', content: 'CSV Formatter & Validator — formatvault' },
-    {
-      property: 'og:description',
-      content:
-        'Format and validate CSV online. Auto-detects delimiters. No data leaves your browser.',
-    },
-  ];
+  return buildMeta({
+    title: 'CSV Formatter & Validator',
+    description:
+      'Free online CSV formatter and validator. Format and validate CSV with automatic delimiter detection (comma, tab, pipe, semicolon). 100% client-side.',
+    path: '/csv-formatter',
+  });
 }
 
 const DELIMITERS: { value: Delimiter; label: string }[] = [

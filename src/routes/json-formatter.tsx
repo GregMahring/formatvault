@@ -1,5 +1,6 @@
 import { useEffect, useCallback, useState } from 'react';
 import type { Route } from './+types/json-formatter';
+import { buildMeta } from '@/lib/meta';
 import { SplitPane } from '@/components/SplitPane';
 import { CodeEditor } from '@/components/CodeEditor';
 import { Button } from '@/components/ui/button';
@@ -17,20 +18,15 @@ import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcut
 import { cn } from '@/lib/utils';
 import { Keyboard } from 'lucide-react';
 
+export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
+
 export function meta(_args: Route.MetaArgs) {
-  return [
-    { title: 'JSON Formatter & Validator — formatvault' },
-    {
-      name: 'description',
-      content:
-        'Free online JSON formatter, validator and minifier. Pretty-print, minify, sort keys, query with JSONPath. Supports relaxed JSON5. 100% client-side.',
-    },
-    { property: 'og:title', content: 'JSON Formatter & Validator — formatvault' },
-    {
-      property: 'og:description',
-      content: 'Format, validate and query JSON online. No data leaves your browser.',
-    },
-  ];
+  return buildMeta({
+    title: 'JSON Formatter & Validator',
+    description:
+      'Free online JSON formatter, validator and minifier. Pretty-print, minify, sort keys, query with JSONPath. Supports relaxed JSON5. 100% client-side.',
+    path: '/json-formatter',
+  });
 }
 
 export default function JsonFormatter() {

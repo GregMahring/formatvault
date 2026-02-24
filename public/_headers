@@ -1,0 +1,42 @@
+/*
+  # Prevent MIME-type sniffing
+  X-Content-Type-Options: nosniff
+  # Prevent clickjacking
+  X-Frame-Options: DENY
+  # Referrer policy — don't leak URL to third parties
+  Referrer-Policy: strict-origin-when-cross-origin
+  # Permissions policy — disable unused browser features
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=()
+  # Content-Security-Policy
+  # self: first-party assets
+  # unsafe-inline styles: required for Tailwind CSS v4 (runtime injection) + CodeMirror
+  # data: required for CodeMirror gutter icons (SVG data URIs)
+  # worker-src blob:: required for Web Workers created via new Worker(new URL(...))
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://plausible.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://plausible.io; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  # HSTS — 1 year, include subdomains
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  # Cross-Origin policies
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
+  Cross-Origin-Resource-Policy: same-origin
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=86400
+
+/robots.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=86400
+
+/sitemap.xml
+  Content-Type: application/xml; charset=utf-8
+  Cache-Control: public, max-age=86400

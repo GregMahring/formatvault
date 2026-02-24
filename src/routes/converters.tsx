@@ -1,16 +1,18 @@
 import { Link } from 'react-router';
 import { ArrowRight } from 'lucide-react';
 import type { Route } from './+types/converters';
+import { buildMeta } from '@/lib/meta';
+
+export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
 
 export function meta(_args: Route.MetaArgs) {
-  return [
-    { title: 'Data Format Converters — formatvault' },
-    {
-      name: 'description',
-      content:
-        'Convert between JSON, CSV and YAML online for free. All six conversion pairs available. 100% client-side — no data leaves your browser.',
-    },
-  ];
+  return buildMeta({
+    title: 'Data Format Converters',
+    description:
+      'Convert between JSON, CSV and YAML online for free. All six conversion pairs — JSON↔CSV, JSON↔YAML, CSV↔YAML. 100% client-side.',
+    path: '/converters',
+    schemaType: 'WebPage',
+  });
 }
 
 const CONVERTERS = [

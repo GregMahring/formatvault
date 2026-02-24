@@ -1,4 +1,5 @@
 import type { Route } from './+types/base64-encoder';
+import { buildMeta } from '@/lib/meta';
 import { useState, useEffect, useCallback } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -15,15 +16,15 @@ import {
 import { Keyboard, ArrowLeftRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
+
 export function meta(_args: Route.MetaArgs) {
-  return [
-    { title: 'Base64 Encoder & Decoder — formatvault' },
-    {
-      name: 'description',
-      content:
-        'Encode and decode Base64 strings online for free. Unicode-safe. 100% client-side — no data leaves your browser.',
-    },
-  ];
+  return buildMeta({
+    title: 'Base64 Encoder & Decoder',
+    description:
+      'Encode and decode Base64 strings online for free. Unicode-safe. 100% client-side — no data leaves your browser.',
+    path: '/base64-encoder',
+  });
 }
 
 export default function Base64Encoder() {

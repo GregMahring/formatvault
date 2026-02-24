@@ -1,4 +1,5 @@
 import type { Route } from './+types/url-encoder';
+import { buildMeta } from '@/lib/meta';
 import { useState, useEffect, useCallback } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -17,15 +18,15 @@ import {
 import { Keyboard, ArrowLeftRight, Table2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
+
 export function meta(_args: Route.MetaArgs) {
-  return [
-    { title: 'URL Encoder & Decoder — formatvault' },
-    {
-      name: 'description',
-      content:
-        'URL-encode and decode strings online for free. Uses encodeURIComponent for accurate percent-encoding. 100% client-side.',
-    },
-  ];
+  return buildMeta({
+    title: 'URL Encoder & Decoder',
+    description:
+      'URL-encode and decode strings online for free. Uses encodeURIComponent for accurate percent-encoding. 100% client-side.',
+    path: '/url-encoder',
+  });
 }
 
 export default function UrlEncoderPage() {

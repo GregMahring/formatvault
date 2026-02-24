@@ -1,21 +1,29 @@
 import { Link } from 'react-router';
-import { Braces, FileText, FileCode2, ArrowLeftRight, KeyRound, Lock, Globe } from 'lucide-react';
+import {
+  Braces,
+  FileText,
+  FileCode2,
+  ArrowLeftRight,
+  KeyRound,
+  Lock,
+  Globe,
+  ShieldCheck,
+  Zap,
+  WifiOff,
+} from 'lucide-react';
 import type { Route } from './+types/home';
+import { buildMeta } from '@/lib/meta';
+
+export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
 
 export function meta(_args: Route.MetaArgs) {
-  return [
-    { title: 'formatvault — Free Developer Data Format Tools' },
-    {
-      name: 'description',
-      content:
-        'Free, privacy-first tools for formatting, validating, and converting JSON, CSV, YAML, and more. 100% client-side — no data ever leaves your browser.',
-    },
-    { property: 'og:title', content: 'formatvault — Free Developer Data Format Tools' },
-    {
-      property: 'og:description',
-      content: 'Format, validate and convert data formats. No data leaves your browser.',
-    },
-  ];
+  return buildMeta({
+    title: 'formatvault — Free Developer Data Format Tools',
+    description:
+      'Free, privacy-first tools for formatting, validating, and converting JSON, CSV, YAML, and more. 100% client-side — no data ever leaves your browser.',
+    path: '/',
+    schemaType: 'WebPage',
+  });
 }
 
 const TOOLS = [
@@ -23,15 +31,17 @@ const TOOLS = [
     to: '/json-formatter',
     icon: Braces,
     label: 'JSON Formatter',
-    description: 'Pretty-print, minify, validate and query JSON',
+    description: 'Pretty-print, minify, validate and query JSON with JSONPath',
     accent: 'text-yellow-400',
+    badge: null as string | null,
   },
   {
     to: '/csv-formatter',
     icon: FileText,
     label: 'CSV Formatter',
-    description: 'Format, validate and inspect CSV with delimiter detection',
+    description: 'Format, validate and inspect CSV with automatic delimiter detection',
     accent: 'text-green-400',
+    badge: null as string | null,
   },
   {
     to: '/yaml-formatter',
@@ -39,13 +49,15 @@ const TOOLS = [
     label: 'YAML Formatter',
     description: 'Format and validate YAML with line-level error reporting',
     accent: 'text-blue-400',
+    badge: null as string | null,
   },
   {
     to: '/converters',
     icon: ArrowLeftRight,
     label: 'Converters',
-    description: 'Convert between JSON, CSV and YAML — all six pairs',
+    description: 'Convert between JSON, CSV and YAML — all six direction pairs',
     accent: 'text-purple-400',
+    badge: '6 pairs' as string | null,
   },
   {
     to: '/jwt-decoder',
@@ -53,22 +65,43 @@ const TOOLS = [
     label: 'JWT Decoder',
     description: 'Decode JWT tokens and inspect header, payload and expiry',
     accent: 'text-orange-400',
+    badge: null as string | null,
   },
   {
     to: '/base64-encoder',
     icon: Lock,
     label: 'Base64',
-    description: 'Encode and decode Base64 strings with Unicode support',
+    description: 'Encode and decode Base64 strings with full Unicode support',
     accent: 'text-pink-400',
+    badge: null as string | null,
   },
   {
     to: '/url-encoder',
     icon: Globe,
     label: 'URL Encoder',
-    description: 'URL-encode and decode strings for safe use in requests',
+    description: 'URL-encode and decode strings and query parameters',
     accent: 'text-cyan-400',
+    badge: null as string | null,
   },
-] as const;
+];
+
+const FEATURES = [
+  {
+    icon: ShieldCheck,
+    label: '100% client-side',
+    description: 'All processing happens in your browser. Your data never touches a server.',
+  },
+  {
+    icon: WifiOff,
+    label: 'Works offline',
+    description: 'No external API calls. Paste your data and format — no internet required.',
+  },
+  {
+    icon: Zap,
+    label: 'Instant results',
+    description: 'Auto-formats as you type with a short debounce. No submit button needed.',
+  },
+];
 
 export default function Home() {
   return (
@@ -76,9 +109,17 @@ export default function Home() {
       {/* Hero */}
       <div className="mb-16 text-center">
         <div className="mb-4 flex justify-center">
-          <Braces className="h-10 w-10 text-accent-400" aria-hidden="true" />
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-accent-500/30 bg-accent-500/10">
+            <Braces className="h-8 w-8 text-accent-400" aria-hidden="true" />
+          </div>
         </div>
-        <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-100">
+
+        <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-gray-700 bg-gray-900 px-3 py-1 text-xs font-medium text-gray-400">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-green-400" aria-hidden="true" />
+          Free · No account · No tracking
+        </div>
+
+        <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-100 sm:text-5xl">
           Developer data format tools
         </h1>
         <p className="mx-auto max-w-xl text-lg text-gray-400">
@@ -86,14 +127,48 @@ export default function Home() {
           <strong className="font-semibold text-gray-200">no data ever leaving your browser</strong>
           .
         </p>
+
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <Link
+            to="/json-formatter"
+            className="rounded-lg bg-accent-600 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-accent-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400"
+          >
+            Try JSON Formatter
+          </Link>
+          <Link
+            to="/converters"
+            className="rounded-lg border border-gray-700 bg-gray-900 px-5 py-2 text-sm font-semibold text-gray-300 transition-colors hover:border-gray-600 hover:bg-gray-800 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400"
+          >
+            See all converters
+          </Link>
+        </div>
+      </div>
+
+      {/* Feature strip */}
+      <div className="mb-12 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        {FEATURES.map(({ icon: Icon, label, description }) => (
+          <div
+            key={label}
+            className="flex flex-col gap-2 rounded-lg border border-gray-800 bg-gray-900/50 p-4"
+          >
+            <div className="flex items-center gap-2">
+              <Icon className="h-4 w-4 text-accent-400" aria-hidden="true" />
+              <span className="text-sm font-semibold text-gray-200">{label}</span>
+            </div>
+            <p className="text-xs leading-relaxed text-gray-500">{description}</p>
+          </div>
+        ))}
       </div>
 
       {/* Tool grid */}
+      <h2 className="mb-4 text-xs font-semibold uppercase tracking-widest text-gray-600">
+        Available tools
+      </h2>
       <ul
         className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
         aria-label="Available tools"
       >
-        {TOOLS.map(({ to, icon: Icon, label, description, accent }) => (
+        {TOOLS.map(({ to, icon: Icon, label, description, accent, badge }) => (
           <li key={to}>
             <Link
               to={to}
@@ -101,7 +176,14 @@ export default function Home() {
             >
               <div className="flex items-center gap-3">
                 <Icon className={`h-5 w-5 shrink-0 ${accent}`} aria-hidden="true" />
-                <span className="font-semibold text-gray-100 group-hover:text-white">{label}</span>
+                <span className="flex-1 font-semibold text-gray-100 group-hover:text-white">
+                  {label}
+                </span>
+                {badge !== null && (
+                  <span className="rounded-full border border-gray-700 bg-gray-800 px-2 py-0.5 text-[10px] font-medium text-gray-400">
+                    {badge}
+                  </span>
+                )}
               </div>
               <p className="text-sm leading-relaxed text-gray-500 group-hover:text-gray-400">
                 {description}
@@ -112,9 +194,14 @@ export default function Home() {
       </ul>
 
       {/* Privacy callout */}
-      <p className="mt-12 text-center text-sm text-gray-600">
-        🔒 All processing happens in your browser. No server, no storage, no tracking.
-      </p>
+      <div className="mt-12 flex flex-col items-center gap-2 rounded-lg border border-gray-800 bg-gray-900/40 px-6 py-5 text-center">
+        <ShieldCheck className="h-6 w-6 text-green-500" aria-hidden="true" />
+        <p className="text-sm font-semibold text-gray-300">Your data stays on your device</p>
+        <p className="max-w-md text-xs leading-relaxed text-gray-600">
+          Every tool on formatvault runs entirely in your browser. No data is ever uploaded, stored,
+          or logged. Paste sensitive credentials, tokens, and payloads with confidence.
+        </p>
+      </div>
     </div>
   );
 }

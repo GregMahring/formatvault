@@ -1,21 +1,17 @@
 import type { Route } from './+types/csv-to-json-converter';
+import { buildMeta } from '@/lib/meta';
 import { ConverterLayout } from '@/components/ConverterLayout';
 import { csvToJson } from '@/features/convert/converters';
 
+export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
+
 export function meta(_args: Route.MetaArgs) {
-  return [
-    { title: 'CSV to JSON Converter — formatvault' },
-    {
-      name: 'description',
-      content:
-        'Convert CSV to JSON online for free. Uses the first row as headers. Supports comma, tab, pipe and semicolon delimiters. 100% client-side.',
-    },
-    { property: 'og:title', content: 'CSV to JSON Converter — formatvault' },
-    {
-      property: 'og:description',
-      content: 'Convert CSV to JSON online. Auto-detects delimiters. No data leaves your browser.',
-    },
-  ];
+  return buildMeta({
+    title: 'CSV to JSON Converter',
+    description:
+      'Convert CSV to JSON online for free. Auto-detects headers and delimiter. 100% client-side.',
+    path: '/csv-to-json-converter',
+  });
 }
 
 export default function CsvToJsonConverter() {

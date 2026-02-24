@@ -1,22 +1,17 @@
 import type { Route } from './+types/yaml-to-json-converter';
+import { buildMeta } from '@/lib/meta';
 import { ConverterLayout } from '@/components/ConverterLayout';
 import { yamlToJson } from '@/features/convert/converters';
 
+export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
+
 export function meta(_args: Route.MetaArgs) {
-  return [
-    { title: 'YAML to JSON Converter — formatvault' },
-    {
-      name: 'description',
-      content:
-        'Convert YAML to JSON online for free. Supports multi-document YAML. Handles all YAML data types. 100% client-side — no data leaves your browser.',
-    },
-    { property: 'og:title', content: 'YAML to JSON Converter — formatvault' },
-    {
-      property: 'og:description',
-      content:
-        'Convert YAML to JSON online. Supports multi-document YAML. No data leaves your browser.',
-    },
-  ];
+  return buildMeta({
+    title: 'YAML to JSON Converter',
+    description:
+      'Convert YAML to JSON online for free. Supports multi-document YAML. 100% client-side.',
+    path: '/yaml-to-json-converter',
+  });
 }
 
 export default function YamlToJsonConverter() {

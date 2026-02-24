@@ -1,0 +1,45 @@
+# formatvault
+
+> Free, privacy-first developer data format tools. 100% client-side — no data ever leaves your browser.
+
+## About
+
+formatvault is a collection of browser-based tools for developers to format, validate, convert and inspect common data formats. All processing happens entirely in the browser using JavaScript — no data is sent to any server.
+
+## Tools
+
+- [JSON Formatter & Validator](https://formatvault.dev/json-formatter): Pretty-print, minify, validate, sort keys, query with JSONPath. Supports relaxed JSON (JSON5).
+- [CSV Formatter & Validator](https://formatvault.dev/csv-formatter): Format and validate CSV with automatic delimiter detection (comma, tab, pipe, semicolon).
+- [YAML Formatter & Validator](https://formatvault.dev/yaml-formatter): Format and validate YAML with line-level error reporting. Supports multi-document YAML.
+- [JWT Decoder](https://formatvault.dev/jwt-decoder): Decode and inspect JWT tokens. View header, payload and expiry claims. No signature verification — decode only.
+- [Base64 Encoder/Decoder](https://formatvault.dev/base64-encoder): Encode and decode Base64 strings. Unicode-safe (handles emoji, non-ASCII characters).
+- [URL Encoder/Decoder](https://formatvault.dev/url-encoder): URL-encode and decode strings using encodeURIComponent. Includes query parameter parser.
+
+## Converters
+
+- [JSON → CSV](https://formatvault.dev/json-to-csv-converter)
+- [JSON → YAML](https://formatvault.dev/json-to-yaml-converter)
+- [CSV → JSON](https://formatvault.dev/csv-to-json-converter)
+- [CSV → YAML](https://formatvault.dev/csv-to-yaml-converter)
+- [YAML → JSON](https://formatvault.dev/yaml-to-json-converter)
+- [YAML → CSV](https://formatvault.dev/yaml-to-csv-converter)
+
+## Privacy
+
+- No data is ever sent to a server
+- No cookies
+- No user tracking (privacy-respecting analytics via Plausible)
+- No account required
+- No login
+- All processing is 100% client-side
+
+## Technical Notes
+
+- Large files (>1MB) are processed in a Web Worker to keep the UI responsive
+- JSON files ≥5MB use streaming parsing
+- Markdown rendering always uses DOMPurify sanitization
+- JWT decoding never performs signature verification — for display/inspection only
+
+## Source
+
+formatvault is open source. See https://github.com/formatvault/formatvault for the repository.

@@ -1,21 +1,17 @@
 import type { Route } from './+types/json-to-csv-converter';
+import { buildMeta } from '@/lib/meta';
 import { ConverterLayout } from '@/components/ConverterLayout';
 import { jsonToCsv } from '@/features/convert/converters';
 
+export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
+
 export function meta(_args: Route.MetaArgs) {
-  return [
-    { title: 'JSON to CSV Converter — formatvault' },
-    {
-      name: 'description',
-      content:
-        'Convert JSON to CSV online for free. Handles arrays of objects, warns on nested values. 100% client-side — no data leaves your browser.',
-    },
-    { property: 'og:title', content: 'JSON to CSV Converter — formatvault' },
-    {
-      property: 'og:description',
-      content: 'Convert JSON arrays to CSV online. Fast, free, 100% in your browser.',
-    },
-  ];
+  return buildMeta({
+    title: 'JSON to CSV Converter',
+    description:
+      'Convert JSON to CSV online for free. Handles nested objects with flattening. 100% client-side.',
+    path: '/json-to-csv-converter',
+  });
 }
 
 export default function JsonToCsvConverter() {

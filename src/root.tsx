@@ -18,6 +18,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {/* Restore persisted theme before paint to avoid flash of wrong theme */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        {/* Plausible Analytics — privacy-respecting, no cookies, no PII */}
+        <script defer data-domain="formatvault.dev" src="https://plausible.io/js/script.js" />
         <Meta />
         <Links />
       </head>

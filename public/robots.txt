@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# AI crawlers — sitemap for LLMs
+User-agent: GPTBot
+Allow: /llms.txt
+
+User-agent: Claude-Web
+Allow: /llms.txt
+
+User-agent: anthropic-ai
+Allow: /llms.txt
+
+User-agent: Googlebot
+Allow: /
+
+Sitemap: https://formatvault.dev/sitemap.xml

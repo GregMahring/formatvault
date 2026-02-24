@@ -1,5 +1,6 @@
 import { useEffect, useCallback, useState } from 'react';
 import type { Route } from './+types/yaml-formatter';
+import { buildMeta } from '@/lib/meta';
 import { SplitPane } from '@/components/SplitPane';
 import { CodeEditor } from '@/components/CodeEditor';
 import { Button } from '@/components/ui/button';
@@ -17,21 +18,15 @@ import type { YamlIndent } from '@/features/yaml/yamlFormatter';
 import { cn } from '@/lib/utils';
 import { Keyboard } from 'lucide-react';
 
+export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
+
 export function meta(_args: Route.MetaArgs) {
-  return [
-    { title: 'YAML Formatter & Validator — formatvault' },
-    {
-      name: 'description',
-      content:
-        'Free online YAML formatter and validator. Format and validate YAML with line-level error reporting. Supports multi-document YAML. 100% client-side.',
-    },
-    { property: 'og:title', content: 'YAML Formatter & Validator — formatvault' },
-    {
-      property: 'og:description',
-      content:
-        'Format and validate YAML online with line-level error reporting. No data leaves your browser.',
-    },
-  ];
+  return buildMeta({
+    title: 'YAML Formatter & Validator',
+    description:
+      'Free online YAML formatter and validator. Format and validate YAML with line-level error reporting. Supports multi-document YAML. 100% client-side.',
+    path: '/yaml-formatter',
+  });
 }
 
 export default function YamlFormatter() {

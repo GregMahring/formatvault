@@ -1,4 +1,5 @@
 import type { Route } from './+types/jwt-decoder';
+import { buildMeta } from '@/lib/meta';
 import { useState, useCallback } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -13,15 +14,15 @@ import {
 } from '@/features/tools/jwtDecoder';
 import { Keyboard, Copy, CheckCheck, ClipboardPaste } from 'lucide-react';
 
+export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
+
 export function meta(_args: Route.MetaArgs) {
-  return [
-    { title: 'JWT Decoder — Decode JSON Web Tokens Online — formatvault' },
-    {
-      name: 'description',
-      content:
-        'Decode and inspect JWT tokens online for free. View header, payload and expiry. No verification — 100% client-side, token never sent to a server.',
-    },
-  ];
+  return buildMeta({
+    title: 'JWT Decoder',
+    description:
+      'Decode and inspect JWT tokens online for free. View header, payload and expiry. No verification — 100% client-side, token never sent to a server.',
+    path: '/jwt-decoder',
+  });
 }
 
 // ── Claim display helpers ─────────────────────────────────────────────────────
