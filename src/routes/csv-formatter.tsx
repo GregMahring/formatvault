@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { FileUploadZone } from '@/components/FileUploadZone';
 import { PaneActions } from '@/components/PaneActions';
 import { DiffPanel } from '@/components/DiffPanel';
+import { MarkdownPreview } from '@/components/MarkdownPreview';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useCsvFormatter } from '@/features/csv/useCsvFormatter';
@@ -45,6 +46,7 @@ export default function CsvFormatter() {
   const fmt = useCsvFormatter();
   const fileParser = useFileParser();
   const [showDiff, setShowDiff] = useState(false);
+  const [showMarkdown, setShowMarkdown] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
 
   // Auto-process on input/option changes with debounce
@@ -89,6 +91,17 @@ export default function CsvFormatter() {
       meta: true,
       handler: () => {
         setShowDiff((v) => !v);
+        setShowMarkdown(false);
+      },
+    },
+    {
+      label: 'Toggle Markdown preview',
+      display: '⌘ M',
+      key: 'm',
+      meta: true,
+      handler: () => {
+        setShowMarkdown((v) => !v);
+        setShowDiff(false);
       },
     },
     {
@@ -174,10 +187,30 @@ export default function CsvFormatter() {
           )}
           onClick={() => {
             setShowDiff((v) => !v);
+            setShowMarkdown(false);
           }}
           aria-pressed={showDiff}
         >
           Diff
+        </button>
+
+        {/* Markdown preview toggle */}
+        <button
+          type="button"
+          className={cn(
+            'rounded px-2 py-1 text-xs transition-colors',
+            showMarkdown
+              ? 'bg-accent-700/40 text-accent-300'
+              : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
+          )}
+          onClick={() => {
+            setShowMarkdown((v) => !v);
+            setShowDiff(false);
+          }}
+          aria-pressed={showMarkdown}
+          title="Toggle Markdown preview (⌘M)"
+        >
+          Markdown
         </button>
 
         {fmt.input.trim() && !hasError && (
@@ -252,7 +285,11 @@ export default function CsvFormatter() {
         {showDiff ? (
           <DiffPanel original={fmt.input} modified={fmt.output} className="flex-1" />
         ) : (
-          <SplitPane leftLabel="CSV input editor" rightLabel="Formatted output" className="flex-1">
+          <SplitPane
+            leftLabel="CSV input editor"
+            rightLabel={showMarkdown ? 'Markdown preview' : 'Formatted output'}
+            className="flex-1"
+          >
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
                 <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
@@ -275,23 +312,27 @@ export default function CsvFormatter() {
               />
             </div>
 
-            <div className="flex h-full flex-col">
-              <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-                <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
-                  Output
-                </span>
-                <PaneActions content={fmt.output} downloadFilename="output.csv" />
+            {showMarkdown ? (
+              <MarkdownPreview source={fmt.output || fmt.input} className="h-full" />
+            ) : (
+              <div className="flex h-full flex-col">
+                <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
+                  <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+                    Output
+                  </span>
+                  <PaneActions content={fmt.output} downloadFilename="output.csv" />
+                </div>
+                <CodeEditor
+                  value={fmt.output}
+                  language="csv"
+                  label="Formatted CSV output"
+                  readOnly
+                  placeholder="Formatted output will appear here…"
+                  className="flex-1 rounded-none border-0"
+                  minHeight="100%"
+                />
               </div>
-              <CodeEditor
-                value={fmt.output}
-                language="csv"
-                label="Formatted CSV output"
-                readOnly
-                placeholder="Formatted output will appear here…"
-                className="flex-1 rounded-none border-0"
-                minHeight="100%"
-              />
-            </div>
+            )}
           </SplitPane>
         )}
       </div>
