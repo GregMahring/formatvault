@@ -1,7 +1,74 @@
 import { describe, it, expect } from 'vitest';
-import { formatJson, minifyJson, validateJson, normaliseCurlyQuotes } from './jsonFormatter';
+import {
+  formatJson,
+  minifyJson,
+  validateJson,
+  normaliseCurlyQuotes,
+  repairUnmatchedBrackets,
+} from './jsonFormatter';
 
 const OPTS = { indent: 2 as const, sortKeys: false, relaxed: false };
+
+describe('repairUnmatchedBrackets', () => {
+  it('appends missing closing brace', () => {
+    const { repaired, changed } = repairUnmatchedBrackets('{"a":1');
+    expect(changed).toBe(true);
+    expect(repaired).toBe('{"a":1}');
+  });
+
+  it('appends missing closing bracket', () => {
+    const { repaired, changed } = repairUnmatchedBrackets('[1,2,3');
+    expect(changed).toBe(true);
+    expect(repaired).toBe('[1,2,3]');
+  });
+
+  it('appends multiple missing closers in LIFO order', () => {
+    const { repaired, changed } = repairUnmatchedBrackets('{"a":[1,2');
+    expect(changed).toBe(true);
+    expect(repaired).toBe('{"a":[1,2]}');
+  });
+
+  it('does not change already-balanced input', () => {
+    const { repaired, changed } = repairUnmatchedBrackets('{"a":1}');
+    expect(changed).toBe(false);
+    expect(repaired).toBe('{"a":1}');
+  });
+
+  it('bails on mismatched closer — returns original unchanged', () => {
+    // { closed by ] is ambiguous — do not guess
+    const { repaired, changed } = repairUnmatchedBrackets('{"a":1]');
+    expect(changed).toBe(false);
+    expect(repaired).toBe('{"a":1]');
+  });
+
+  it('skips bracket characters inside strings', () => {
+    // Brackets inside string values must not be counted
+    const { repaired, changed } = repairUnmatchedBrackets('{"a":"[unclosed in string"');
+    expect(changed).toBe(true);
+    expect(repaired).toBe('{"a":"[unclosed in string"}');
+  });
+
+  it('handles escaped quotes inside strings correctly', () => {
+    const input = String.raw`{"a":"he said \"hi\"`;
+    const { repaired, changed } = repairUnmatchedBrackets(input);
+    expect(changed).toBe(true);
+    expect(repaired).toBe(input + '}');
+  });
+
+  it('skips brackets inside JSON5 single-line comments (relaxed mode)', () => {
+    const input = '{\n// {"unclosed comment bracket\n"a":1';
+    const { repaired, changed } = repairUnmatchedBrackets(input, true);
+    expect(changed).toBe(true);
+    expect(repaired).toBe(input + '}');
+  });
+
+  it('skips brackets inside JSON5 block comments (relaxed mode)', () => {
+    const input = '{"a":1/* [unclosed in block comment */';
+    const { repaired, changed } = repairUnmatchedBrackets(input, true);
+    expect(changed).toBe(true);
+    expect(repaired).toBe(input + '}');
+  });
+});
 
 describe('normaliseCurlyQuotes', () => {
   it('converts left/right double curly quotes', () => {
@@ -72,6 +139,41 @@ describe('formatJson', () => {
 
   it('rejects trailing commas in strict mode', () => {
     const result = formatJson('{"a": 1,}', OPTS);
+    expect(result.output).toBeNull();
+    expect(result.error).toBeTruthy();
+  });
+
+  it('auto-repairs missing closing brace', () => {
+    const result = formatJson('{"a":1', OPTS);
+    expect(result.error).toBeNull();
+    expect(result.output).toContain('"a": 1');
+    expect((result as { repaired?: true }).repaired).toBe(true);
+  });
+
+  it('auto-repairs missing closing bracket', () => {
+    const result = formatJson('[1,2,3', OPTS);
+    expect(result.error).toBeNull();
+    expect(result.output).toContain('1');
+    expect((result as { repaired?: true }).repaired).toBe(true);
+  });
+
+  it('auto-repairs nested missing closers', () => {
+    // {"items":[1,2 → missing ] and }
+    const result = formatJson('{"items":[1,2', OPTS);
+    expect(result.error).toBeNull();
+    expect(result.output).toContain('"items"');
+    expect((result as { repaired?: true }).repaired).toBe(true);
+  });
+
+  it('does not set repaired flag for already-valid input', () => {
+    const result = formatJson('{"a":1}', OPTS);
+    expect(result.error).toBeNull();
+    expect((result as { repaired?: true }).repaired).toBeUndefined();
+  });
+
+  it('still errors on genuinely invalid JSON that repair cannot fix', () => {
+    // Mismatched brackets — repair bails, error is surfaced
+    const result = formatJson('{"a":1]', OPTS);
     expect(result.output).toBeNull();
     expect(result.error).toBeTruthy();
   });

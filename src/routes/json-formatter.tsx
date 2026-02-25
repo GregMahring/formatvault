@@ -315,6 +315,16 @@ export default function JsonFormatter() {
         </div>
       )}
 
+      {/* Bracket repair notice */}
+      {fmt.repairedBrackets && (
+        <div
+          role="status"
+          className="flex items-center gap-2 border-b border-yellow-900/40 bg-yellow-950/30 px-4 py-1.5 text-xs text-yellow-400"
+        >
+          <span>⚠ Missing closing brackets/braces were automatically appended.</span>
+        </div>
+      )}
+
       {/* JSONPath bar */}
       {fmt.isQueryMode && (
         <div className="flex items-center gap-2 border-b border-gray-800 bg-gray-900/50 px-4 py-2">

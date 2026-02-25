@@ -14,6 +14,8 @@ export interface FormatResult {
   error: null;
   /** Present when input had curly/smart quotes that were normalised before parsing */
   normalisedQuotes?: true;
+  /** Present when missing closing brackets/braces/parens were automatically appended */
+  repaired?: true;
 }
 
 export interface FormatError {
@@ -38,6 +40,97 @@ export function normaliseCurlyQuotes(input: string): { normalised: string; chang
     .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'") // ' ' ‚ ‛ ′ ‵ → '
     .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"'); // " " „ ‟ ″ ‶ → "
   return { normalised, changed: normalised !== input };
+}
+
+const CLOSER: Record<string, string> = { '{': '}', '[': ']', '(': ')' };
+const OPENER = new Set(['{', '[', '(']);
+const MATCH: Record<string, string> = { '}': '{', ']': '[', ')': '(' };
+
+/**
+ * Append missing closing brackets/braces/parens to JSON-like input.
+ *
+ * Strategy: scan character-by-character maintaining a stack of unclosed openers.
+ * - Content inside strings (including escaped chars) is skipped entirely.
+ * - JSON5 single-line (//) and block (/* *\/) comments are skipped.
+ * - If a closer is encountered that doesn't match the top of the stack, bail
+ *   (mismatched brackets are ambiguous; we don't guess what was intended).
+ * - At end-of-input, append closers for any remaining open openers in LIFO order.
+ *
+ * Returns `{ repaired, changed }`. `changed` is false when the input was already
+ * balanced or when a mismatch was detected (input returned as-is in both cases).
+ */
+export function repairUnmatchedBrackets(
+  input: string,
+  relaxed = false
+): { repaired: string; changed: boolean } {
+  const stack: string[] = [];
+  let i = 0;
+  const n = input.length;
+
+  while (i < n) {
+    const ch = input[i] ?? '';
+
+    // String literal — skip to closing unescaped quote
+    if (ch === '"' || (relaxed && ch === "'")) {
+      const quote = ch;
+      i++;
+      while (i < n) {
+        const sc = input[i] ?? '';
+        if (sc === '\\') {
+          i += 2; // skip escaped character
+          continue;
+        }
+        if (sc === quote) {
+          i++;
+          break;
+        }
+        i++;
+      }
+      continue;
+    }
+
+    // JSON5 single-line comment
+    if (relaxed && ch === '/' && (input[i + 1] ?? '') === '/') {
+      while (i < n && (input[i] ?? '') !== '\n') i++;
+      continue;
+    }
+
+    // JSON5 block comment
+    if (relaxed && ch === '/' && (input[i + 1] ?? '') === '*') {
+      i += 2;
+      while (i < n - 1 && !((input[i] ?? '') === '*' && (input[i + 1] ?? '') === '/')) i++;
+      i += 2; // skip closing */
+      continue;
+    }
+
+    if (OPENER.has(ch)) {
+      stack.push(ch);
+      i++;
+      continue;
+    }
+
+    if (ch === '}' || ch === ']' || ch === ')') {
+      const expected = MATCH[ch];
+      if (stack.length === 0 || stack[stack.length - 1] !== expected) {
+        // Mismatched closer — bail, return original
+        return { repaired: input, changed: false };
+      }
+      stack.pop();
+      i++;
+      continue;
+    }
+
+    i++;
+  }
+
+  if (stack.length === 0) return { repaired: input, changed: false };
+
+  // Append missing closers in LIFO order
+  const closers = stack
+    .reverse()
+    .map((op) => CLOSER[op] ?? '')
+    .join('');
+  return { repaired: input + closers, changed: true };
 }
 
 /** Extract line/column from a native JSON.parse SyntaxError message. */
@@ -85,23 +178,49 @@ export function formatJson(input: string, options: FormatOptions): JsonFormatRes
     return { output: null, error: 'Input is empty.' };
   }
 
-  const { normalised, changed } = normaliseCurlyQuotes(trimmed);
+  const { normalised, changed: quotesChanged } = normaliseCurlyQuotes(trimmed);
 
   let parsed: unknown;
+  let bracketRepaired = false;
 
+  // First attempt: parse as-is (after quote normalisation)
+  let firstError: { msg: string; pos: { line?: number; column?: number } } | null = null;
   try {
     parsed = options.relaxed ? JSON5.parse(normalised) : JSON.parse(normalised);
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
-    const pos = extractPosition(msg);
-    return { output: null, error: msg, ...pos };
+    firstError = { msg, pos: extractPosition(msg) };
+  }
+
+  if (firstError !== null) {
+    // Second attempt: repair unmatched brackets, then re-parse
+    const { repaired, changed } = repairUnmatchedBrackets(normalised, options.relaxed);
+    if (changed) {
+      try {
+        parsed = options.relaxed ? JSON5.parse(repaired) : JSON.parse(repaired);
+        bracketRepaired = true;
+        firstError = null;
+      } catch (err2) {
+        const msg = err2 instanceof Error ? err2.message : String(err2);
+        const pos = extractPosition(msg);
+        return { output: null, error: msg, ...pos };
+      }
+    }
+    if (firstError !== null) {
+      return { output: null, error: firstError.msg, ...firstError.pos };
+    }
   }
 
   const data = options.sortKeys ? sortObjectKeys(parsed) : parsed;
 
   try {
     const output = JSON.stringify(data, null, options.indent);
-    return { output, error: null, ...(changed ? { normalisedQuotes: true } : {}) };
+    return {
+      output,
+      error: null,
+      ...(quotesChanged ? { normalisedQuotes: true } : {}),
+      ...(bracketRepaired ? { repaired: true } : {}),
+    };
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     return { output: null, error: `Serialization error: ${msg}` };
@@ -114,19 +233,43 @@ export function minifyJson(input: string, relaxed = false): JsonFormatResult {
   if (!trimmed) {
     return { output: null, error: 'Input is empty.' };
   }
-  const { normalised, changed } = normaliseCurlyQuotes(trimmed);
+  const { normalised, changed: quotesChanged } = normaliseCurlyQuotes(trimmed);
+
+  let parsed: unknown;
+  let bracketRepaired = false;
+  let firstError: { msg: string; pos: { line?: number; column?: number } } | null = null;
+
   try {
-    const parsed: unknown = relaxed ? JSON5.parse(normalised) : JSON.parse(normalised);
-    return {
-      output: JSON.stringify(parsed),
-      error: null,
-      ...(changed ? { normalisedQuotes: true } : {}),
-    };
+    parsed = relaxed ? JSON5.parse(normalised) : JSON.parse(normalised);
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
-    const pos = extractPosition(msg);
-    return { output: null, error: msg, ...pos };
+    firstError = { msg, pos: extractPosition(msg) };
   }
+
+  if (firstError !== null) {
+    const { repaired, changed } = repairUnmatchedBrackets(normalised, relaxed);
+    if (changed) {
+      try {
+        parsed = relaxed ? JSON5.parse(repaired) : JSON.parse(repaired);
+        bracketRepaired = true;
+        firstError = null;
+      } catch (err2) {
+        const msg = err2 instanceof Error ? err2.message : String(err2);
+        const pos = extractPosition(msg);
+        return { output: null, error: msg, ...pos };
+      }
+    }
+    if (firstError !== null) {
+      return { output: null, error: firstError.msg, ...firstError.pos };
+    }
+  }
+
+  return {
+    output: JSON.stringify(parsed),
+    error: null,
+    ...(quotesChanged ? { normalisedQuotes: true } : {}),
+    ...(bracketRepaired ? { repaired: true } : {}),
+  };
 }
 
 /** Validate only — returns error info or null on success. */

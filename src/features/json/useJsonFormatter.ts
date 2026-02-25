@@ -24,6 +24,8 @@ export interface JsonFormatterState {
   validationResult: FormatError | null;
   /** True when curly/smart quotes were silently normalised before parsing */
   normalisedQuotes: boolean;
+  /** True when missing closing brackets/braces/parens were automatically appended */
+  repairedBrackets: boolean;
   mode: JsonMode;
   relaxed: boolean;
   sortKeys: boolean;
@@ -51,6 +53,7 @@ export function useJsonFormatter(): JsonFormatterState & JsonFormatterActions {
   const [error, setError] = useState<FormatError | null>(null);
   const [validationResult, setValidationResult] = useState<FormatError | null>(null);
   const [normalisedQuotes, setNormalisedQuotes] = useState(false);
+  const [repairedBrackets, setRepairedBrackets] = useState(false);
   const [mode, setMode] = useState<JsonMode>('format');
   const [relaxed, setRelaxed] = useState(false);
   const [sortKeys, setSortKeys] = useState(false);
@@ -77,10 +80,12 @@ export function useJsonFormatter(): JsonFormatterState & JsonFormatterActions {
         setError(result);
         setOutput('');
         setNormalisedQuotes(false);
+        setRepairedBrackets(false);
       } else {
         setError(null);
         setOutput(result.output);
         setNormalisedQuotes(result.normalisedQuotes === true);
+        setRepairedBrackets(result.repaired === true);
       }
       // Always update validation state
       setValidationResult(validateJson(input, relaxed));
@@ -90,10 +95,12 @@ export function useJsonFormatter(): JsonFormatterState & JsonFormatterActions {
         setError(result);
         setOutput('');
         setNormalisedQuotes(false);
+        setRepairedBrackets(false);
       } else {
         setError(null);
         setOutput(result.output);
         setNormalisedQuotes(result.normalisedQuotes === true);
+        setRepairedBrackets(result.repaired === true);
       }
       setValidationResult(validateJson(input, relaxed));
     } else {
@@ -101,6 +108,7 @@ export function useJsonFormatter(): JsonFormatterState & JsonFormatterActions {
       const validErr = validateJson(input, relaxed);
       setValidationResult(validErr);
       setNormalisedQuotes(false);
+      setRepairedBrackets(false);
       setError(null);
       setOutput(validErr === null ? '✓ Valid JSON' : '');
     }
@@ -123,6 +131,7 @@ export function useJsonFormatter(): JsonFormatterState & JsonFormatterActions {
     // Clear errors and notices on new input
     setError(null);
     setNormalisedQuotes(false);
+    setRepairedBrackets(false);
   }, []);
 
   const clear = useCallback(() => {
@@ -131,6 +140,7 @@ export function useJsonFormatter(): JsonFormatterState & JsonFormatterActions {
     setError(null);
     setValidationResult(null);
     setNormalisedQuotes(false);
+    setRepairedBrackets(false);
   }, []);
 
   return {
@@ -139,6 +149,7 @@ export function useJsonFormatter(): JsonFormatterState & JsonFormatterActions {
     error,
     validationResult,
     normalisedQuotes,
+    repairedBrackets,
     mode,
     relaxed,
     sortKeys,
