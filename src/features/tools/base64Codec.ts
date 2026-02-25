@@ -48,10 +48,18 @@ export function decodeBase64(input: string): Base64CodecResult {
 /**
  * Detect whether a string looks like Base64 (to auto-select decode mode).
  * Not authoritative — just a heuristic for UX convenience.
+ *
+ * Accepts both padded (`SGVsbG8=`) and unpadded (`SGVsbG8`) Base64, and
+ * URL-safe Base64 (`-_` instead of `+/`). Minimum length of 4 avoids
+ * false-positives on very short plain-text strings like "AAAA".
  */
 export function looksLikeBase64(input: string): boolean {
   const cleaned = input.trim().replace(/\s/g, '');
-  if (cleaned.length === 0) return false;
-  // Standard Base64 character set + padding
-  return /^[A-Za-z0-9+/]+=*$/.test(cleaned) && cleaned.length % 4 === 0;
+  if (cleaned.length < 4) return false;
+  // Match standard or URL-safe Base64, with optional padding
+  // Length % 4 is checked after stripping trailing = to allow unpadded
+  if (!/^[A-Za-z0-9+/\-_]+=*$/.test(cleaned)) return false;
+  const withoutPadding = cleaned.replace(/=+$/, '');
+  // A valid Base64 stream's raw length mod 4 must be 0, 2, or 3 (1 is impossible)
+  return withoutPadding.length % 4 !== 1;
 }

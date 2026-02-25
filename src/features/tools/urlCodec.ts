@@ -67,16 +67,28 @@ export function looksLikeEncoded(input: string): boolean {
   return /%[0-9A-Fa-f]{2}/.test(input);
 }
 
+/**
+ * Safely decode a percent-encoded string, returning the original on failure.
+ * `decodeURIComponent` throws on malformed sequences like `%GG` or a bare `%`.
+ */
+function safeDecodeComponent(s: string): string {
+  try {
+    return decodeURIComponent(s);
+  } catch {
+    return s; // Return raw value rather than throwing to the UI
+  }
+}
+
 /** Parse a query string into key→value pairs for structured display. */
 export function parseQueryString(input: string): { key: string; value: string }[] {
   const s = input.startsWith('?') ? input.slice(1) : input;
   if (!s.trim()) return [];
   return s.split('&').map((pair) => {
     const eqIdx = pair.indexOf('=');
-    if (eqIdx === -1) return { key: decodeURIComponent(pair), value: '' };
+    if (eqIdx === -1) return { key: safeDecodeComponent(pair), value: '' };
     return {
-      key: decodeURIComponent(pair.slice(0, eqIdx)),
-      value: decodeURIComponent(pair.slice(eqIdx + 1)),
+      key: safeDecodeComponent(pair.slice(0, eqIdx)),
+      value: safeDecodeComponent(pair.slice(eqIdx + 1)),
     };
   });
 }

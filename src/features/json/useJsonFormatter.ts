@@ -22,6 +22,8 @@ export interface JsonFormatterState {
   error: FormatError | null;
   /** null = valid, FormatError = invalid */
   validationResult: FormatError | null;
+  /** True when curly/smart quotes were silently normalised before parsing */
+  normalisedQuotes: boolean;
   mode: JsonMode;
   relaxed: boolean;
   sortKeys: boolean;
@@ -48,6 +50,7 @@ export function useJsonFormatter(): JsonFormatterState & JsonFormatterActions {
   const [output, setOutput] = useState('');
   const [error, setError] = useState<FormatError | null>(null);
   const [validationResult, setValidationResult] = useState<FormatError | null>(null);
+  const [normalisedQuotes, setNormalisedQuotes] = useState(false);
   const [mode, setMode] = useState<JsonMode>('format');
   const [relaxed, setRelaxed] = useState(false);
   const [sortKeys, setSortKeys] = useState(false);
@@ -73,9 +76,11 @@ export function useJsonFormatter(): JsonFormatterState & JsonFormatterActions {
       if (isFormatError(result)) {
         setError(result);
         setOutput('');
+        setNormalisedQuotes(false);
       } else {
         setError(null);
         setOutput(result.output);
+        setNormalisedQuotes(result.normalisedQuotes === true);
       }
       // Always update validation state
       setValidationResult(validateJson(input, relaxed));
@@ -84,15 +89,18 @@ export function useJsonFormatter(): JsonFormatterState & JsonFormatterActions {
       if (isFormatError(result)) {
         setError(result);
         setOutput('');
+        setNormalisedQuotes(false);
       } else {
         setError(null);
         setOutput(result.output);
+        setNormalisedQuotes(result.normalisedQuotes === true);
       }
       setValidationResult(validateJson(input, relaxed));
     } else {
       // validate-only mode
       const validErr = validateJson(input, relaxed);
       setValidationResult(validErr);
+      setNormalisedQuotes(false);
       setError(null);
       setOutput(validErr === null ? '✓ Valid JSON' : '');
     }
@@ -112,8 +120,9 @@ export function useJsonFormatter(): JsonFormatterState & JsonFormatterActions {
 
   const setInput = useCallback((v: string) => {
     setInputRaw(v);
-    // Clear errors on new input
+    // Clear errors and notices on new input
     setError(null);
+    setNormalisedQuotes(false);
   }, []);
 
   const clear = useCallback(() => {
@@ -121,6 +130,7 @@ export function useJsonFormatter(): JsonFormatterState & JsonFormatterActions {
     setOutput('');
     setError(null);
     setValidationResult(null);
+    setNormalisedQuotes(false);
   }, []);
 
   return {
@@ -128,6 +138,7 @@ export function useJsonFormatter(): JsonFormatterState & JsonFormatterActions {
     output,
     error,
     validationResult,
+    normalisedQuotes,
     mode,
     relaxed,
     sortKeys,

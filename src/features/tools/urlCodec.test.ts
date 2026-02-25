@@ -17,8 +17,30 @@ describe('encodeUrl (component)', () => {
     expect(assertOutput(encodeUrl('café'))).toBe('caf%C3%A9');
   });
 
+  it('encodes emoji', () => {
+    const encoded = assertOutput(encodeUrl('👋'));
+    expect(encoded).toBe('%F0%9F%91%8B');
+  });
+
   it('returns empty string for empty input', () => {
     expect(assertOutput(encodeUrl(''))).toBe('');
+  });
+});
+
+describe('encodeUrl (full URL mode)', () => {
+  it('encodes spaces in query values while preserving ? and & delimiters', () => {
+    // full mode splits on [?&#=+] and encodes each segment; ? & = are preserved as-is
+    const result = assertOutput(encodeUrl('?q=hello world&lang=en', 'full'));
+    expect(result).toContain('hello%20world');
+    expect(result).toContain('?');
+    expect(result).toContain('&');
+    expect(result).toContain('=');
+  });
+
+  it('preserves query string delimiters', () => {
+    const result = assertOutput(encodeUrl('a=1&b=hello world', 'full'));
+    expect(result).toContain('&');
+    expect(result).toContain('hello%20world');
   });
 });
 
@@ -38,6 +60,11 @@ describe('decodeUrl', () => {
     expect(isUrlError(result)).toBe(true);
   });
 
+  it('returns error for bare percent sign', () => {
+    const result = decodeUrl('100%');
+    expect(isUrlError(result)).toBe(true);
+  });
+
   it('returns empty string for empty input', () => {
     expect(assertOutput(decodeUrl(''))).toBe('');
   });
@@ -52,6 +79,11 @@ describe('looksLikeEncoded', () => {
   it('returns false for plain strings', () => {
     expect(looksLikeEncoded('hello world')).toBe(false);
     expect(looksLikeEncoded('normal text')).toBe(false);
+  });
+
+  it('is case-insensitive for hex digits', () => {
+    expect(looksLikeEncoded('hello%2fworld')).toBe(true); // lowercase hex
+    expect(looksLikeEncoded('hello%2Fworld')).toBe(true); // uppercase hex
   });
 });
 
@@ -74,7 +106,30 @@ describe('parseQueryString', () => {
     });
   });
 
+  it('handles value-less keys (flag params)', () => {
+    expect(parseQueryString('debug&verbose')).toEqual([
+      { key: 'debug', value: '' },
+      { key: 'verbose', value: '' },
+    ]);
+  });
+
+  it('handles empty values (key= with no value)', () => {
+    expect(parseQueryString('name=')).toEqual([{ key: 'name', value: '' }]);
+  });
+
+  it('does not throw on malformed percent sequences — returns raw value', () => {
+    // %GG is invalid — safeDecodeComponent should return it unchanged
+    expect(() => parseQueryString('bad=%GG')).not.toThrow();
+    const result = parseQueryString('bad=%GG');
+    expect(result[0]?.key).toBe('bad');
+    expect(result[0]?.value).toBe('%GG'); // raw, not decoded
+  });
+
   it('returns empty array for empty string', () => {
     expect(parseQueryString('')).toEqual([]);
+  });
+
+  it('returns empty array for whitespace-only string', () => {
+    expect(parseQueryString('   ')).toEqual([]);
   });
 });

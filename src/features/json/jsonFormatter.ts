@@ -12,6 +12,8 @@ export interface FormatOptions {
 export interface FormatResult {
   output: string;
   error: null;
+  /** Present when input had curly/smart quotes that were normalised before parsing */
+  normalisedQuotes?: true;
 }
 
 export interface FormatError {
@@ -24,6 +26,19 @@ export interface FormatError {
 }
 
 export type JsonFormatResult = FormatResult | FormatError;
+
+/**
+ * Normalise curly/smart quotes and apostrophes to their plain ASCII equivalents.
+ * Users frequently paste JSON from word processors (Word, Pages, Google Docs) or
+ * macOS autocorrect which silently replaces " → " " and ' → ' '.
+ * Returns `{ normalised, changed }` so callers can inform the user.
+ */
+export function normaliseCurlyQuotes(input: string): { normalised: string; changed: boolean } {
+  const normalised = input
+    .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'") // ' ' ‚ ‛ ′ ‵ → '
+    .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"'); // " " „ ‟ ″ ‶ → "
+  return { normalised, changed: normalised !== input };
+}
 
 /** Extract line/column from a native JSON.parse SyntaxError message. */
 function extractPosition(msg: string): { line?: number; column?: number } {
@@ -70,10 +85,12 @@ export function formatJson(input: string, options: FormatOptions): JsonFormatRes
     return { output: null, error: 'Input is empty.' };
   }
 
+  const { normalised, changed } = normaliseCurlyQuotes(trimmed);
+
   let parsed: unknown;
 
   try {
-    parsed = options.relaxed ? JSON5.parse(trimmed) : JSON.parse(trimmed);
+    parsed = options.relaxed ? JSON5.parse(normalised) : JSON.parse(normalised);
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     const pos = extractPosition(msg);
@@ -84,7 +101,7 @@ export function formatJson(input: string, options: FormatOptions): JsonFormatRes
 
   try {
     const output = JSON.stringify(data, null, options.indent);
-    return { output, error: null };
+    return { output, error: null, ...(changed ? { normalisedQuotes: true } : {}) };
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     return { output: null, error: `Serialization error: ${msg}` };
@@ -97,9 +114,14 @@ export function minifyJson(input: string, relaxed = false): JsonFormatResult {
   if (!trimmed) {
     return { output: null, error: 'Input is empty.' };
   }
+  const { normalised, changed } = normaliseCurlyQuotes(trimmed);
   try {
-    const parsed: unknown = relaxed ? JSON5.parse(trimmed) : JSON.parse(trimmed);
-    return { output: JSON.stringify(parsed), error: null };
+    const parsed: unknown = relaxed ? JSON5.parse(normalised) : JSON.parse(normalised);
+    return {
+      output: JSON.stringify(parsed),
+      error: null,
+      ...(changed ? { normalisedQuotes: true } : {}),
+    };
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     const pos = extractPosition(msg);
@@ -113,12 +135,13 @@ export function validateJson(input: string, relaxed = false): FormatError | null
   if (!trimmed) {
     return { output: null, error: 'Input is empty.' };
   }
+  const { normalised } = normaliseCurlyQuotes(trimmed);
   try {
     // Parse to validate — result intentionally discarded
     if (relaxed) {
-      JSON5.parse(trimmed);
+      JSON5.parse(normalised);
     } else {
-      JSON.parse(trimmed);
+      JSON.parse(normalised);
     }
     return null;
   } catch (err) {
