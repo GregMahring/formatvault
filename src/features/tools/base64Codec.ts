@@ -23,10 +23,10 @@ export function isBase64Error(r: Base64CodecResult): r is Base64Error {
 }
 
 /** Encode a plain text string to Base64 (Unicode-safe). */
-export function encodeBase64(input: string): Base64CodecResult {
+export function encodeBase64(input: string, urlSafe = false): Base64CodecResult {
   if (!input) return { output: '', error: null };
   try {
-    return { output: toBase64(input), error: null };
+    return { output: toBase64(input, urlSafe), error: null };
   } catch (err) {
     return { output: null, error: err instanceof Error ? err.message : 'Encoding failed.' };
   }

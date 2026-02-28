@@ -14,7 +14,7 @@ import { ProgressBar } from '@/components/ProgressBar';
 import { useYamlFormatter } from '@/features/yaml/useYamlFormatter';
 import { useFileParser } from '@/hooks/useFileParser';
 import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
-import type { YamlIndent } from '@/features/yaml/yamlFormatter';
+import type { YamlIndent, YamlStyle } from '@/features/yaml/yamlFormatter';
 import { cn } from '@/lib/utils';
 import { Keyboard } from 'lucide-react';
 
@@ -46,7 +46,7 @@ export default function YamlFormatter() {
       clearTimeout(timer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fmt.input, fmt.indent]);
+  }, [fmt.input, fmt.indent, fmt.style]);
 
   // Load parsed file into formatter
   useEffect(() => {
@@ -134,6 +134,21 @@ export default function YamlFormatter() {
         >
           <option value={2}>2 spaces</option>
           <option value={4}>4 spaces</option>
+        </select>
+
+        <label htmlFor="yaml-style-select" className="text-xs text-gray-400">
+          Style
+        </label>
+        <select
+          id="yaml-style-select"
+          value={fmt.style}
+          onChange={(e) => {
+            fmt.setStyle(e.target.value as YamlStyle);
+          }}
+          className="rounded border border-gray-700 bg-gray-900 px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
+        >
+          <option value="block">Block</option>
+          <option value="flow">Flow</option>
         </select>
 
         <div className="flex-1" />

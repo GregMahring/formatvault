@@ -7,6 +7,8 @@ export interface FormatOptions {
   sortKeys: boolean;
   /** When true, parse with json5 first (allows trailing commas, comments) */
   relaxed: boolean;
+  /** When true, use '\t' instead of numeric indent */
+  indentWithTabs?: boolean;
 }
 
 export interface FormatResult {
@@ -214,7 +216,8 @@ export function formatJson(input: string, options: FormatOptions): JsonFormatRes
   const data = options.sortKeys ? sortObjectKeys(parsed) : parsed;
 
   try {
-    const output = JSON.stringify(data, null, options.indent);
+    const indentArg: string | number = options.indentWithTabs === true ? '\t' : options.indent;
+    const output = JSON.stringify(data, null, indentArg);
     return {
       output,
       error: null,

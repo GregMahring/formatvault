@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import {
   formatYaml,
   type YamlIndent,
+  type YamlStyle,
   type YamlFormatError,
   type YamlResult,
 } from './yamlFormatter';
@@ -15,12 +16,14 @@ export interface YamlFormatterState {
   output: string;
   error: YamlFormatError | null;
   indent: YamlIndent;
+  style: YamlStyle;
   documentCount: number;
 }
 
 export interface YamlFormatterActions {
   setInput: (v: string) => void;
   setIndent: (i: YamlIndent) => void;
+  setStyle: (s: YamlStyle) => void;
   process: () => void;
   clear: () => void;
 }
@@ -30,6 +33,7 @@ export function useYamlFormatter(): YamlFormatterState & YamlFormatterActions {
   const [output, setOutput] = useState('');
   const [error, setError] = useState<YamlFormatError | null>(null);
   const [indent, setIndent] = useState<YamlIndent>(2);
+  const [style, setStyle] = useState<YamlStyle>('block');
   const [documentCount, setDocumentCount] = useState(0);
 
   const process = useCallback(() => {
@@ -40,7 +44,7 @@ export function useYamlFormatter(): YamlFormatterState & YamlFormatterActions {
       return;
     }
 
-    const result = formatYaml(input, { indent });
+    const result = formatYaml(input, { indent, style });
     if (isYamlError(result)) {
       setError(result);
       setOutput('');
@@ -49,7 +53,7 @@ export function useYamlFormatter(): YamlFormatterState & YamlFormatterActions {
       setOutput(result.output);
       setDocumentCount(result.documentCount);
     }
-  }, [input, indent]);
+  }, [input, indent, style]);
 
   const setInput = useCallback((v: string) => {
     setInputRaw(v);
@@ -68,9 +72,11 @@ export function useYamlFormatter(): YamlFormatterState & YamlFormatterActions {
     output,
     error,
     indent,
+    style,
     documentCount,
     setInput,
     setIndent,
+    setStyle,
     process,
     clear,
   };

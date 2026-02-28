@@ -25,13 +25,15 @@ export interface ConvertError {
 
 export type ConversionResult = ConvertResult | ConvertError;
 
+export type CsvOutputDelimiter = ',' | '\t' | '|' | ';';
+
 // ─── JSON → CSV ────────────────────────────────────────────────────────────
 
 /**
  * Convert JSON (array of objects) to CSV.
  * Warns if the JSON contains nested objects (flattened to [object]).
  */
-export function jsonToCsv(input: string): ConversionResult {
+export function jsonToCsv(input: string, delimiter?: CsvOutputDelimiter): ConversionResult {
   const trimmed = input.trim();
   if (!trimmed) return { output: null, error: 'Input is empty.' };
 
@@ -65,7 +67,9 @@ export function jsonToCsv(input: string): ConversionResult {
     if (hasNested) break;
   }
 
-  const output = Papa.unparse(arr as object[]);
+  const output = Papa.unparse(arr as object[], {
+    ...(delimiter != null ? { delimiter } : {}),
+  });
 
   return {
     output,
@@ -156,7 +160,7 @@ export function csvToYaml(input: string, indent: YamlIndent = 2): ConversionResu
 
 // ─── YAML → CSV ────────────────────────────────────────────────────────────
 
-export function yamlToCsv(input: string): ConversionResult {
+export function yamlToCsv(input: string, delimiter?: CsvOutputDelimiter): ConversionResult {
   const { value, error } = parseYaml(input);
   if (error) return { output: null, error };
 
@@ -180,7 +184,9 @@ export function yamlToCsv(input: string): ConversionResult {
     if (hasNested) break;
   }
 
-  const output = Papa.unparse(arr as object[]);
+  const output = Papa.unparse(arr as object[], {
+    ...(delimiter != null ? { delimiter } : {}),
+  });
 
   return {
     output,

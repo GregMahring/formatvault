@@ -1,9 +1,11 @@
 import yaml from 'js-yaml';
 
 export type YamlIndent = 2 | 4;
+export type YamlStyle = 'block' | 'flow';
 
 export interface YamlFormatOptions {
   indent: YamlIndent;
+  style?: YamlStyle;
 }
 
 export interface YamlFormatResult {
@@ -52,6 +54,7 @@ export function formatYaml(input: string, options: YamlFormatOptions): YamlResul
   }
 
   try {
+    const flowLevel = options.style === 'flow' ? 0 : -1;
     const parts = documents.map((doc) =>
       yaml.dump(doc, {
         indent: options.indent,
@@ -59,6 +62,7 @@ export function formatYaml(input: string, options: YamlFormatOptions): YamlResul
         noRefs: true, // don't use YAML anchors/aliases
         quotingType: '"',
         forceQuotes: false,
+        flowLevel,
       })
     );
 
@@ -114,12 +118,14 @@ export function parseYaml(input: string): { value: unknown; error: string | null
 }
 
 /** Serialize a JS value to YAML string. Used by converters. */
-export function serializeToYaml(value: unknown, indent: YamlIndent = 2): string {
+export function serializeToYaml(value: unknown, indent: YamlIndent = 2, style?: YamlStyle): string {
+  const flowLevel = style === 'flow' ? 0 : -1;
   return yaml.dump(value, {
     indent,
     lineWidth: -1,
     noRefs: true,
     quotingType: '"',
     forceQuotes: false,
+    flowLevel,
   });
 }

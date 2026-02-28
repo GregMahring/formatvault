@@ -30,6 +30,7 @@ export function meta(_args: Route.MetaArgs) {
 export default function Base64Encoder() {
   const [input, setInputRaw] = useState('');
   const [mode, setMode] = useState<Base64Mode>('encode');
+  const [urlSafe, setUrlSafe] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
 
   // Auto-detect mode when input changes
@@ -40,7 +41,7 @@ export default function Base64Encoder() {
 
   const result = input.trim()
     ? mode === 'encode'
-      ? encodeBase64(input)
+      ? encodeBase64(input, urlSafe)
       : decodeBase64(input)
     : null;
 
@@ -113,6 +114,39 @@ export default function Base64Encoder() {
             </button>
           ))}
         </div>
+
+        {/* URL-safe toggle (encode mode only) */}
+        {mode === 'encode' && (
+          <>
+            <div className="h-4 w-px bg-gray-800" aria-hidden="true" />
+            <div className="flex items-center rounded-md border border-gray-800 bg-gray-900 p-0.5">
+              <button
+                type="button"
+                onClick={() => {
+                  setUrlSafe(false);
+                }}
+                className={cn(
+                  'rounded px-2 py-0.5 text-xs transition-colors',
+                  !urlSafe ? 'bg-gray-700 text-gray-100' : 'text-gray-500 hover:text-gray-300'
+                )}
+              >
+                Standard
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setUrlSafe(true);
+                }}
+                className={cn(
+                  'rounded px-2 py-0.5 text-xs transition-colors',
+                  urlSafe ? 'bg-gray-700 text-gray-100' : 'text-gray-500 hover:text-gray-300'
+                )}
+              >
+                URL-safe
+              </button>
+            </div>
+          </>
+        )}
 
         <div className="flex-1" />
 

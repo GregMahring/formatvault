@@ -46,7 +46,7 @@ export interface JsonFormatterActions {
 }
 
 export function useJsonFormatter(): JsonFormatterState & JsonFormatterActions {
-  const { indentSize } = useSettingsStore();
+  const { indentSize, indentWithTabs } = useSettingsStore();
 
   const [input, setInputRaw] = useState('');
   const [output, setOutput] = useState('');
@@ -72,6 +72,7 @@ export function useJsonFormatter(): JsonFormatterState & JsonFormatterActions {
       indent: indentSize as 2 | 4 | 8,
       sortKeys,
       relaxed,
+      ...(indentWithTabs ? { indentWithTabs: true } : {}),
     };
 
     if (mode === 'format') {
@@ -112,7 +113,7 @@ export function useJsonFormatter(): JsonFormatterState & JsonFormatterActions {
       setError(null);
       setOutput(validErr === null ? '✓ Valid JSON' : '');
     }
-  }, [input, mode, indentSize, sortKeys, relaxed]);
+  }, [input, mode, indentSize, indentWithTabs, sortKeys, relaxed]);
 
   const runQuery = useCallback(() => {
     if (!input.trim() || !jsonPath.trim()) return;

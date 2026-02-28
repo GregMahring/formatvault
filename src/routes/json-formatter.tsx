@@ -13,6 +13,7 @@ import { MarkdownPreview } from '@/components/MarkdownPreview';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useJsonFormatter } from '@/features/json/useJsonFormatter';
+import { useSettingsStore } from '@/stores/settingsStore';
 import { useFileParser } from '@/hooks/useFileParser';
 import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
 import { cn } from '@/lib/utils';
@@ -31,6 +32,7 @@ export function meta(_args: Route.MetaArgs) {
 
 export default function JsonFormatter() {
   const fmt = useJsonFormatter();
+  const { indentWithTabs, setIndentWithTabs } = useSettingsStore();
   const fileParser = useFileParser();
   const [showDiff, setShowDiff] = useState(false);
   const [showMarkdown, setShowMarkdown] = useState(false);
@@ -47,7 +49,7 @@ export default function JsonFormatter() {
       clearTimeout(timer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fmt.input, fmt.mode, fmt.relaxed, fmt.sortKeys]);
+  }, [fmt.input, fmt.mode, fmt.relaxed, fmt.sortKeys, indentWithTabs]);
 
   // When file parse completes, load the text into the formatter input
   useEffect(() => {
@@ -182,6 +184,36 @@ export default function JsonFormatter() {
           />
           Sort keys
         </label>
+
+        <div className="h-4 w-px bg-gray-800" aria-hidden="true" />
+
+        {/* Indent character toggle */}
+        <div className="flex items-center rounded-md border border-gray-800 bg-gray-900 p-0.5">
+          <button
+            type="button"
+            onClick={() => {
+              setIndentWithTabs(false);
+            }}
+            className={cn(
+              'rounded px-2 py-0.5 text-xs transition-colors',
+              !indentWithTabs ? 'bg-gray-700 text-gray-100' : 'text-gray-500 hover:text-gray-300'
+            )}
+          >
+            Spaces
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setIndentWithTabs(true);
+            }}
+            className={cn(
+              'rounded px-2 py-0.5 text-xs transition-colors',
+              indentWithTabs ? 'bg-gray-700 text-gray-100' : 'text-gray-500 hover:text-gray-300'
+            )}
+          >
+            Tabs
+          </button>
+        </div>
 
         <div className="flex-1" />
 
