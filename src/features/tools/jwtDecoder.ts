@@ -81,6 +81,17 @@ export function decodeJwtToken(raw: string): JwtResult {
   }
 }
 
+/**
+ * Heuristic: quick check whether a string looks like a JWT.
+ * Used by format auto-detection on the landing page.
+ * JWTs are base64url-encoded JSON, so the header always starts with `eyJ` ({"...).
+ */
+export function looksLikeJwt(input: string): boolean {
+  const trimmed = input.trim();
+  const parts = trimmed.split('.');
+  return parts.length === 3 && parts.every((p) => p.length > 0) && trimmed.startsWith('eyJ');
+}
+
 /** Format a unix timestamp (seconds) as a human-readable local string. */
 export function formatUnixTimestamp(unix: number): string {
   return new Date(unix * 1000).toLocaleString(undefined, {

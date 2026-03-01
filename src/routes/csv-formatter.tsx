@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useMemo } from 'react';
 import type { Route } from './+types/csv-formatter';
 import { buildMeta } from '@/lib/meta';
 import { SplitPane } from '@/components/SplitPane';
@@ -7,13 +7,18 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { FileUploadZone } from '@/components/FileUploadZone';
 import { PaneActions } from '@/components/PaneActions';
+import { PiiMaskToggle } from '@/components/PiiMaskToggle';
 import { DiffPanel } from '@/components/DiffPanel';
 import { MarkdownPreview } from '@/components/MarkdownPreview';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useCsvFormatter } from '@/features/csv/useCsvFormatter';
+import { useEditorStore } from '@/stores/editorStore';
 import { useFileParser } from '@/hooks/useFileParser';
 import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
+import { usePiiMasking } from '@/hooks/usePiiMasking';
+import { useRegisterCommands } from '@/hooks/useRegisterCommands';
+import { type Command } from '@/stores/commandStore';
 import type { Delimiter } from '@/features/csv/csvFormatter';
 import { cn } from '@/lib/utils';
 import { Keyboard } from 'lucide-react';
@@ -43,6 +48,16 @@ export default function CsvFormatter() {
   const [showDiff, setShowDiff] = useState(false);
   const [showMarkdown, setShowMarkdown] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
+
+  // Load pre-loaded input from the landing page paste flow
+  useEffect(() => {
+    const preloaded = useEditorStore.getState().input;
+    if (preloaded) {
+      fmt.setInput(preloaded);
+      useEditorStore.getState().reset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Auto-process on input/option changes with debounce
   useEffect(() => {
@@ -101,9 +116,10 @@ export default function CsvFormatter() {
     },
     {
       label: 'Clear input',
-      display: '⌘ K',
+      display: '⌘ ⇧ K',
       key: 'k',
       meta: true,
+      shift: true,
       handler: fmt.clear,
     },
     {
@@ -117,6 +133,38 @@ export default function CsvFormatter() {
   ];
 
   useKeyboardShortcuts(shortcuts, !showShortcuts);
+
+  const commands = useMemo<Command[]>(
+    () => [
+      {
+        id: 'action:format',
+        label: 'Format CSV',
+        group: 'Actions',
+        shortcut: '⌘ ↵',
+        handler: fmt.process,
+      },
+      {
+        id: 'action:clear',
+        label: 'Clear input',
+        group: 'Actions',
+        shortcut: '⌘ ⇧ K',
+        handler: fmt.clear,
+      },
+      {
+        id: 'action:toggle-diff',
+        label: 'Toggle diff panel',
+        group: 'Actions',
+        handler: () => {
+          setShowDiff((v) => !v);
+          setShowMarkdown(false);
+        },
+      },
+    ],
+    [fmt, setShowDiff, setShowMarkdown]
+  );
+  useRegisterCommands(commands);
+
+  const pii = usePiiMasking(fmt.output);
 
   const hasError = fmt.error !== null;
 
@@ -315,10 +363,13 @@ export default function CsvFormatter() {
                   <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
                     Output
                   </span>
-                  <PaneActions content={fmt.output} downloadFilename="output.csv" />
+                  <div className="flex items-center gap-1">
+                    <PiiMaskToggle pii={pii} />
+                    <PaneActions content={pii.displayContent} downloadFilename="output.csv" />
+                  </div>
                 </div>
                 <CodeEditor
-                  value={fmt.output}
+                  value={pii.displayContent}
                   language="csv"
                   label="Formatted CSV output"
                   readOnly

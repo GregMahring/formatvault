@@ -1,11 +1,16 @@
 import type { Route } from './+types/url-encoder';
 import { buildMeta } from '@/lib/meta';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { PaneActions } from '@/components/PaneActions';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { usePiiMasking } from '@/hooks/usePiiMasking';
+import { useRegisterCommands } from '@/hooks/useRegisterCommands';
+import { PiiMaskToggle } from '@/components/PiiMaskToggle';
+import { type Command } from '@/stores/commandStore';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
+import { useEditorStore } from '@/stores/editorStore';
 import {
   encodeUrl,
   decodeUrl,
@@ -36,6 +41,16 @@ export default function UrlEncoderPage() {
   const [showParsed, setShowParsed] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
 
+  // Load pre-loaded input from the landing page paste flow
+  useEffect(() => {
+    const preloaded = useEditorStore.getState().input;
+    if (preloaded) {
+      setInput(preloaded);
+      useEditorStore.getState().reset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Auto-detect mode from input
   useEffect(() => {
     if (!input.trim()) return;
@@ -50,6 +65,7 @@ export default function UrlEncoderPage() {
 
   const output = result && !isUrlError(result) ? result.output : '';
   const error = result && isUrlError(result) ? result.error : null;
+  const pii = usePiiMasking(output);
 
   // Parsed query params (shown when output looks like a query string)
   const parsedParams = showParsed && output ? parseQueryString(output) : null;
@@ -79,9 +95,10 @@ export default function UrlEncoderPage() {
     },
     {
       label: 'Clear',
-      display: '⌘ K',
+      display: '⌘ ⇧ K',
       key: 'k',
       meta: true,
+      shift: true,
       handler: clear,
     },
     {
@@ -95,6 +112,27 @@ export default function UrlEncoderPage() {
   ];
 
   useKeyboardShortcuts(shortcuts, !showShortcuts);
+
+  const commands = useMemo<Command[]>(
+    () => [
+      {
+        id: 'action:swap',
+        label: 'Swap input ↔ output',
+        group: 'Actions',
+        shortcut: '⌘ ⇧ S',
+        handler: swap,
+      },
+      {
+        id: 'action:clear',
+        label: 'Clear',
+        group: 'Actions',
+        shortcut: '⌘ ⇧ K',
+        handler: clear,
+      },
+    ],
+    [swap, clear]
+  );
+  useRegisterCommands(commands);
 
   // Determine if input looks like a query string (for showing the parsed panel)
   const looksLikeQuery = /[?&=]/.test(input);
@@ -257,15 +295,18 @@ export default function UrlEncoderPage() {
               <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
                 {mode === 'encode' ? 'Encoded URL' : 'Decoded / plain text'}
               </span>
-              <PaneActions
-                content={output}
-                downloadFilename={mode === 'encode' ? 'encoded.txt' : 'decoded.txt'}
-              />
+              <div className="flex items-center gap-1">
+                <PiiMaskToggle pii={pii} />
+                <PaneActions
+                  content={pii.displayContent}
+                  downloadFilename={mode === 'encode' ? 'encoded.txt' : 'decoded.txt'}
+                />
+              </div>
             </div>
             <textarea
               className="flex-1 resize-none bg-gray-900 p-4 font-mono text-sm text-gray-300 placeholder-gray-700 focus:outline-none"
               placeholder={mode === 'encode' ? 'Encoded output…' : 'Decoded output…'}
-              value={output}
+              value={pii.displayContent}
               readOnly
               aria-label="Output"
               aria-live="polite"

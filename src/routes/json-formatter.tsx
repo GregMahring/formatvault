@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useMemo } from 'react';
 import type { Route } from './+types/json-formatter';
 import { buildMeta } from '@/lib/meta';
 import { SplitPane } from '@/components/SplitPane';
@@ -8,14 +8,19 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileUploadZone } from '@/components/FileUploadZone';
 import { PaneActions } from '@/components/PaneActions';
+import { PiiMaskToggle } from '@/components/PiiMaskToggle';
 import { DiffPanel } from '@/components/DiffPanel';
 import { MarkdownPreview } from '@/components/MarkdownPreview';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useJsonFormatter } from '@/features/json/useJsonFormatter';
 import { useSettingsStore } from '@/stores/settingsStore';
+import { useEditorStore } from '@/stores/editorStore';
 import { useFileParser } from '@/hooks/useFileParser';
 import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
+import { usePiiMasking } from '@/hooks/usePiiMasking';
+import { useRegisterCommands } from '@/hooks/useRegisterCommands';
+import { type Command } from '@/stores/commandStore';
 import { cn } from '@/lib/utils';
 import { Keyboard } from 'lucide-react';
 
@@ -37,6 +42,16 @@ export default function JsonFormatter() {
   const [showDiff, setShowDiff] = useState(false);
   const [showMarkdown, setShowMarkdown] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
+
+  // Load pre-loaded input from the landing page paste flow
+  useEffect(() => {
+    const preloaded = useEditorStore.getState().input;
+    if (preloaded) {
+      fmt.setInput(preloaded);
+      useEditorStore.getState().reset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Auto-process on input/option changes with 400ms debounce
   useEffect(() => {
@@ -111,9 +126,10 @@ export default function JsonFormatter() {
     },
     {
       label: 'Clear input',
-      display: '⌘ K',
+      display: '⌘ ⇧ K',
       key: 'k',
       meta: true,
+      shift: true,
       handler: fmt.clear,
     },
     {
@@ -127,6 +143,66 @@ export default function JsonFormatter() {
   ];
 
   useKeyboardShortcuts(shortcuts, !showShortcuts);
+
+  const commands = useMemo<Command[]>(
+    () => [
+      {
+        id: 'action:format',
+        label: 'Format JSON',
+        group: 'Actions',
+        shortcut: '⌘ ↵',
+        keywords: ['pretty', 'beautify'],
+        handler: fmt.process,
+      },
+      {
+        id: 'action:minify',
+        label: 'Minify JSON',
+        group: 'Actions',
+        keywords: ['compress', 'compact'],
+        handler: () => {
+          fmt.setMode('minify');
+          fmt.process();
+        },
+      },
+      {
+        id: 'action:validate',
+        label: 'Validate JSON',
+        group: 'Actions',
+        handler: () => {
+          fmt.setMode('validate');
+          fmt.process();
+        },
+      },
+      {
+        id: 'action:clear',
+        label: 'Clear input',
+        group: 'Actions',
+        shortcut: '⌘ ⇧ K',
+        handler: fmt.clear,
+      },
+      {
+        id: 'action:toggle-diff',
+        label: 'Toggle diff panel',
+        group: 'Actions',
+        handler: () => {
+          setShowDiff((v) => !v);
+          setShowMarkdown(false);
+        },
+      },
+      {
+        id: 'action:toggle-jsonpath',
+        label: 'Toggle JSONPath',
+        group: 'Actions',
+        handler: () => {
+          fmt.setQueryMode(!fmt.isQueryMode);
+        },
+      },
+    ],
+    [fmt, setShowDiff, setShowMarkdown]
+  );
+  useRegisterCommands(commands);
+
+  const pii = usePiiMasking(fmt.output);
 
   const hasError = fmt.error !== null;
   const isValid = fmt.validationResult === null && fmt.input.trim().length > 0;
@@ -438,10 +514,13 @@ export default function JsonFormatter() {
                   <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
                     Output
                   </span>
-                  <PaneActions content={fmt.output} downloadFilename="output.json" />
+                  <div className="flex items-center gap-1">
+                    <PiiMaskToggle pii={pii} />
+                    <PaneActions content={pii.displayContent} downloadFilename="output.json" />
+                  </div>
                 </div>
                 <CodeEditor
-                  value={fmt.output}
+                  value={pii.displayContent}
                   language="json"
                   label="Formatted JSON output"
                   readOnly

@@ -1,14 +1,18 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { SplitPane } from '@/components/SplitPane';
 import { CodeEditor, type EditorLanguage } from '@/components/CodeEditor';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { FileUploadZone } from '@/components/FileUploadZone';
 import { PaneActions } from '@/components/PaneActions';
+import { PiiMaskToggle } from '@/components/PiiMaskToggle';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useFileParser } from '@/hooks/useFileParser';
 import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
+import { usePiiMasking } from '@/hooks/usePiiMasking';
+import { useRegisterCommands } from '@/hooks/useRegisterCommands';
+import { type Command } from '@/stores/commandStore';
 import type { ConversionResult, ConvertResult, ConvertError } from '@/features/convert/converters';
 import { Keyboard } from 'lucide-react';
 
@@ -133,9 +137,10 @@ export function ConverterLayout({
     },
     {
       label: 'Clear input',
-      display: '⌘ K',
+      display: '⌘ ⇧ K',
       key: 'k',
       meta: true,
+      shift: true,
       handler: clear,
     },
     {
@@ -149,6 +154,31 @@ export function ConverterLayout({
   ];
 
   useKeyboardShortcuts(shortcuts, !showShortcuts);
+
+  const commands = useMemo<Command[]>(
+    () => [
+      {
+        id: 'action:convert',
+        label: 'Convert',
+        group: 'Actions',
+        shortcut: '⌘ ↵',
+        handler: () => {
+          runConvert(input);
+        },
+      },
+      {
+        id: 'action:clear',
+        label: 'Clear input',
+        group: 'Actions',
+        shortcut: '⌘ ⇧ K',
+        handler: clear,
+      },
+    ],
+    [runConvert, input, clear]
+  );
+  useRegisterCommands(commands);
+
+  const pii = usePiiMasking(output);
 
   const hasError = error !== null;
 
@@ -281,13 +311,16 @@ export function ConverterLayout({
               <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
                 {toLanguage.toUpperCase()} Output
               </span>
-              <PaneActions
-                content={output}
-                downloadFilename={`output.${toLanguage === 'json' ? 'json' : toLanguage === 'yaml' ? 'yaml' : 'csv'}`}
-              />
+              <div className="flex items-center gap-1">
+                <PiiMaskToggle pii={pii} />
+                <PaneActions
+                  content={pii.displayContent}
+                  downloadFilename={`output.${toLanguage === 'json' ? 'json' : toLanguage === 'yaml' ? 'yaml' : 'csv'}`}
+                />
+              </div>
             </div>
             <CodeEditor
-              value={output}
+              value={pii.displayContent}
               language={toLanguage}
               label={`${toLanguage.toUpperCase()} output`}
               readOnly

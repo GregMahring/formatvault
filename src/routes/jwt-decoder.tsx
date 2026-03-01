@@ -1,10 +1,15 @@
 import type { Route } from './+types/jwt-decoder';
 import { buildMeta } from '@/lib/meta';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { usePiiMasking } from '@/hooks/usePiiMasking';
+import { useRegisterCommands } from '@/hooks/useRegisterCommands';
+import { PiiMaskToggle } from '@/components/PiiMaskToggle';
+import { useEditorStore } from '@/stores/editorStore';
+import { type Command } from '@/stores/commandStore';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
 import {
   decodeJwtToken,
@@ -151,9 +156,22 @@ export default function JwtDecoder() {
   const [showShortcuts, setShowShortcuts] = useState(false);
   const { copy: copyRaw, copied: copiedRaw } = useCopyToClipboard();
 
+  // Load pre-loaded input from the landing page paste flow
+  useEffect(() => {
+    const preloaded = useEditorStore.getState().input;
+    if (preloaded) {
+      setInput(preloaded);
+      useEditorStore.getState().reset();
+    }
+  }, []);
+
   const result = input.trim() ? decodeJwtToken(input) : null;
   const decoded = result && !isJwtError(result) ? result : null;
   const error = result && isJwtError(result) ? result.error : null;
+
+  // Serialise full payload for PII scanning
+  const payloadJson = decoded ? JSON.stringify(decoded.payload, null, 2) : '';
+  const pii = usePiiMasking(payloadJson);
 
   const clear = useCallback(() => {
     setInput('');
@@ -171,9 +189,10 @@ export default function JwtDecoder() {
   const shortcuts = [
     {
       label: 'Clear',
-      display: '⌘ K',
+      display: '⌘ ⇧ K',
       key: 'k',
       meta: true,
+      shift: true,
       handler: clear,
     },
     {
@@ -187,6 +206,20 @@ export default function JwtDecoder() {
   ];
 
   useKeyboardShortcuts(shortcuts, !showShortcuts);
+
+  const commands = useMemo<Command[]>(
+    () => [
+      {
+        id: 'action:clear',
+        label: 'Clear',
+        group: 'Actions',
+        shortcut: '⌘ ⇧ K',
+        handler: clear,
+      },
+    ],
+    [clear]
+  );
+  useRegisterCommands(commands);
 
   // Payload without known timing claims (shown separately)
   const timingKeys = new Set(['iat', 'exp', 'nbf']);
@@ -321,38 +354,63 @@ export default function JwtDecoder() {
         </div>
 
         {/* Right: decoded output */}
-        <div className="flex flex-1 flex-col overflow-y-auto p-4 gap-4">
-          {!decoded && !error && (
-            <div className="flex h-full items-center justify-center text-xs text-gray-700">
-              Paste a JWT token on the left to decode it
-            </div>
-          )}
-
-          {decoded && (
-            <>
-              <JsonBlock label="Header" value={decoded.header} />
-              <JsonBlock
-                label="Payload"
-                value={
-                  payloadWithoutTiming && Object.keys(payloadWithoutTiming).length > 0
-                    ? payloadWithoutTiming
-                    : decoded.payload
-                }
-              />
-              <TimingSection result={decoded} />
-
-              {/* Signature notice */}
-              <div className="rounded-lg border border-gray-800 bg-gray-900 px-4 py-3">
-                <div className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
-                  Signature
-                </div>
-                <div className="break-all font-mono text-xs text-gray-600">{decoded.signature}</div>
-                <p className="mt-2 text-[10px] text-gray-700">
-                  Signature is not verified. This tool only decodes the token structure.
-                </p>
+        <div className="flex flex-1 flex-col overflow-y-auto">
+          <div className="flex items-center justify-between border-b border-gray-800 px-4 py-1.5">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+              Decoded
+            </span>
+            <PiiMaskToggle pii={pii} />
+          </div>
+          <div className="flex flex-1 flex-col gap-4 p-4">
+            {!decoded && !error && (
+              <div className="flex h-full items-center justify-center text-xs text-gray-700">
+                Paste a JWT token on the left to decode it
               </div>
-            </>
-          )}
+            )}
+
+            {decoded && (
+              <>
+                <JsonBlock label="Header" value={decoded.header} />
+                {pii.enabled && pii.matchCount > 0 ? (
+                  <div className="rounded-lg border border-gray-800 bg-gray-900">
+                    <div className="border-b border-gray-800 px-4 py-2">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                        Payload (masked)
+                      </span>
+                    </div>
+                    <pre className="overflow-x-auto px-4 py-3 font-mono text-xs text-gray-200 whitespace-pre-wrap">
+                      {pii.displayContent}
+                    </pre>
+                  </div>
+                ) : (
+                  <>
+                    <JsonBlock
+                      label="Payload"
+                      value={
+                        payloadWithoutTiming && Object.keys(payloadWithoutTiming).length > 0
+                          ? payloadWithoutTiming
+                          : decoded.payload
+                      }
+                    />
+                    <TimingSection result={decoded} />
+                  </>
+                )}
+
+                {/* Signature notice */}
+                <div className="rounded-lg border border-gray-800 bg-gray-900 px-4 py-3">
+                  <div className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                    Signature
+                  </div>
+                  <div className="break-all font-mono text-xs text-gray-600">
+                    {decoded.signature}
+                  </div>
+                  <p className="mt-2 text-[10px] text-gray-700">
+                    Signature is not verified. This tool only decodes the token structure.
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
 

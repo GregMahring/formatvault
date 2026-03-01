@@ -1,11 +1,16 @@
 import type { Route } from './+types/base64-encoder';
 import { buildMeta } from '@/lib/meta';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { PaneActions } from '@/components/PaneActions';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { usePiiMasking } from '@/hooks/usePiiMasking';
+import { useRegisterCommands } from '@/hooks/useRegisterCommands';
+import { PiiMaskToggle } from '@/components/PiiMaskToggle';
+import { type Command } from '@/stores/commandStore';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
+import { useEditorStore } from '@/stores/editorStore';
 import {
   encodeBase64,
   decodeBase64,
@@ -33,6 +38,16 @@ export default function Base64Encoder() {
   const [urlSafe, setUrlSafe] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
 
+  // Load pre-loaded input from the landing page paste flow
+  useEffect(() => {
+    const preloaded = useEditorStore.getState().input;
+    if (preloaded) {
+      setInput(preloaded);
+      useEditorStore.getState().reset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Auto-detect mode when input changes
   useEffect(() => {
     if (!input.trim()) return;
@@ -47,6 +62,7 @@ export default function Base64Encoder() {
 
   const output = result && !isBase64Error(result) ? result.output : '';
   const error = result && isBase64Error(result) ? result.error : null;
+  const pii = usePiiMasking(output);
 
   const setInput = useCallback((v: string) => {
     setInputRaw(v);
@@ -72,9 +88,10 @@ export default function Base64Encoder() {
     },
     {
       label: 'Clear',
-      display: '⌘ K',
+      display: '⌘ ⇧ K',
       key: 'k',
       meta: true,
+      shift: true,
       handler: clear,
     },
     {
@@ -88,6 +105,27 @@ export default function Base64Encoder() {
   ];
 
   useKeyboardShortcuts(shortcuts, !showShortcuts);
+
+  const commands = useMemo<Command[]>(
+    () => [
+      {
+        id: 'action:swap',
+        label: 'Swap input ↔ output',
+        group: 'Actions',
+        shortcut: '⌘ ⇧ S',
+        handler: swap,
+      },
+      {
+        id: 'action:clear',
+        label: 'Clear',
+        group: 'Actions',
+        shortcut: '⌘ ⇧ K',
+        handler: clear,
+      },
+    ],
+    [swap, clear]
+  );
+  useRegisterCommands(commands);
 
   return (
     <div className="flex h-full flex-col">
@@ -241,15 +279,18 @@ export default function Base64Encoder() {
             <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
               {mode === 'encode' ? 'Base64' : 'Plain text'}
             </span>
-            <PaneActions
-              content={output}
-              downloadFilename={mode === 'encode' ? 'encoded.txt' : 'decoded.txt'}
-            />
+            <div className="flex items-center gap-1">
+              <PiiMaskToggle pii={pii} />
+              <PaneActions
+                content={pii.displayContent}
+                downloadFilename={mode === 'encode' ? 'encoded.txt' : 'decoded.txt'}
+              />
+            </div>
           </div>
           <textarea
             className="flex-1 resize-none bg-gray-900 p-4 font-mono text-sm text-gray-300 placeholder-gray-700 focus:outline-none"
             placeholder={mode === 'encode' ? 'Encoded output…' : 'Decoded output…'}
-            value={output}
+            value={pii.displayContent}
             readOnly
             aria-label="Output"
             aria-live="polite"

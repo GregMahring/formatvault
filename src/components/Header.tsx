@@ -7,6 +7,8 @@ import { cn } from '@/lib/utils';
 
 export interface HeaderProps {
   className?: string;
+  /** Callback to open the global command palette */
+  onOpenCommandPalette?: () => void;
 }
 
 const NAV_LINKS = [
@@ -19,7 +21,7 @@ const NAV_LINKS = [
   { to: '/url-encoder', label: 'URL' },
 ] as const;
 
-export function Header({ className }: HeaderProps) {
+export function Header({ className, onOpenCommandPalette }: HeaderProps) {
   const { theme, setTheme } = useSettingsStore();
 
   const toggleTheme = () => {
@@ -70,6 +72,26 @@ export function Header({ className }: HeaderProps) {
 
       {/* Spacer */}
       <div className="flex-1" />
+
+      {/* Command palette trigger */}
+      {onOpenCommandPalette && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              onClick={onOpenCommandPalette}
+              className="flex items-center gap-1.5 rounded-md border border-gray-800 bg-gray-900 px-2.5 py-1 text-xs text-gray-500 transition-colors hover:border-gray-700 hover:text-gray-300"
+              aria-label="Open command palette"
+            >
+              <span className="hidden sm:inline">Search commands</span>
+              <kbd className="rounded border border-gray-700 bg-gray-800 px-1 py-0.5 text-[10px] font-medium text-gray-500">
+                ⌘K
+              </kbd>
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>Command palette (⌘K)</TooltipContent>
+        </Tooltip>
+      )}
 
       {/* Theme toggle */}
       <Tooltip>
