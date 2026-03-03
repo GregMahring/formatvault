@@ -8,8 +8,9 @@
  * 4. JSON5 — json5.parse succeeds (relaxed JSON with comments/trailing commas)
  * 5. CSV — 2+ lines with consistent delimiter count and 2+ columns
  * 6. YAML — js-yaml.load succeeds and result is not a scalar string
- * 7. Base64 — heuristic pattern match (last to avoid false positives)
- * 8. Unknown — no match
+ * 7. TOML — smol-toml parse succeeds with an object result
+ * 8. Base64 — heuristic pattern match (last to avoid false positives)
+ * 9. Unknown — no match
  */
 import JSON5 from 'json5';
 import yaml from 'js-yaml';
@@ -17,12 +18,14 @@ import Papa from 'papaparse';
 import { looksLikeJwt } from '@/features/tools/jwtDecoder';
 import { looksLikeBase64 } from '@/features/tools/base64Codec';
 import { looksLikeEncoded } from '@/features/tools/urlCodec';
+import { parseToml } from '@/features/toml/tomlFormatter';
 
 export type DetectedFormat =
   | 'json'
   | 'json5'
   | 'csv'
   | 'yaml'
+  | 'toml'
   | 'jwt'
   | 'base64'
   | 'url-encoded'
@@ -42,6 +45,7 @@ export const FORMAT_TO_ROUTE: Record<Exclude<DetectedFormat, 'unknown' | 'json5'
   json: '/json-formatter',
   csv: '/csv-formatter',
   yaml: '/yaml-formatter',
+  toml: '/toml-formatter',
   jwt: '/jwt-decoder',
   base64: '/base64-encoder',
   'url-encoded': '/url-encoder',
@@ -124,6 +128,13 @@ function isYaml(input: string): boolean {
   }
 }
 
+function isToml(input: string): boolean {
+  // TOML must have key = value pairs; quick heuristic before full parse
+  if (!/^\s*\w/.test(input) && !/^\s*\[/.test(input)) return false;
+  const { error } = parseToml(input);
+  return error === null;
+}
+
 function isBase64(input: string): boolean {
   const trimmed = input.trim();
   // Require minimum length to avoid false positives on short strings
@@ -151,6 +162,14 @@ export function detectFormat(input: string): DetectionResult {
   if (isCsv(sample)) matches.push('csv');
   if (isYaml(trimmed) && !matches.includes('json') && !matches.includes('json5')) {
     matches.push('yaml');
+  }
+  if (
+    isToml(trimmed) &&
+    !matches.includes('json') &&
+    !matches.includes('json5') &&
+    !matches.includes('yaml')
+  ) {
+    matches.push('toml');
   }
   if (isBase64(sample) && matches.length === 0) matches.push('base64');
 

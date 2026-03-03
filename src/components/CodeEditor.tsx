@@ -5,7 +5,7 @@ import { EditorView } from '@codemirror/view';
 import { cn } from '@/lib/utils';
 import { useSettingsStore } from '@/stores/settingsStore';
 
-export type EditorLanguage = 'json' | 'yaml' | 'csv' | 'text' | 'typescript';
+export type EditorLanguage = 'json' | 'yaml' | 'csv' | 'toml' | 'text' | 'typescript';
 
 export interface CodeEditorProps {
   value: string;

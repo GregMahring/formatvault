@@ -8,6 +8,7 @@ export default [
   route('json-formatter', 'routes/json-formatter.tsx'),
   route('csv-formatter', 'routes/csv-formatter.tsx'),
   route('yaml-formatter', 'routes/yaml-formatter.tsx'),
+  route('toml-formatter', 'routes/toml-formatter.tsx'),
 
   // Converter routes — one route per conversion pair for SEO/GEO (ADR-0003)
   route('converters', 'routes/converters.tsx'),
@@ -18,6 +19,10 @@ export default [
   route('yaml-to-json-converter', 'routes/yaml-to-json-converter.tsx'),
   route('yaml-to-csv-converter', 'routes/yaml-to-csv-converter.tsx'),
   route('json-to-typescript', 'routes/json-to-typescript.tsx'),
+  route('toml-to-json-converter', 'routes/toml-to-json-converter.tsx'),
+  route('json-to-toml-converter', 'routes/json-to-toml-converter.tsx'),
+  route('toml-to-yaml-converter', 'routes/toml-to-yaml-converter.tsx'),
+  route('yaml-to-toml-converter', 'routes/yaml-to-toml-converter.tsx'),
 
   // Utility tool routes
   route('json-schema-generator', 'routes/json-schema-generator.tsx'),

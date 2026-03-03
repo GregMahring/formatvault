@@ -103,6 +103,16 @@ export function AppLayout({ children }: AppLayoutProps) {
         },
       },
       {
+        id: 'nav:toml-formatter',
+        label: 'TOML Formatter',
+        group: 'Navigation',
+        icon: FileCode2,
+        keywords: ['cargo', 'pyproject', 'config'],
+        handler: () => {
+          void navigate('/toml-formatter');
+        },
+      },
+      {
         id: 'nav:converters',
         label: 'Converters',
         group: 'Navigation',

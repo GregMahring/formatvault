@@ -1,6 +1,6 @@
 /**
- * All 6 conversion pair implementations:
- *   JSON ↔ CSV, JSON ↔ YAML, CSV ↔ YAML
+ * All conversion pair implementations:
+ *   JSON ↔ CSV, JSON ↔ YAML, CSV ↔ YAML, TOML ↔ JSON, TOML ↔ YAML
  *
  * Each converter returns { output, error, warning? }.
  * A warning (not an error) is used for lossy conversions (e.g. nested JSON → CSV).
@@ -10,6 +10,7 @@ import Papa from 'papaparse';
 import { parseCsvToObjects } from '../csv/csvFormatter';
 import { parseYaml, serializeToYaml } from '../yaml/yamlFormatter';
 import type { YamlIndent } from '../yaml/yamlFormatter';
+import { parseToml, serializeToToml } from '../toml/tomlFormatter';
 
 export interface ConvertResult {
   output: string;
@@ -195,4 +196,98 @@ export function yamlToCsv(input: string, delimiter?: CsvOutputDelimiter): Conver
       ? 'Nested objects/sequences were converted to their string representation. The CSV output may not be round-trippable.'
       : undefined,
   };
+}
+
+// ─── TOML → JSON ───────────────────────────────────────────────────────────
+
+export function tomlToJson(input: string, indent = 2): ConversionResult {
+  const { value, error } = parseToml(input);
+  if (error) return { output: null, error };
+
+  try {
+    return { output: JSON.stringify(value, null, indent), error: null };
+  } catch (err) {
+    return {
+      output: null,
+      error: `JSON serialization error: ${err instanceof Error ? err.message : String(err)}`,
+    };
+  }
+}
+
+// ─── JSON → TOML ───────────────────────────────────────────────────────────
+
+export function jsonToToml(input: string): ConversionResult {
+  const trimmed = input.trim();
+  if (!trimmed) return { output: null, error: 'Input is empty.' };
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(trimmed);
+  } catch (err) {
+    return {
+      output: null,
+      error: `Invalid JSON: ${err instanceof Error ? err.message : String(err)}`,
+    };
+  }
+
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    return {
+      output: null,
+      error:
+        'TOML root must be a table (object). JSON arrays and scalar values cannot be converted to TOML.',
+    };
+  }
+
+  try {
+    const output = serializeToToml(parsed as Record<string, unknown>);
+    return { output: output.trimEnd(), error: null };
+  } catch (err) {
+    return {
+      output: null,
+      error: `TOML serialization error: ${err instanceof Error ? err.message : String(err)}`,
+    };
+  }
+}
+
+// ─── TOML → YAML ───────────────────────────────────────────────────────────
+
+export function tomlToYaml(input: string, indent: YamlIndent = 2): ConversionResult {
+  const { value, error } = parseToml(input);
+  if (error) return { output: null, error };
+
+  try {
+    const output = serializeToYaml(value, indent);
+    return { output: output.trimEnd(), error: null };
+  } catch (err) {
+    return {
+      output: null,
+      error: `YAML serialization error: ${err instanceof Error ? err.message : String(err)}`,
+    };
+  }
+}
+
+// ─── YAML → TOML ───────────────────────────────────────────────────────────
+
+export function yamlToToml(input: string): ConversionResult {
+  const { value, error } = parseYaml(input);
+  if (error) return { output: null, error };
+
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+    return {
+      output: null,
+      error:
+        'TOML root must be a table (object). YAML sequences and scalar values cannot be converted to TOML.',
+      // Note: YAML arrays map directly to TOML arrays but only as table values, not roots
+    } as ConvertError;
+  }
+
+  try {
+    const output = serializeToToml(value as Record<string, unknown>);
+    return { output: output.trimEnd(), error: null };
+  } catch (err) {
+    return {
+      output: null,
+      error: `TOML serialization error: ${err instanceof Error ? err.message : String(err)}`,
+    };
+  }
 }
