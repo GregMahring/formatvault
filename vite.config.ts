@@ -12,6 +12,14 @@ export default defineConfig({
     tsconfigPaths(),
   ],
 
+  // Scan all route files so Vite discovers every dependency upfront.
+  // Without this, route-specific deps (e.g. @radix-ui/react-tabs, codemirror)
+  // are discovered on first navigation, triggering re-optimization that creates
+  // duplicate React instances and "Invalid hook call" errors.
+  optimizeDeps: {
+    entries: ['src/routes/**/*.tsx', 'src/components/**/*.tsx'],
+  },
+
   server: {
     port: 5173,
     open: true,

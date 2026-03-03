@@ -5,7 +5,7 @@ import { EditorView } from '@codemirror/view';
 import { cn } from '@/lib/utils';
 import { useSettingsStore } from '@/stores/settingsStore';
 
-export type EditorLanguage = 'json' | 'yaml' | 'csv' | 'text';
+export type EditorLanguage = 'json' | 'yaml' | 'csv' | 'text' | 'typescript';
 
 export interface CodeEditorProps {
   value: string;
@@ -29,6 +29,10 @@ async function loadLangExtension(language: EditorLanguage): Promise<Extension | 
   if (language === 'yaml') {
     const { yaml } = await import('@codemirror/lang-yaml');
     return yaml();
+  }
+  if (language === 'typescript') {
+    const { javascript } = await import('@codemirror/lang-javascript');
+    return javascript({ typescript: true });
   }
   // csv / text — no language pack needed
   return null;

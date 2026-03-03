@@ -17,8 +17,10 @@ export default [
   route('csv-to-yaml-converter', 'routes/csv-to-yaml-converter.tsx'),
   route('yaml-to-json-converter', 'routes/yaml-to-json-converter.tsx'),
   route('yaml-to-csv-converter', 'routes/yaml-to-csv-converter.tsx'),
+  route('json-to-typescript', 'routes/json-to-typescript.tsx'),
 
   // Utility tool routes
+  route('json-schema-generator', 'routes/json-schema-generator.tsx'),
   route('jwt-decoder', 'routes/jwt-decoder.tsx'),
   route('base64-encoder', 'routes/base64-encoder.tsx'),
   route('url-encoder', 'routes/url-encoder.tsx'),

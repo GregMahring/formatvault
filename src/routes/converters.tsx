@@ -22,6 +22,7 @@ const CONVERTERS = [
   { from: 'CSV', to: 'YAML', path: '/csv-to-yaml-converter' },
   { from: 'YAML', to: 'JSON', path: '/yaml-to-json-converter' },
   { from: 'YAML', to: 'CSV', path: '/yaml-to-csv-converter' },
+  { from: 'JSON', to: 'TypeScript', path: '/json-to-typescript' },
 ] as const;
 
 export default function Converters() {

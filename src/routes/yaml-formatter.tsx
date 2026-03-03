@@ -10,9 +10,11 @@ import { PaneActions } from '@/components/PaneActions';
 import { PiiMaskToggle } from '@/components/PiiMaskToggle';
 import { DiffPanel } from '@/components/DiffPanel';
 import { MarkdownPreview } from '@/components/MarkdownPreview';
+import { TreeView } from '@/components/TreeView';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useYamlFormatter } from '@/features/yaml/useYamlFormatter';
+import { parseYaml } from '@/features/yaml/yamlFormatter';
 import { useEditorStore } from '@/stores/editorStore';
 import { useFileParser } from '@/hooks/useFileParser';
 import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
@@ -39,6 +41,7 @@ export default function YamlFormatter() {
   const fileParser = useFileParser();
   const [showDiff, setShowDiff] = useState(false);
   const [showMarkdown, setShowMarkdown] = useState(false);
+  const [showTree, setShowTree] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
 
   // Load pre-loaded input from the landing page paste flow
@@ -78,6 +81,14 @@ export default function YamlFormatter() {
     [fileParser]
   );
 
+  // Parse the output (or input) as a JS value for the tree view
+  const treeData = useMemo(() => {
+    const source = fmt.output || fmt.input;
+    if (!source.trim()) return undefined;
+    const result = parseYaml(source);
+    return result.error === null ? result.value : undefined;
+  }, [fmt.output, fmt.input]);
+
   const shortcuts: Shortcut[] = [
     {
       label: 'Format',
@@ -94,6 +105,7 @@ export default function YamlFormatter() {
       handler: () => {
         setShowDiff((v) => !v);
         setShowMarkdown(false);
+        setShowTree(false);
       },
     },
     {
@@ -104,6 +116,18 @@ export default function YamlFormatter() {
       handler: () => {
         setShowMarkdown((v) => !v);
         setShowDiff(false);
+        setShowTree(false);
+      },
+    },
+    {
+      label: 'Toggle tree view',
+      display: '⌘ T',
+      key: 't',
+      meta: true,
+      handler: () => {
+        setShowTree((v) => !v);
+        setShowDiff(false);
+        setShowMarkdown(false);
       },
     },
     {
@@ -149,10 +173,22 @@ export default function YamlFormatter() {
         handler: () => {
           setShowDiff((v) => !v);
           setShowMarkdown(false);
+          setShowTree(false);
+        },
+      },
+      {
+        id: 'action:toggle-tree',
+        label: 'Toggle tree view',
+        group: 'Actions',
+        shortcut: '⌘ T',
+        handler: () => {
+          setShowTree((v) => !v);
+          setShowDiff(false);
+          setShowMarkdown(false);
         },
       },
     ],
-    [fmt, setShowDiff, setShowMarkdown]
+    [fmt, setShowDiff, setShowMarkdown, setShowTree]
   );
   useRegisterCommands(commands);
 
@@ -219,6 +255,7 @@ export default function YamlFormatter() {
           onClick={() => {
             setShowDiff((v) => !v);
             setShowMarkdown(false);
+            setShowTree(false);
           }}
           aria-pressed={showDiff}
         >
@@ -237,11 +274,32 @@ export default function YamlFormatter() {
           onClick={() => {
             setShowMarkdown((v) => !v);
             setShowDiff(false);
+            setShowTree(false);
           }}
           aria-pressed={showMarkdown}
           title="Toggle Markdown preview (⌘M)"
         >
           Markdown
+        </button>
+
+        {/* Tree view toggle */}
+        <button
+          type="button"
+          className={cn(
+            'rounded px-2 py-1 text-xs transition-colors',
+            showTree
+              ? 'bg-accent-700/40 text-accent-300'
+              : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
+          )}
+          onClick={() => {
+            setShowTree((v) => !v);
+            setShowDiff(false);
+            setShowMarkdown(false);
+          }}
+          aria-pressed={showTree}
+          title="Toggle tree view (⌘T)"
+        >
+          Tree
         </button>
 
         {fmt.input.trim() && (
@@ -306,7 +364,9 @@ export default function YamlFormatter() {
         ) : (
           <SplitPane
             leftLabel="YAML input editor"
-            rightLabel={showMarkdown ? 'Markdown preview' : 'Formatted output'}
+            rightLabel={
+              showTree ? 'Tree view' : showMarkdown ? 'Markdown preview' : 'Formatted output'
+            }
             className="flex-1"
           >
             <div className="flex h-full flex-col">
@@ -331,7 +391,9 @@ export default function YamlFormatter() {
               />
             </div>
 
-            {showMarkdown ? (
+            {showTree && treeData !== undefined ? (
+              <TreeView data={treeData} className="h-full" />
+            ) : showMarkdown ? (
               <MarkdownPreview source={fmt.output || fmt.input} className="h-full" />
             ) : (
               <div className="flex h-full flex-col">

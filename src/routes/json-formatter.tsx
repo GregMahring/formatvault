@@ -11,6 +11,7 @@ import { PaneActions } from '@/components/PaneActions';
 import { PiiMaskToggle } from '@/components/PiiMaskToggle';
 import { DiffPanel } from '@/components/DiffPanel';
 import { MarkdownPreview } from '@/components/MarkdownPreview';
+import { TreeView } from '@/components/TreeView';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useJsonFormatter } from '@/features/json/useJsonFormatter';
@@ -41,6 +42,7 @@ export default function JsonFormatter() {
   const fileParser = useFileParser();
   const [showDiff, setShowDiff] = useState(false);
   const [showMarkdown, setShowMarkdown] = useState(false);
+  const [showTree, setShowTree] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
 
   // Load pre-loaded input from the landing page paste flow
@@ -84,6 +86,17 @@ export default function JsonFormatter() {
     [fileParser]
   );
 
+  // Parse the output (or input) as a JS value for the tree view
+  const treeData = useMemo(() => {
+    const source = fmt.output || fmt.input;
+    if (!source.trim()) return undefined;
+    try {
+      return JSON.parse(source) as unknown;
+    } catch {
+      return undefined;
+    }
+  }, [fmt.output, fmt.input]);
+
   const shortcuts: Shortcut[] = [
     {
       label: 'Format / Run query',
@@ -103,6 +116,7 @@ export default function JsonFormatter() {
       handler: () => {
         setShowDiff((v) => !v);
         setShowMarkdown(false);
+        setShowTree(false);
       },
     },
     {
@@ -113,6 +127,18 @@ export default function JsonFormatter() {
       handler: () => {
         setShowMarkdown((v) => !v);
         setShowDiff(false);
+        setShowTree(false);
+      },
+    },
+    {
+      label: 'Toggle tree view',
+      display: '⌘ T',
+      key: 't',
+      meta: true,
+      handler: () => {
+        setShowTree((v) => !v);
+        setShowDiff(false);
+        setShowMarkdown(false);
       },
     },
     {
@@ -190,6 +216,17 @@ export default function JsonFormatter() {
         },
       },
       {
+        id: 'action:toggle-tree',
+        label: 'Toggle tree view',
+        group: 'Actions',
+        shortcut: '⌘ T',
+        handler: () => {
+          setShowTree((v) => !v);
+          setShowDiff(false);
+          setShowMarkdown(false);
+        },
+      },
+      {
         id: 'action:toggle-jsonpath',
         label: 'Toggle JSONPath',
         group: 'Actions',
@@ -198,7 +235,7 @@ export default function JsonFormatter() {
         },
       },
     ],
-    [fmt, setShowDiff, setShowMarkdown]
+    [fmt, setShowDiff, setShowMarkdown, setShowTree]
   );
   useRegisterCommands(commands);
 
@@ -305,6 +342,7 @@ export default function JsonFormatter() {
           onClick={() => {
             setShowDiff((v) => !v);
             setShowMarkdown(false);
+            setShowTree(false);
           }}
           aria-pressed={showDiff}
         >
@@ -323,11 +361,32 @@ export default function JsonFormatter() {
           onClick={() => {
             setShowMarkdown((v) => !v);
             setShowDiff(false);
+            setShowTree(false);
           }}
           aria-pressed={showMarkdown}
           title="Toggle Markdown preview (⌘M)"
         >
           Markdown
+        </button>
+
+        {/* Tree view toggle */}
+        <button
+          type="button"
+          className={cn(
+            'rounded px-2 py-1 text-xs transition-colors',
+            showTree
+              ? 'bg-accent-700/40 text-accent-300'
+              : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
+          )}
+          onClick={() => {
+            setShowTree((v) => !v);
+            setShowDiff(false);
+            setShowMarkdown(false);
+          }}
+          aria-pressed={showTree}
+          title="Toggle tree view (⌘T)"
+        >
+          Tree
         </button>
 
         {/* Validation badge */}
@@ -465,7 +524,9 @@ export default function JsonFormatter() {
         ) : (
           <SplitPane
             leftLabel="JSON input editor"
-            rightLabel={showMarkdown ? 'Markdown preview' : 'Formatted output'}
+            rightLabel={
+              showTree ? 'Tree view' : showMarkdown ? 'Markdown preview' : 'Formatted output'
+            }
             className="flex-1"
           >
             {/* Left: input */}
@@ -505,8 +566,10 @@ export default function JsonFormatter() {
               />
             </div>
 
-            {/* Right: output or markdown preview */}
-            {showMarkdown ? (
+            {/* Right: output, markdown preview, or tree view */}
+            {showTree && treeData !== undefined ? (
+              <TreeView data={treeData} className="h-full" />
+            ) : showMarkdown ? (
               <MarkdownPreview source={fmt.output || fmt.input} className="h-full" />
             ) : (
               <div className="flex h-full flex-col">

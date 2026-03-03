@@ -315,7 +315,7 @@ export function ConverterLayout({
                 <PiiMaskToggle pii={pii} />
                 <PaneActions
                   content={pii.displayContent}
-                  downloadFilename={`output.${toLanguage === 'json' ? 'json' : toLanguage === 'yaml' ? 'yaml' : 'csv'}`}
+                  downloadFilename={`output.${toLanguage === 'json' ? 'json' : toLanguage === 'yaml' ? 'yaml' : toLanguage === 'typescript' ? 'ts' : 'csv'}`}
                 />
               </div>
             </div>

@@ -12,6 +12,7 @@ import {
   Zap,
   WifiOff,
   Sparkles,
+  FileCheck2,
 } from 'lucide-react';
 import type { Route } from './+types/home';
 import { buildMeta } from '@/lib/meta';
@@ -59,9 +60,17 @@ const TOOLS = [
     to: '/converters',
     icon: ArrowLeftRight,
     label: 'Converters',
-    description: 'Convert between JSON, CSV and YAML — all six direction pairs',
+    description: 'Convert between JSON, CSV, YAML and TypeScript — seven conversion pairs',
     accent: 'text-purple-400',
-    badge: '6 pairs' as string | null,
+    badge: '7 pairs' as string | null,
+  },
+  {
+    to: '/json-schema-generator',
+    icon: FileCheck2,
+    label: 'JSON Schema',
+    description: 'Generate JSON Schema from data and validate JSON against schemas',
+    accent: 'text-emerald-400',
+    badge: null as string | null,
   },
   {
     to: '/jwt-decoder',
