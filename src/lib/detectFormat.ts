@@ -26,6 +26,7 @@ export type DetectedFormat =
   | 'csv'
   | 'yaml'
   | 'toml'
+  | 'sql'
   | 'jwt'
   | 'base64'
   | 'url-encoded'
@@ -46,6 +47,7 @@ export const FORMAT_TO_ROUTE: Record<Exclude<DetectedFormat, 'unknown' | 'json5'
   csv: '/csv-formatter',
   yaml: '/yaml-formatter',
   toml: '/toml-formatter',
+  sql: '/sql-formatter',
   jwt: '/jwt-decoder',
   base64: '/base64-encoder',
   'url-encoded': '/url-encoder',
@@ -135,6 +137,12 @@ function isToml(input: string): boolean {
   return error === null;
 }
 
+function isSql(input: string): boolean {
+  return /^\s*(SELECT|INSERT\s+INTO|UPDATE\s+\w|DELETE\s+FROM|CREATE\s+(TABLE|DATABASE|INDEX)|DROP\s+(TABLE|DATABASE)|ALTER\s+TABLE|WITH\s+\w)/i.test(
+    input.trim()
+  );
+}
+
 function isBase64(input: string): boolean {
   const trimmed = input.trim();
   // Require minimum length to avoid false positives on short strings
@@ -171,6 +179,7 @@ export function detectFormat(input: string): DetectionResult {
   ) {
     matches.push('toml');
   }
+  if (isSql(trimmed) && matches.length === 0) matches.push('sql');
   if (isBase64(sample) && matches.length === 0) matches.push('base64');
 
   if (matches.length === 0) {

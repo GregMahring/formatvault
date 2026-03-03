@@ -9,6 +9,7 @@ export default [
   route('csv-formatter', 'routes/csv-formatter.tsx'),
   route('yaml-formatter', 'routes/yaml-formatter.tsx'),
   route('toml-formatter', 'routes/toml-formatter.tsx'),
+  route('sql-formatter', 'routes/sql-formatter.tsx'),
 
   // Converter routes — one route per conversion pair for SEO/GEO (ADR-0003)
   route('converters', 'routes/converters.tsx'),

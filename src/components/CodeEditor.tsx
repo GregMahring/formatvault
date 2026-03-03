@@ -5,7 +5,7 @@ import { EditorView } from '@codemirror/view';
 import { cn } from '@/lib/utils';
 import { useSettingsStore } from '@/stores/settingsStore';
 
-export type EditorLanguage = 'json' | 'yaml' | 'csv' | 'toml' | 'text' | 'typescript';
+export type EditorLanguage = 'json' | 'yaml' | 'csv' | 'toml' | 'sql' | 'text' | 'typescript';
 
 export interface CodeEditorProps {
   value: string;
@@ -33,6 +33,17 @@ async function loadLangExtension(language: EditorLanguage): Promise<Extension | 
   if (language === 'typescript') {
     const { javascript } = await import('@codemirror/lang-javascript');
     return javascript({ typescript: true });
+  }
+  if (language === 'toml') {
+    const [{ toml }, { StreamLanguage }] = await Promise.all([
+      import('@codemirror/legacy-modes/mode/toml'),
+      import('@codemirror/language'),
+    ]);
+    return StreamLanguage.define(toml);
+  }
+  if (language === 'sql') {
+    const { sql } = await import('@codemirror/lang-sql');
+    return sql();
   }
   // csv / text — no language pack needed
   return null;

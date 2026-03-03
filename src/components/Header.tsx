@@ -16,6 +16,7 @@ const NAV_LINKS = [
   { to: '/csv-formatter', label: 'CSV' },
   { to: '/yaml-formatter', label: 'YAML' },
   { to: '/toml-formatter', label: 'TOML' },
+  { to: '/sql-formatter', label: 'SQL' },
   { to: '/converters', label: 'Convert' },
   { to: '/jwt-decoder', label: 'JWT' },
   { to: '/base64-encoder', label: 'Base64' },

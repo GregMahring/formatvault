@@ -20,6 +20,7 @@ import {
   WrapText,
   Zap,
   Indent,
+  Database,
 } from 'lucide-react';
 
 export interface AppLayoutProps {
@@ -110,6 +111,16 @@ export function AppLayout({ children }: AppLayoutProps) {
         keywords: ['cargo', 'pyproject', 'config'],
         handler: () => {
           void navigate('/toml-formatter');
+        },
+      },
+      {
+        id: 'nav:sql-formatter',
+        label: 'SQL Formatter',
+        group: 'Navigation',
+        icon: Database,
+        keywords: ['query', 'database', 'select', 'postgres', 'mysql'],
+        handler: () => {
+          void navigate('/sql-formatter');
         },
       },
       {
