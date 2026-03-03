@@ -32,6 +32,7 @@ export default [
   route('base64-encoder', 'routes/base64-encoder.tsx'),
   route('url-encoder', 'routes/url-encoder.tsx'),
   route('hash-generator', 'routes/hash-generator.tsx'),
+  route('unix-timestamp-converter', 'routes/unix-timestamp-converter.tsx'),
 
   // 404 catch-all
   route('*', 'routes/not-found.tsx'),

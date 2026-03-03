@@ -22,6 +22,7 @@ const NAV_LINKS = [
   { to: '/jwt-decoder', label: 'JWT' },
   { to: '/base64-encoder', label: 'Base64' },
   { to: '/url-encoder', label: 'URL' },
+  { to: '/unix-timestamp-converter', label: 'Timestamp' },
 ] as const;
 
 export function Header({ className, onOpenCommandPalette }: HeaderProps) {

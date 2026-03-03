@@ -22,6 +22,7 @@ import {
   Indent,
   Database,
   Slash,
+  Timer,
 } from 'lucide-react';
 
 export interface AppLayoutProps {
@@ -132,6 +133,16 @@ export function AppLayout({ children }: AppLayoutProps) {
         keywords: ['regexp', 'pattern', 'match', 'test'],
         handler: () => {
           void navigate('/regex-tester');
+        },
+      },
+      {
+        id: 'nav:unix-timestamp-converter',
+        label: 'Unix Timestamp Converter',
+        group: 'Navigation',
+        icon: Timer,
+        keywords: ['timestamp', 'unix', 'epoch', 'date', 'time', 'seconds', 'milliseconds'],
+        handler: () => {
+          void navigate('/unix-timestamp-converter');
         },
       },
       {
