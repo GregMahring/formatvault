@@ -31,6 +31,7 @@ export default [
   route('jwt-decoder', 'routes/jwt-decoder.tsx'),
   route('base64-encoder', 'routes/base64-encoder.tsx'),
   route('url-encoder', 'routes/url-encoder.tsx'),
+  route('hash-generator', 'routes/hash-generator.tsx'),
 
   // 404 catch-all
   route('*', 'routes/not-found.tsx'),

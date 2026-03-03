@@ -8,6 +8,7 @@ import {
   KeyRound,
   Lock,
   Globe,
+  Hash,
   ShieldCheck,
   Zap,
   WifiOff,
@@ -103,6 +104,14 @@ const TOOLS = [
     label: 'Regex Tester',
     description: 'Test regular expressions with real-time match highlighting and capture groups',
     accent: 'text-rose-400',
+    badge: null as string | null,
+  },
+  {
+    to: '/hash-generator',
+    icon: Hash,
+    label: 'Hash Generator',
+    description: 'Generate MD5, SHA-256, and SHA-512 hashes from text or files',
+    accent: 'text-violet-400',
     badge: null as string | null,
   },
 ];
