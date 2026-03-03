@@ -17,6 +17,7 @@ const NAV_LINKS = [
   { to: '/yaml-formatter', label: 'YAML' },
   { to: '/toml-formatter', label: 'TOML' },
   { to: '/sql-formatter', label: 'SQL' },
+  { to: '/regex-tester', label: 'Regex' },
   { to: '/converters', label: 'Convert' },
   { to: '/jwt-decoder', label: 'JWT' },
   { to: '/base64-encoder', label: 'Base64' },

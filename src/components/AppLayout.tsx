@@ -21,6 +21,7 @@ import {
   Zap,
   Indent,
   Database,
+  Slash,
 } from 'lucide-react';
 
 export interface AppLayoutProps {
@@ -121,6 +122,16 @@ export function AppLayout({ children }: AppLayoutProps) {
         keywords: ['query', 'database', 'select', 'postgres', 'mysql'],
         handler: () => {
           void navigate('/sql-formatter');
+        },
+      },
+      {
+        id: 'nav:regex-tester',
+        label: 'Regex Tester',
+        group: 'Navigation',
+        icon: Slash,
+        keywords: ['regexp', 'pattern', 'match', 'test'],
+        handler: () => {
+          void navigate('/regex-tester');
         },
       },
       {

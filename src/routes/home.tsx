@@ -13,6 +13,7 @@ import {
   WifiOff,
   Sparkles,
   FileCheck2,
+  Slash,
 } from 'lucide-react';
 import type { Route } from './+types/home';
 import { buildMeta } from '@/lib/meta';
@@ -96,6 +97,14 @@ const TOOLS = [
     accent: 'text-cyan-400',
     badge: null as string | null,
   },
+  {
+    to: '/regex-tester',
+    icon: Slash,
+    label: 'Regex Tester',
+    description: 'Test regular expressions with real-time match highlighting and capture groups',
+    accent: 'text-rose-400',
+    badge: null as string | null,
+  },
 ];
 
 const FEATURES = [
@@ -121,6 +130,8 @@ const FORMAT_LABELS: Record<DetectedFormat, string> = {
   json5: 'JSON5 (relaxed)',
   csv: 'CSV',
   yaml: 'YAML',
+  toml: 'TOML',
+  sql: 'SQL',
   jwt: 'JWT',
   base64: 'Base64',
   'url-encoded': 'URL-encoded',
