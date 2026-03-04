@@ -35,6 +35,7 @@ export default [
   route('unix-timestamp-converter', 'routes/unix-timestamp-converter.tsx'),
   route('cron-expression-explainer', 'routes/cron-expression-explainer.tsx'),
   route('color-picker', 'routes/color-picker.tsx'),
+  route('number-base-converter', 'routes/number-base-converter.tsx'),
 
   // 404 catch-all
   route('*', 'routes/not-found.tsx'),

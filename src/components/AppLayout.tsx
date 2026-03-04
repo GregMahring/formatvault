@@ -25,6 +25,7 @@ import {
   Timer,
   CalendarClock,
   Pipette,
+  Binary,
 } from 'lucide-react';
 
 export interface AppLayoutProps {
@@ -165,6 +166,16 @@ export function AppLayout({ children }: AppLayoutProps) {
         keywords: ['color', 'colour', 'hex', 'rgb', 'hsl', 'oklch', 'picker', 'converter'],
         handler: () => {
           void navigate('/color-picker');
+        },
+      },
+      {
+        id: 'nav:number-base-converter',
+        label: 'Number Base Converter',
+        group: 'Navigation',
+        icon: Binary,
+        keywords: ['binary', 'hex', 'octal', 'decimal', 'base', 'bits', 'number', 'convert'],
+        handler: () => {
+          void navigate('/number-base-converter');
         },
       },
       {

@@ -25,6 +25,7 @@ const NAV_LINKS = [
   { to: '/unix-timestamp-converter', label: 'Timestamp' },
   { to: '/cron-expression-explainer', label: 'Cron' },
   { to: '/color-picker', label: 'Color' },
+  { to: '/number-base-converter', label: 'Base' },
 ] as const;
 
 export function Header({ className, onOpenCommandPalette }: HeaderProps) {
