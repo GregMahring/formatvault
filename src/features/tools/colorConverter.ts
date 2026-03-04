@@ -148,15 +148,16 @@ function rgbToOklch({ r, g, b }: RgbColor): OklchColor {
   // LMS → OKLab (M2)
   const L = 0.2104542553 * l_ + 0.793617785 * m_ - 0.0040720468 * s_;
   const a = 1.9779984951 * l_ - 2.428592205 * m_ + 0.4505937099 * s_;
-  const bk = 0.0259040371 * l_ + 0.4072384251 * m_ - 0.432964753 * s_;
+  const bk = 0.0259040371 * l_ + 0.4072384251 * m_ - 0.4328948739 * s_;
 
-  // OKLab → OKLCH
+  // OKLab → OKLCH (threshold small C to zero for achromatic colors)
   const C = Math.sqrt(a * a + bk * bk);
-  const H = C < 0.0002 ? 0 : (Math.atan2(bk, a) * 180) / Math.PI;
+  const isAchromatic = C < 0.0005;
+  const H = isAchromatic ? 0 : (Math.atan2(bk, a) * 180) / Math.PI;
 
   return {
     l: round(L, 4),
-    c: round(C, 4),
+    c: isAchromatic ? 0 : round(C, 4),
     h: round(H < 0 ? H + 360 : H, 1),
   };
 }
@@ -166,10 +167,10 @@ function oklchToRgb({ l, c, h }: OklchColor): RgbColor {
   const a = c * Math.cos(hRad);
   const bk = c * Math.sin(hRad);
 
-  // OKLab → LMS (inverse M2)
-  const l_ = l + 0.3963377774 * a + 0.2158037573 * bk;
-  const m_ = l - 0.1055613458 * a - 0.0638541728 * bk;
-  const s_ = l - 0.0894841775 * a - 1.291485548 * bk;
+  // OKLab → LMS (numerically computed inverse of M2)
+  const l_ = 0.9999008157 * l + 0.3939278718 * a + 0.4006279324 * bk;
+  const m_ = 1.0000293561 * l - 0.104848271 * a - 0.1185418004 * bk;
+  const s_ = 1.0005936174 * l - 0.075061925 * a - 2.397572616 * bk;
 
   const lc = l_ * l_ * l_;
   const mc = m_ * m_ * m_;
@@ -224,27 +225,25 @@ export function cssOklch(c: ParsedColor): string {
 
 function parseHexStr(input: string): ColorResult {
   const hex = input.startsWith('#') ? input.slice(1) : input;
-  if (!/^[0-9a-fA-F]{3,8}$/.test(hex)) {
-    return { error: 'Invalid hex color. Expected #rgb or #rrggbb.' };
+  if (!/^([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(hex)) {
+    return { error: 'Invalid hex color. Expected #rgb, #rrggbb, or #rrggbbaa.' };
   }
   let r: number, g: number, b: number;
-  if (hex.length === 3 || hex.length === 4) {
+  if (hex.length === 3) {
     r = parseInt((hex[0] ?? '0') + (hex[0] ?? '0'), 16);
     g = parseInt((hex[1] ?? '0') + (hex[1] ?? '0'), 16);
     b = parseInt((hex[2] ?? '0') + (hex[2] ?? '0'), 16);
-  } else if (hex.length === 6 || hex.length === 8) {
+  } else {
     r = parseInt(hex.slice(0, 2), 16);
     g = parseInt(hex.slice(2, 4), 16);
     b = parseInt(hex.slice(4, 6), 16);
-  } else {
-    return { error: 'Invalid hex length. Expected 3 or 6 hex digits.' };
   }
   return fromRgb({ r, g, b });
 }
 
 function parseRgbStr(input: string): ColorResult {
   const match =
-    /rgba?\(\s*([\d.]+)%?\s*[,\s]\s*([\d.]+)%?\s*[,\s]\s*([\d.]+)%?(?:\s*[,/]\s*[\d.]+%?)?\s*\)/i.exec(
+    /rgba?\(\s*(-?[\d.]+)%?\s*[,\s]\s*(-?[\d.]+)%?\s*[,\s]\s*(-?[\d.]+)%?(?:\s*[,/]\s*-?[\d.]+%?)?\s*\)/i.exec(
       input
     );
   if (!match?.[1] || !match[2] || !match[3]) {
@@ -261,7 +260,7 @@ function parseRgbStr(input: string): ColorResult {
 
 function parseHslStr(input: string): ColorResult {
   const match =
-    /hsla?\(\s*([\d.]+)(?:deg)?\s*[,\s]\s*([\d.]+)%?\s*[,\s]\s*([\d.]+)%?(?:\s*[,/]\s*[\d.]+%?)?\s*\)/i.exec(
+    /hsla?\(\s*(-?[\d.]+)(?:deg)?\s*[,\s]\s*([\d.]+)%?\s*[,\s]\s*([\d.]+)%?(?:\s*[,/]\s*[\d.]+%?)?\s*\)/i.exec(
       input
     );
   if (!match?.[1] || !match[2] || !match[3]) {

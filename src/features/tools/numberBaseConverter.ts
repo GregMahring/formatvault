@@ -64,7 +64,8 @@ export function convertNumber(input: string, fromBase: NumberBase): NumberResult
   let value: bigint;
   try {
     const prefix = BASE_PREFIXES[fromBase];
-    value = BigInt(`${isNegative ? '-' : ''}${prefix}${digits}`);
+    const abs = BigInt(`${prefix}${digits}`);
+    value = isNegative ? -abs : abs;
   } catch {
     return { error: 'Failed to parse number.' };
   }
