@@ -24,6 +24,7 @@ const NAV_LINKS = [
   { to: '/url-encoder', label: 'URL' },
   { to: '/unix-timestamp-converter', label: 'Timestamp' },
   { to: '/cron-expression-explainer', label: 'Cron' },
+  { to: '/color-picker', label: 'Color' },
 ] as const;
 
 export function Header({ className, onOpenCommandPalette }: HeaderProps) {

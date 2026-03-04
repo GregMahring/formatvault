@@ -24,6 +24,7 @@ import {
   Slash,
   Timer,
   CalendarClock,
+  Pipette,
 } from 'lucide-react';
 
 export interface AppLayoutProps {
@@ -154,6 +155,16 @@ export function AppLayout({ children }: AppLayoutProps) {
         keywords: ['cron', 'schedule', 'recurring', 'job', 'task', 'cronjob', 'next run'],
         handler: () => {
           void navigate('/cron-expression-explainer');
+        },
+      },
+      {
+        id: 'nav:color-picker',
+        label: 'Color Picker',
+        group: 'Navigation',
+        icon: Pipette,
+        keywords: ['color', 'colour', 'hex', 'rgb', 'hsl', 'oklch', 'picker', 'converter'],
+        handler: () => {
+          void navigate('/color-picker');
         },
       },
       {

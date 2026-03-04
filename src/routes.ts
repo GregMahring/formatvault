@@ -34,6 +34,7 @@ export default [
   route('hash-generator', 'routes/hash-generator.tsx'),
   route('unix-timestamp-converter', 'routes/unix-timestamp-converter.tsx'),
   route('cron-expression-explainer', 'routes/cron-expression-explainer.tsx'),
+  route('color-picker', 'routes/color-picker.tsx'),
 
   // 404 catch-all
   route('*', 'routes/not-found.tsx'),
