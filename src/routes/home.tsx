@@ -15,6 +15,8 @@ import {
   Sparkles,
   FileCheck2,
   Slash,
+  Timer,
+  CalendarClock,
 } from 'lucide-react';
 import type { Route } from './+types/home';
 import { buildMeta } from '@/lib/meta';
@@ -112,6 +114,23 @@ const TOOLS = [
     label: 'Hash Generator',
     description: 'Generate MD5, SHA-256, and SHA-512 hashes from text or files',
     accent: 'text-violet-400',
+    badge: null as string | null,
+  },
+  {
+    to: '/unix-timestamp-converter',
+    icon: Timer,
+    label: 'Timestamp Converter',
+    description: 'Convert Unix timestamps to dates and back. Auto-detects seconds vs milliseconds',
+    accent: 'text-amber-400',
+    badge: null as string | null,
+  },
+  {
+    to: '/cron-expression-explainer',
+    icon: CalendarClock,
+    label: 'Cron Explainer',
+    description:
+      'Explain cron expressions in plain English with next run times and field breakdown',
+    accent: 'text-teal-400',
     badge: null as string | null,
   },
 ];

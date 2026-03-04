@@ -23,6 +23,7 @@ import {
   Database,
   Slash,
   Timer,
+  CalendarClock,
 } from 'lucide-react';
 
 export interface AppLayoutProps {
@@ -143,6 +144,16 @@ export function AppLayout({ children }: AppLayoutProps) {
         keywords: ['timestamp', 'unix', 'epoch', 'date', 'time', 'seconds', 'milliseconds'],
         handler: () => {
           void navigate('/unix-timestamp-converter');
+        },
+      },
+      {
+        id: 'nav:cron-expression-explainer',
+        label: 'Cron Expression Explainer',
+        group: 'Navigation',
+        icon: CalendarClock,
+        keywords: ['cron', 'schedule', 'recurring', 'job', 'task', 'cronjob', 'next run'],
+        handler: () => {
+          void navigate('/cron-expression-explainer');
         },
       },
       {

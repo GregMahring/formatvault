@@ -23,6 +23,7 @@ const NAV_LINKS = [
   { to: '/base64-encoder', label: 'Base64' },
   { to: '/url-encoder', label: 'URL' },
   { to: '/unix-timestamp-converter', label: 'Timestamp' },
+  { to: '/cron-expression-explainer', label: 'Cron' },
 ] as const;
 
 export function Header({ className, onOpenCommandPalette }: HeaderProps) {
