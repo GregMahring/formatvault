@@ -221,7 +221,7 @@ export default function UrlEncoderPage() {
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 gap-1.5 px-3 text-xs text-gray-500"
+          className="h-7 gap-1.5 px-3 text-xs text-gray-400"
           onClick={swap}
           disabled={!output}
           title="Swap input and output (⌘⇧S)"
@@ -232,7 +232,7 @@ export default function UrlEncoderPage() {
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-3 text-xs text-gray-500"
+          className="h-7 px-3 text-xs text-gray-400"
           onClick={clear}
           disabled={!input}
         >
@@ -241,7 +241,7 @@ export default function UrlEncoderPage() {
 
         <button
           type="button"
-          className="rounded p-1 text-gray-600 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -269,7 +269,7 @@ export default function UrlEncoderPage() {
           {/* Input */}
           <div className="flex w-1/2 flex-col border-r border-gray-800">
             <div className="flex items-center border-b border-gray-800 px-3 py-1.5">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
                 {mode === 'encode' ? 'Decoded / plain text' : 'Encoded URL'}
               </span>
             </div>
@@ -292,7 +292,7 @@ export default function UrlEncoderPage() {
           {/* Output */}
           <div className="flex w-1/2 flex-col">
             <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1.5">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
                 {mode === 'encode' ? 'Encoded URL' : 'Decoded / plain text'}
               </span>
               <div className="flex items-center gap-1">

@@ -50,7 +50,7 @@ export function PiiMaskToggle({ pii, className }: PiiMaskToggleProps) {
         'flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] transition-colors',
         pii.enabled
           ? 'bg-amber-900/40 text-amber-400 hover:bg-amber-900/60'
-          : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300',
+          : 'text-gray-400 hover:bg-gray-800 hover:text-gray-300',
         className
       )}
       aria-pressed={pii.enabled}

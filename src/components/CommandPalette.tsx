@@ -143,7 +143,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
               autoComplete="off"
               spellCheck={false}
             />
-            <kbd className="hidden shrink-0 rounded border border-gray-700 bg-gray-900 px-1.5 py-0.5 text-[10px] font-medium text-gray-500 sm:inline-block">
+            <kbd className="hidden shrink-0 rounded border border-gray-700 bg-gray-900 px-1.5 py-0.5 text-[10px] font-medium text-gray-400 sm:inline-block">
               ESC
             </kbd>
           </div>
@@ -161,7 +161,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
 
             {grouped.map(({ group, commands: groupCmds }) => (
               <div key={group} role="group" aria-label={group}>
-                <div className="px-2 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-gray-600">
+                <div className="px-2 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-gray-500">
                   {group}
                 </div>
                 {groupCmds.map((cmd) => {

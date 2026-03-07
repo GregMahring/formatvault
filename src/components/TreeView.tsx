@@ -81,7 +81,7 @@ export function TreeView({ data, className }: TreeViewProps) {
 
       {/* Search results info */}
       {tree.isSearching && (
-        <div className="border-b border-gray-800 bg-gray-900/50 px-3 py-1 text-[11px] text-gray-500">
+        <div className="border-b border-gray-800 bg-gray-900/50 px-3 py-1 text-[11px] text-gray-400">
           {tree.matchingPaths.size > 0
             ? `${String(tree.matchingPaths.size)} matches`
             : 'No matches'}

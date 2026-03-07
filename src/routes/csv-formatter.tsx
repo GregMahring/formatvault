@@ -275,12 +275,12 @@ export default function CsvFormatter() {
           disabled={!fmt.input.trim()}
         >
           Format
-          <kbd className="ml-1 rounded bg-gray-800 px-1 text-[10px] text-gray-500">⌘↵</kbd>
+          <kbd className="ml-1 rounded bg-gray-800 px-1 text-[10px] text-gray-400">⌘↵</kbd>
         </Button>
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-3 text-xs text-gray-500"
+          className="h-7 px-3 text-xs text-gray-400"
           onClick={fmt.clear}
           disabled={!fmt.input.trim()}
         >
@@ -289,7 +289,7 @@ export default function CsvFormatter() {
 
         <button
           type="button"
-          className="rounded p-1 text-gray-600 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -335,7 +335,7 @@ export default function CsvFormatter() {
           >
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-                <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
                   Input
                 </span>
                 <FileUploadZone
@@ -360,7 +360,7 @@ export default function CsvFormatter() {
             ) : (
               <div className="flex h-full flex-col">
                 <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-                  <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+                  <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
                     Output
                   </span>
                   <div className="flex items-center gap-1">

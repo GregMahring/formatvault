@@ -158,10 +158,10 @@ export default function RegexTester() {
               title={title}
               aria-pressed={flags[key]}
               className={cn(
-                'rounded px-1.5 py-0.5 font-mono text-xs font-medium transition-colors',
+                'rounded px-2 py-1 font-mono text-xs font-medium transition-colors',
                 flags[key]
                   ? 'bg-accent-600/30 text-accent-300 ring-1 ring-accent-500/50'
-                  : 'text-gray-600 hover:bg-gray-800 hover:text-gray-400'
+                  : 'text-gray-500 hover:bg-gray-800 hover:text-gray-400'
               )}
             >
               {letter}
@@ -183,7 +183,7 @@ export default function RegexTester() {
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-3 text-xs text-gray-500"
+          className="h-7 px-3 text-xs text-gray-400"
           onClick={clear}
           disabled={!pattern && !input}
         >
@@ -192,7 +192,7 @@ export default function RegexTester() {
 
         <button
           type="button"
-          className="rounded p-1 text-gray-600 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -219,7 +219,7 @@ export default function RegexTester() {
         {/* Left pane — test string */}
         <div className="flex w-1/2 flex-col border-r border-gray-800">
           <div className="flex items-center border-b border-gray-800 px-3 py-1.5">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
               Test string
             </span>
           </div>
@@ -244,7 +244,7 @@ export default function RegexTester() {
         <div className="flex w-1/2 flex-col">
           <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1.5">
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
                 Match results
               </span>
               {hasPattern && hasInput && !result.error && matchCount > 0 && (

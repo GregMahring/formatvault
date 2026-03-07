@@ -43,7 +43,7 @@ export function MarkdownPreview({ source, className }: MarkdownPreviewProps) {
     <div className={`flex h-full flex-col ${className ?? ''}`}>
       {/* Panel header */}
       <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1.5">
-        <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+        <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
           Markdown Preview
         </span>
         <div className="flex items-center gap-1">
@@ -53,7 +53,7 @@ export function MarkdownPreview({ source, className }: MarkdownPreviewProps) {
               void copy(source);
             }}
             disabled={!source.trim()}
-            className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-gray-600 hover:bg-gray-800 hover:text-gray-400 disabled:opacity-40"
+            className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-gray-500 hover:bg-gray-800 hover:text-gray-400 disabled:opacity-40"
             title="Copy markdown source"
           >
             {copied ? (
@@ -69,7 +69,7 @@ export function MarkdownPreview({ source, className }: MarkdownPreviewProps) {
               download(source, 'preview.md');
             }}
             disabled={!source.trim()}
-            className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-gray-600 hover:bg-gray-800 hover:text-gray-400 disabled:opacity-40"
+            className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-gray-500 hover:bg-gray-800 hover:text-gray-400 disabled:opacity-40"
             title="Download as .md file"
           >
             <Download className="h-3 w-3" aria-hidden="true" />

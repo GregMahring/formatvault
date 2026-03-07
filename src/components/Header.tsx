@@ -87,11 +87,11 @@ export function Header({ className, onOpenCommandPalette }: HeaderProps) {
             <button
               type="button"
               onClick={onOpenCommandPalette}
-              className="flex items-center gap-1.5 rounded-md border border-gray-800 bg-gray-900 px-2.5 py-1 text-xs text-gray-500 transition-colors hover:border-gray-700 hover:text-gray-300"
-              aria-label="Open command palette"
+              className="flex items-center gap-1.5 rounded-md border border-gray-800 bg-gray-900 px-2.5 py-1 text-xs text-gray-400 transition-colors hover:border-gray-700 hover:text-gray-300"
+              aria-label="Search commands"
             >
               <span className="hidden sm:inline">Search commands</span>
-              <kbd className="rounded border border-gray-700 bg-gray-800 px-1 py-0.5 text-[10px] font-medium text-gray-500">
+              <kbd className="rounded border border-gray-700 bg-gray-800 px-1 py-0.5 text-[10px] font-medium text-gray-400">
                 ⌘K
               </kbd>
             </button>

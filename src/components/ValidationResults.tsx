@@ -46,7 +46,7 @@ export function ValidationResults({ result, className }: ValidationResultsProps)
               <span className="font-mono text-xs text-red-400">{err.path || '/'}</span>
               <p className="text-xs text-gray-400">{err.message}</p>
             </div>
-            <span className="shrink-0 rounded bg-gray-800 px-1.5 py-0.5 text-[10px] text-gray-500">
+            <span className="shrink-0 rounded bg-gray-800 px-1.5 py-0.5 text-[10px] text-gray-400">
               {err.keyword}
             </span>
           </li>

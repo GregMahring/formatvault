@@ -41,7 +41,7 @@ function ColorValueRow({ label, value }: ColorValueRowProps) {
   const { copy, copied } = useCopyToClipboard();
   return (
     <div className="flex items-center gap-3 border-b border-gray-800 py-3 last:border-0">
-      <span className="w-14 shrink-0 text-[11px] font-semibold uppercase tracking-wider text-gray-600">
+      <span className="w-14 shrink-0 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
         {label}
       </span>
       <code className="flex-1 font-mono text-sm text-gray-100">{value}</code>
@@ -164,7 +164,7 @@ export default function ColorPicker() {
         </Button>
         <button
           type="button"
-          className="rounded p-1 text-gray-600 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -179,7 +179,7 @@ export default function ColorPicker() {
       <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-6">
         {/* ── Input section ─────────────────────────────────────────── */}
         <section>
-          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
             Color
           </h2>
 
@@ -239,7 +239,7 @@ export default function ColorPicker() {
         {/* ── Output section ────────────────────────────────────────── */}
         {color ? (
           <section>
-            <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+            <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
               CSS Values
             </h2>
             <div className="overflow-hidden rounded-lg border border-gray-800 bg-gray-900 px-4">

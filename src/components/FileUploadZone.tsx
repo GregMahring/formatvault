@@ -131,7 +131,7 @@ export function FileUploadZone({
         type="button"
         onClick={openFilePicker}
         disabled={disabled}
-        className="flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] text-gray-500 transition-colors hover:bg-gray-800 hover:text-gray-300 disabled:opacity-40"
+        className="flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-300 disabled:opacity-40"
         aria-label="Upload file"
         title="Upload file"
       >

@@ -47,7 +47,7 @@ function BaseRow({ label, prefix, placeholder, value, base, hasError, onChange }
 
   return (
     <div className="flex items-center gap-3 border-b border-gray-800 py-3 last:border-0">
-      <span className="w-10 shrink-0 text-[11px] font-semibold uppercase tracking-wider text-gray-600">
+      <span className="w-10 shrink-0 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
         {label}
       </span>
 
@@ -209,7 +209,7 @@ export default function NumberBaseConverter() {
         </Button>
         <button
           type="button"
-          className="rounded p-1 text-gray-600 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -224,7 +224,7 @@ export default function NumberBaseConverter() {
       <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-6">
         {/* ── Inputs ────────────────────────────────────────────────── */}
         <section>
-          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
             Number
           </h2>
           <div className="overflow-hidden rounded-lg border border-gray-800 bg-gray-900 px-4">
@@ -251,7 +251,7 @@ export default function NumberBaseConverter() {
 
         {/* ── Presets ───────────────────────────────────────────────── */}
         <section>
-          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
             Common values
           </h2>
           <div className="flex flex-wrap gap-1.5">

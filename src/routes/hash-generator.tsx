@@ -172,7 +172,7 @@ export default function HashGenerator() {
 
         <button
           type="button"
-          className="rounded p-1 text-gray-600 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -199,7 +199,7 @@ export default function HashGenerator() {
         {/* Input section */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
               {hash.inputMode === 'text' ? 'Input text' : 'File'}
             </span>
           </div>
@@ -245,7 +245,7 @@ export default function HashGenerator() {
           <div className="flex flex-col gap-0 overflow-hidden rounded-md border border-gray-800">
             {/* Hex row */}
             <div className="flex items-center gap-3 border-b border-gray-800 bg-gray-900/60 px-4 py-3">
-              <span className="w-14 shrink-0 text-[11px] font-semibold uppercase tracking-wide text-gray-600">
+              <span className="w-14 shrink-0 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
                 Hex
               </span>
               <span
@@ -259,7 +259,7 @@ export default function HashGenerator() {
 
             {/* Base64 row */}
             <div className="flex items-center gap-3 bg-gray-900/40 px-4 py-3">
-              <span className="w-14 shrink-0 text-[11px] font-semibold uppercase tracking-wide text-gray-600">
+              <span className="w-14 shrink-0 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
                 Base64
               </span>
               <span

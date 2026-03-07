@@ -218,7 +218,7 @@ export function ConverterLayout({
           disabled={!input.trim()}
         >
           Convert
-          <kbd className="ml-1 rounded bg-gray-800 px-1 text-[10px] text-gray-500">⌘↵</kbd>
+          <kbd className="ml-1 rounded bg-gray-800 px-1 text-[10px] text-gray-400">⌘↵</kbd>
         </Button>
         <Button
           size="sm"
@@ -279,7 +279,7 @@ export function ConverterLayout({
           {/* Left: input */}
           <div className="flex h-full flex-col">
             <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
                 {fromLanguage.toUpperCase()} Input
               </span>
               <FileUploadZone
@@ -308,7 +308,7 @@ export function ConverterLayout({
           {/* Right: output */}
           <div className="flex h-full flex-col">
             <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
                 {toLanguage.toUpperCase()} Output
               </span>
               <div className="flex items-center gap-1">

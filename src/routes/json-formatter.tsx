@@ -5,7 +5,7 @@ import { SplitPane } from '@/components/SplitPane';
 import { CodeEditor } from '@/components/CodeEditor';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { FileUploadZone } from '@/components/FileUploadZone';
 import { PaneActions } from '@/components/PaneActions';
 import { PiiMaskToggle } from '@/components/PiiMaskToggle';
@@ -270,6 +270,9 @@ export default function JsonFormatter() {
               Validate
             </TabsTrigger>
           </TabsList>
+          <TabsContent value="format" className="hidden" />
+          <TabsContent value="minify" className="hidden" />
+          <TabsContent value="validate" className="hidden" />
         </Tabs>
 
         <div className="h-4 w-px bg-gray-800" aria-hidden="true" />
@@ -309,7 +312,7 @@ export default function JsonFormatter() {
             }}
             className={cn(
               'rounded px-2 py-0.5 text-xs transition-colors',
-              !indentWithTabs ? 'bg-gray-700 text-gray-100' : 'text-gray-500 hover:text-gray-300'
+              !indentWithTabs ? 'bg-gray-700 text-gray-100' : 'text-gray-400 hover:text-gray-300'
             )}
           >
             Spaces
@@ -321,7 +324,7 @@ export default function JsonFormatter() {
             }}
             className={cn(
               'rounded px-2 py-0.5 text-xs transition-colors',
-              indentWithTabs ? 'bg-gray-700 text-gray-100' : 'text-gray-500 hover:text-gray-300'
+              indentWithTabs ? 'bg-gray-700 text-gray-100' : 'text-gray-400 hover:text-gray-300'
             )}
           >
             Tabs
@@ -337,7 +340,7 @@ export default function JsonFormatter() {
             'rounded px-2 py-1 text-xs transition-colors',
             showDiff
               ? 'bg-accent-700/40 text-accent-300'
-              : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
+              : 'text-gray-400 hover:bg-gray-800 hover:text-gray-300'
           )}
           onClick={() => {
             setShowDiff((v) => !v);
@@ -356,7 +359,7 @@ export default function JsonFormatter() {
             'rounded px-2 py-1 text-xs transition-colors',
             showMarkdown
               ? 'bg-accent-700/40 text-accent-300'
-              : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
+              : 'text-gray-400 hover:bg-gray-800 hover:text-gray-300'
           )}
           onClick={() => {
             setShowMarkdown((v) => !v);
@@ -376,7 +379,7 @@ export default function JsonFormatter() {
             'rounded px-2 py-1 text-xs transition-colors',
             showTree
               ? 'bg-accent-700/40 text-accent-300'
-              : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
+              : 'text-gray-400 hover:bg-gray-800 hover:text-gray-300'
           )}
           onClick={() => {
             setShowTree((v) => !v);
@@ -411,12 +414,12 @@ export default function JsonFormatter() {
           disabled={!fmt.input.trim()}
         >
           {fmt.isQueryMode ? 'Run query' : 'Format'}
-          <kbd className="ml-1 rounded bg-gray-800 px-1 text-[10px] text-gray-500">⌘↵</kbd>
+          <kbd className="ml-1 rounded bg-gray-800 px-1 text-[10px] text-gray-400">⌘↵</kbd>
         </Button>
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-3 text-xs text-gray-500"
+          className="h-7 px-3 text-xs text-gray-400"
           onClick={fmt.clear}
           disabled={!fmt.input.trim()}
         >
@@ -426,7 +429,7 @@ export default function JsonFormatter() {
         {/* Shortcuts help */}
         <button
           type="button"
-          className="rounded p-1 text-gray-600 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -532,7 +535,7 @@ export default function JsonFormatter() {
             {/* Left: input */}
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-                <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
                   Input
                 </span>
                 <div className="flex items-center gap-1">
@@ -545,7 +548,7 @@ export default function JsonFormatter() {
                     type="button"
                     className={cn(
                       'rounded px-1.5 py-0.5 text-[11px] transition-colors hover:bg-gray-800',
-                      fmt.isQueryMode ? 'text-accent-400' : 'text-gray-500 hover:text-gray-300'
+                      fmt.isQueryMode ? 'text-accent-400' : 'text-gray-400 hover:text-gray-300'
                     )}
                     onClick={() => {
                       fmt.setQueryMode(!fmt.isQueryMode);
@@ -574,7 +577,7 @@ export default function JsonFormatter() {
             ) : (
               <div className="flex h-full flex-col">
                 <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-                  <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+                  <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
                     Output
                   </span>
                   <div className="flex items-center gap-1">

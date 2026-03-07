@@ -91,11 +91,12 @@ export function CodeEditor({
         '.cm-content': { padding: '8px 0' },
         '.cm-focused': { outline: 'none' },
       }),
+      EditorView.contentAttributes.of({ 'aria-label': label }),
     ];
     if (readOnly) exts.push(EditorView.editable.of(false));
     if (langExtension) exts.push(langExtension);
     return exts;
-  }, [editorFontSize, readOnly, langExtension]);
+  }, [editorFontSize, readOnly, langExtension, label]);
 
   const handleChange = useCallback(
     (val: string) => {

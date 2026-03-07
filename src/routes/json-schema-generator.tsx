@@ -208,7 +208,7 @@ export default function JsonSchemaGenerator() {
           disabled={!schema.jsonInput.trim() || schema.isProcessing}
         >
           {schema.mode === 'generate' ? 'Generate' : 'Validate'}
-          <kbd className="ml-1 rounded bg-gray-800 px-1 text-[10px] text-gray-500">⌘↵</kbd>
+          <kbd className="ml-1 rounded bg-gray-800 px-1 text-[10px] text-gray-400">⌘↵</kbd>
         </Button>
 
         {schema.mode === 'generate' && schema.schemaOutput && (
@@ -237,7 +237,7 @@ export default function JsonSchemaGenerator() {
 
         <button
           type="button"
-          className="rounded p-1 text-gray-600 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -269,7 +269,7 @@ export default function JsonSchemaGenerator() {
           {/* Left: JSON input */}
           <div className="flex h-full flex-col">
             <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
                 JSON Input
               </span>
             </div>
@@ -287,7 +287,7 @@ export default function JsonSchemaGenerator() {
           {/* Right: Schema output/input + validation results */}
           <div className="flex h-full flex-col">
             <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
                 {schema.mode === 'generate' ? 'JSON Schema' : 'Schema'}
               </span>
               {schema.mode === 'generate' && (

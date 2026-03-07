@@ -38,7 +38,7 @@ function ResultRow({ label, value }: { label: string; value: string }) {
 
   return (
     <tr className="border-b border-gray-800 last:border-0">
-      <td className="w-28 py-2.5 pr-4 align-top text-[11px] font-medium uppercase tracking-wide text-gray-600">
+      <td className="w-28 py-2.5 pr-4 align-top text-[11px] font-medium uppercase tracking-wide text-gray-500">
         {label}
       </td>
       <td className="py-2.5 pr-2 font-mono text-xs text-gray-200 break-all">{value}</td>
@@ -71,7 +71,7 @@ function TimestampCopyRow({ label, value }: { label: string; value: number }) {
 
   return (
     <div className="flex items-center gap-3">
-      <span className="w-24 text-[11px] font-medium uppercase tracking-wide text-gray-600">
+      <span className="w-24 text-[11px] font-medium uppercase tracking-wide text-gray-500">
         {label}
       </span>
       <span className="flex-1 font-mono text-sm text-gray-200">{display}</span>
@@ -206,7 +206,7 @@ export default function UnixTimestampConverter() {
         </Button>
         <button
           type="button"
-          className="rounded p-1 text-gray-600 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -221,7 +221,7 @@ export default function UnixTimestampConverter() {
       <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-6">
         {/* ── Timestamp → Date ─────────────────────────────────── */}
         <section>
-          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
             Timestamp → Date
           </h2>
 
@@ -277,7 +277,7 @@ export default function UnixTimestampConverter() {
 
             {/* Auto-detect label */}
             {input.trim() && !forceUnit && result && !isTimestampError(result) && (
-              <span className="text-[11px] text-gray-600">
+              <span className="text-[11px] text-gray-500">
                 auto-detected: {result.detectedUnit}
               </span>
             )}
@@ -323,7 +323,7 @@ export default function UnixTimestampConverter() {
 
         {/* ── Date → Timestamp ─────────────────────────────────── */}
         <section>
-          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
             Date → Timestamp
           </h2>
 

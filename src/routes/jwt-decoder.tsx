@@ -83,7 +83,7 @@ function JsonBlock({ label, value }: { label: string; value: Record<string, unkn
   return (
     <div className="rounded-lg border border-gray-800 bg-gray-900">
       <div className="flex items-center justify-between border-b border-gray-800 px-4 py-2">
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
           {label}
         </span>
         <button
@@ -91,7 +91,7 @@ function JsonBlock({ label, value }: { label: string; value: Record<string, unkn
           onClick={() => {
             void copy(json);
           }}
-          className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-gray-600 hover:bg-gray-800 hover:text-gray-400"
+          className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-gray-500 hover:bg-gray-800 hover:text-gray-400"
           aria-label={`Copy ${label}`}
         >
           {copied ? (
@@ -122,7 +122,7 @@ function TimingSection({ result }: { result: JwtDecodeResult }) {
   return (
     <div className="rounded-lg border border-gray-800 bg-gray-900">
       <div className="border-b border-gray-800 px-4 py-2">
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
           Timing
         </span>
       </div>
@@ -262,7 +262,7 @@ export default function JwtDecoder() {
 
         <button
           type="button"
-          className="rounded p-1 text-gray-600 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -288,7 +288,7 @@ export default function JwtDecoder() {
         {/* Left: token input */}
         <div className="flex w-2/5 flex-col border-r border-gray-800">
           <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1.5">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
               JWT Token
             </span>
             <div className="flex items-center gap-1">
@@ -297,7 +297,7 @@ export default function JwtDecoder() {
                 onClick={() => {
                   void pasteFromClipboard();
                 }}
-                className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-gray-600 hover:bg-gray-800 hover:text-gray-400"
+                className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-gray-500 hover:bg-gray-800 hover:text-gray-400"
                 title="Paste from clipboard"
               >
                 <ClipboardPaste className="h-3 w-3" aria-hidden="true" />
@@ -309,7 +309,7 @@ export default function JwtDecoder() {
                   void copyRaw(input);
                 }}
                 disabled={!input}
-                className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-gray-600 hover:bg-gray-800 hover:text-gray-400 disabled:opacity-40"
+                className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-gray-500 hover:bg-gray-800 hover:text-gray-400 disabled:opacity-40"
                 title="Copy token"
               >
                 {copiedRaw ? (
@@ -356,7 +356,7 @@ export default function JwtDecoder() {
         {/* Right: decoded output */}
         <div className="flex flex-1 flex-col overflow-y-auto">
           <div className="flex items-center justify-between border-b border-gray-800 px-4 py-1.5">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-gray-600">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
               Decoded
             </span>
             <PiiMaskToggle pii={pii} />
@@ -374,7 +374,7 @@ export default function JwtDecoder() {
                 {pii.enabled && pii.matchCount > 0 ? (
                   <div className="rounded-lg border border-gray-800 bg-gray-900">
                     <div className="border-b border-gray-800 px-4 py-2">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
                         Payload (masked)
                       </span>
                     </div>
@@ -398,7 +398,7 @@ export default function JwtDecoder() {
 
                 {/* Signature notice */}
                 <div className="rounded-lg border border-gray-800 bg-gray-900 px-4 py-3">
-                  <div className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                  <div className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
                     Signature
                   </div>
                   <div className="break-all font-mono text-xs text-gray-600">

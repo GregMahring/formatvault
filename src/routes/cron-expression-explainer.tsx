@@ -67,10 +67,10 @@ function NextRunRow({ index, date }: { index: number; date: Date }) {
   const relative = formatRelative(date);
   return (
     <tr className="border-b border-gray-800 last:border-0">
-      <td className="w-6 py-2.5 pr-3 text-right text-[11px] font-medium text-gray-600">{index}</td>
+      <td className="w-6 py-2.5 pr-3 text-right text-[11px] font-medium text-gray-500">{index}</td>
       <td className="py-2.5 pr-2">
         <div className="font-mono text-xs text-gray-200">{formatted}</div>
-        <div className="mt-0.5 text-[10px] text-gray-600">{relative}</div>
+        <div className="mt-0.5 text-[10px] text-gray-400">{relative}</div>
       </td>
       <td className="w-8 py-2.5 align-top">
         <button
@@ -106,13 +106,13 @@ function FieldTable({ expr }: { expr: CronExpression }) {
     <table className="w-full text-xs">
       <thead>
         <tr className="border-b border-gray-800">
-          <th className="py-1.5 pr-4 text-left text-[11px] font-medium uppercase tracking-wide text-gray-600">
+          <th className="py-1.5 pr-4 text-left text-[11px] font-medium uppercase tracking-wide text-gray-500">
             Field
           </th>
-          <th className="py-1.5 pr-4 text-left text-[11px] font-medium uppercase tracking-wide text-gray-600">
+          <th className="py-1.5 pr-4 text-left text-[11px] font-medium uppercase tracking-wide text-gray-500">
             Value
           </th>
-          <th className="py-1.5 text-left text-[11px] font-medium uppercase tracking-wide text-gray-600">
+          <th className="py-1.5 text-left text-[11px] font-medium uppercase tracking-wide text-gray-500">
             Meaning
           </th>
         </tr>
@@ -230,7 +230,7 @@ function CronBuilder({
     <div className="flex flex-col gap-5">
       {/* Mode selector */}
       <div>
-        <p className="mb-2 text-[11px] font-medium uppercase tracking-wide text-gray-600">
+        <p className="mb-2 text-[11px] font-medium uppercase tracking-wide text-gray-500">
           Schedule type
         </p>
         <div className="flex flex-wrap gap-1.5">
@@ -497,7 +497,7 @@ export default function CronExpressionExplainer() {
         </Button>
         <button
           type="button"
-          className="rounded p-1 text-gray-600 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -513,7 +513,7 @@ export default function CronExpressionExplainer() {
         {/* ── Explain tab ───────────────────────────────────────────── */}
         {activeTab === 'explain' && (
           <section>
-            <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+            <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
               Expression
             </h2>
 
@@ -568,15 +568,15 @@ export default function CronExpressionExplainer() {
             {!explainInput.trim() && (
               <p className="mt-4 text-xs text-gray-700">
                 Enter a cron expression or pick a preset. Supports{' '}
-                <code className="rounded border border-gray-800 bg-gray-900 px-1 text-[10px] text-gray-500">
+                <code className="rounded border border-gray-800 bg-gray-900 px-1 text-[10px] text-gray-400">
                   @shortcuts
                 </code>
                 , named months{' '}
-                <code className="rounded border border-gray-800 bg-gray-900 px-1 text-[10px] text-gray-500">
+                <code className="rounded border border-gray-800 bg-gray-900 px-1 text-[10px] text-gray-400">
                   jan–dec
                 </code>
                 , and day names{' '}
-                <code className="rounded border border-gray-800 bg-gray-900 px-1 text-[10px] text-gray-500">
+                <code className="rounded border border-gray-800 bg-gray-900 px-1 text-[10px] text-gray-400">
                   mon–sun
                 </code>
                 .
@@ -588,7 +588,7 @@ export default function CronExpressionExplainer() {
         {/* ── Build tab ─────────────────────────────────────────────── */}
         {activeTab === 'build' && (
           <section>
-            <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+            <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
               Builder
             </h2>
             <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
@@ -596,7 +596,7 @@ export default function CronExpressionExplainer() {
 
               {/* Generated expression */}
               <div className="mt-5 border-t border-gray-800 pt-4">
-                <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-gray-600">
+                <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-gray-500">
                   Generated expression
                 </p>
                 <div className="flex items-center gap-2">
@@ -638,7 +638,7 @@ export default function CronExpressionExplainer() {
         {expression && (
           <>
             <section>
-              <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+              <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
                 In plain English
               </h2>
               <div className="rounded-lg border border-gray-800 bg-gray-900 px-4 py-3">
@@ -648,7 +648,7 @@ export default function CronExpressionExplainer() {
 
             <div className="grid gap-6 lg:grid-cols-2">
               <section>
-                <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
                   Field breakdown
                 </h2>
                 <div className="overflow-hidden rounded-lg border border-gray-800 bg-gray-900 px-4 py-2">
@@ -657,7 +657,7 @@ export default function CronExpressionExplainer() {
               </section>
 
               <section>
-                <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
                   Next 5 runs
                   <span className="ml-2 text-[10px] font-normal text-gray-700">(local time)</span>
                 </h2>
