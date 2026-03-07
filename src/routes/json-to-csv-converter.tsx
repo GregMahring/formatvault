@@ -29,7 +29,7 @@ export default function JsonToCsvConverter() {
       convert={convert}
       toolbarSlot={
         <>
-          <label htmlFor="csv-delimiter-select" className="text-xs text-gray-400">
+          <label htmlFor="csv-delimiter-select" className="text-xs text-fg-secondary">
             Delimiter
           </label>
           <select
@@ -38,7 +38,7 @@ export default function JsonToCsvConverter() {
             onChange={(e) => {
               setDelimiter(e.target.value as CsvOutputDelimiter);
             }}
-            className="rounded border border-gray-700 bg-gray-900 px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
+            className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
           >
             <option value=",">Comma (,)</option>
             <option value={'\t'}>Tab</option>

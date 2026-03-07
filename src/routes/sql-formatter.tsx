@@ -161,12 +161,12 @@ export default function SqlFormatter() {
   return (
     <div className="flex h-full flex-col">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-gray-800 bg-gray-950 px-4 py-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <h1 className="text-sm font-semibold text-gray-200">SQL Formatter</h1>
 
-        <div className="h-4 w-px bg-gray-800" aria-hidden="true" />
+        <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
-        <label htmlFor="sql-dialect-select" className="text-xs text-gray-400">
+        <label htmlFor="sql-dialect-select" className="text-xs text-fg-secondary">
           Dialect
         </label>
         <select
@@ -175,7 +175,7 @@ export default function SqlFormatter() {
           onChange={(e) => {
             fmt.setDialect(e.target.value as SqlDialect);
           }}
-          className="rounded border border-gray-700 bg-gray-900 px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
+          className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
         >
           {(Object.entries(DIALECT_LABELS) as [SqlDialect, string][]).map(([value, label]) => (
             <option key={value} value={value}>
@@ -184,7 +184,7 @@ export default function SqlFormatter() {
           ))}
         </select>
 
-        <label htmlFor="sql-keyword-case-select" className="text-xs text-gray-400">
+        <label htmlFor="sql-keyword-case-select" className="text-xs text-fg-secondary">
           Keywords
         </label>
         <select
@@ -193,14 +193,14 @@ export default function SqlFormatter() {
           onChange={(e) => {
             fmt.setKeywordCase(e.target.value as SqlKeywordCase);
           }}
-          className="rounded border border-gray-700 bg-gray-900 px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
+          className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
         >
           <option value="upper">UPPERCASE</option>
           <option value="lower">lowercase</option>
           <option value="preserve">Preserve</option>
         </select>
 
-        <label htmlFor="sql-indent-select" className="text-xs text-gray-400">
+        <label htmlFor="sql-indent-select" className="text-xs text-fg-secondary">
           Indent
         </label>
         <select
@@ -209,13 +209,13 @@ export default function SqlFormatter() {
           onChange={(e) => {
             fmt.setTabWidth(Number(e.target.value) as 2 | 4);
           }}
-          className="rounded border border-gray-700 bg-gray-900 px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
+          className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
         >
           <option value={2}>2 spaces</option>
           <option value={4}>4 spaces</option>
         </select>
 
-        <label htmlFor="sql-lines-select" className="text-xs text-gray-400">
+        <label htmlFor="sql-lines-select" className="text-xs text-fg-secondary">
           Between queries
         </label>
         <select
@@ -224,7 +224,7 @@ export default function SqlFormatter() {
           onChange={(e) => {
             fmt.setLinesBetweenQueries(Number(e.target.value) as 1 | 2);
           }}
-          className="rounded border border-gray-700 bg-gray-900 px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
+          className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
         >
           <option value={1}>1 line</option>
           <option value={2}>2 lines</option>
@@ -239,7 +239,7 @@ export default function SqlFormatter() {
             'rounded px-2 py-1 text-xs transition-colors',
             showDiff
               ? 'bg-accent-700/40 text-accent-300'
-              : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
+              : 'text-fg-tertiary hover:bg-surface-elevated hover:text-fg'
           )}
           onClick={() => {
             setShowDiff((v) => !v);
@@ -264,12 +264,14 @@ export default function SqlFormatter() {
           disabled={!fmt.input.trim()}
         >
           Format
-          <kbd className="ml-1 rounded bg-gray-800 px-1 text-[10px] text-gray-400">⌘↵</kbd>
+          <kbd className="ml-1 rounded bg-surface-elevated px-1 text-[10px] text-fg-secondary">
+            ⌘↵
+          </kbd>
         </Button>
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-3 text-xs text-gray-400"
+          className="h-7 px-3 text-xs text-fg-secondary"
           onClick={fmt.clear}
           disabled={!fmt.input.trim()}
         >
@@ -278,7 +280,7 @@ export default function SqlFormatter() {
 
         <button
           type="button"
-          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -309,8 +311,8 @@ export default function SqlFormatter() {
         ) : (
           <SplitPane leftLabel="SQL input editor" rightLabel="Formatted output" className="flex-1">
             <div className="flex h-full flex-col">
-              <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-                <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
+              <div className="flex items-center justify-between border-b border-edge px-3 py-1">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
                   Input
                 </span>
                 <FileUploadZone
@@ -331,8 +333,8 @@ export default function SqlFormatter() {
             </div>
 
             <div className="flex h-full flex-col">
-              <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-                <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
+              <div className="flex items-center justify-between border-b border-edge px-3 py-1">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
                   Output
                 </span>
                 <div className="flex items-center gap-1">

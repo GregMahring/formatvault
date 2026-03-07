@@ -62,7 +62,7 @@ export function DiffPanel({ original, modified, className }: DiffPanelProps) {
 
   if (!original && !modified) {
     return (
-      <div className={cn('flex items-center justify-center p-8 text-xs text-gray-600', className)}>
+      <div className={cn('flex items-center justify-center p-8 text-xs text-fg-muted', className)}>
         Diff will appear here once both panes have content.
       </div>
     );
@@ -71,18 +71,18 @@ export function DiffPanel({ original, modified, className }: DiffPanelProps) {
   return (
     <div className={cn('flex flex-col overflow-hidden', className)}>
       {/* Summary bar */}
-      <div className="flex items-center gap-3 border-b border-gray-800 px-4 py-1.5 text-xs">
+      <div className="flex items-center gap-3 border-b border-edge px-4 py-1.5 text-xs">
         {hasChanges ? (
           <>
             {added > 0 && <span className="text-green-400">+{String(added)} added</span>}
             {removed > 0 && <span className="text-red-400">−{String(removed)} removed</span>}
-            <span className="text-gray-600">{String(unchanged)} unchanged</span>
+            <span className="text-fg-muted">{String(unchanged)} unchanged</span>
           </>
         ) : (
-          <span className="text-gray-500">No differences</span>
+          <span className="text-fg-tertiary">No differences</span>
         )}
         <div className="flex-1" />
-        <label className="flex cursor-pointer items-center gap-1.5 text-gray-500">
+        <label className="flex cursor-pointer items-center gap-1.5 text-fg-tertiary">
           <input
             type="checkbox"
             className="h-3 w-3 accent-accent-500"
@@ -129,7 +129,7 @@ export function DiffPanel({ original, modified, className }: DiffPanelProps) {
                     'px-2 py-0.5 whitespace-pre',
                     line.kind === 'added' && 'text-green-300',
                     line.kind === 'removed' && 'text-red-300',
-                    line.kind === 'unchanged' && 'text-gray-500'
+                    line.kind === 'unchanged' && 'text-fg-tertiary'
                   )}
                 >
                   {line.text || ' '}
@@ -140,7 +140,7 @@ export function DiffPanel({ original, modified, className }: DiffPanelProps) {
         </table>
 
         {visibleLines.length === 0 && (
-          <div className="p-4 text-center text-xs text-gray-600">
+          <div className="p-4 text-center text-xs text-fg-muted">
             {showContext ? 'Empty diff' : 'No changes — enable "Show context" to see all lines'}
           </div>
         )}

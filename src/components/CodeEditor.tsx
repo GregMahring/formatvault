@@ -67,7 +67,7 @@ export function CodeEditor({
   minHeight = '200px',
   maxHeight,
 }: CodeEditorProps) {
-  const { editorFontSize } = useSettingsStore();
+  const { editorFontSize, theme } = useSettingsStore();
   const [langExtension, setLangExtension] = useState<Extension | null>(null);
 
   // Load language pack once when language prop changes
@@ -107,17 +107,14 @@ export function CodeEditor({
 
   return (
     <div
-      className={cn(
-        'relative overflow-hidden rounded-md border border-gray-800 bg-gray-950',
-        className
-      )}
+      className={cn('relative overflow-hidden rounded-md border border-edge bg-surface', className)}
       role="group"
       aria-label={label}
     >
       <ReactCodeMirror
         value={value}
         onChange={readOnly ? undefined : handleChange}
-        theme={oneDark}
+        theme={theme === 'dark' ? oneDark : 'light'}
         extensions={extensions}
         placeholder={placeholder}
         readOnly={readOnly}

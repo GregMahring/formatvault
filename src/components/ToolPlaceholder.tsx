@@ -25,7 +25,7 @@ export function ToolPlaceholder({
   const placeholderPane = (label: string) => (
     <div
       className={cn(
-        'flex h-full flex-col items-center justify-center gap-2 text-gray-600',
+        'flex h-full flex-col items-center justify-center gap-2 text-fg-muted',
         className
       )}
     >
@@ -37,9 +37,9 @@ export function ToolPlaceholder({
   return (
     <div className="flex h-full flex-col">
       {/* Tool header bar */}
-      <div className="flex h-10 shrink-0 items-center gap-3 border-b border-gray-800 bg-gray-900 px-4">
+      <div className="flex h-10 shrink-0 items-center gap-3 border-b border-edge bg-surface-raised px-4">
         <h1 className="text-sm font-semibold text-gray-200">{title}</h1>
-        <span className="text-xs text-gray-500">{description}</span>
+        <span className="text-xs text-fg-tertiary">{description}</span>
       </div>
 
       {/* Split pane — occupies remaining height */}

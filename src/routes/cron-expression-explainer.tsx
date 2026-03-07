@@ -66,11 +66,13 @@ function NextRunRow({ index, date }: { index: number; date: Date }) {
   const formatted = localFormatter.format(date);
   const relative = formatRelative(date);
   return (
-    <tr className="border-b border-gray-800 last:border-0">
-      <td className="w-6 py-2.5 pr-3 text-right text-[11px] font-medium text-gray-500">{index}</td>
+    <tr className="border-b border-edge last:border-0">
+      <td className="w-6 py-2.5 pr-3 text-right text-[11px] font-medium text-fg-tertiary">
+        {index}
+      </td>
       <td className="py-2.5 pr-2">
         <div className="font-mono text-xs text-gray-200">{formatted}</div>
-        <div className="mt-0.5 text-[10px] text-gray-400">{relative}</div>
+        <div className="mt-0.5 text-[10px] text-fg-secondary">{relative}</div>
       </td>
       <td className="w-8 py-2.5 align-top">
         <button
@@ -78,7 +80,7 @@ function NextRunRow({ index, date }: { index: number; date: Date }) {
           onClick={() => {
             void copy(formatted);
           }}
-          className="rounded p-1 text-gray-700 transition-colors hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-fg-muted transition-colors hover:bg-surface-elevated hover:text-fg-secondary"
           aria-label={`Copy run ${String(index)} timestamp`}
           title="Copy"
         >
@@ -105,14 +107,14 @@ function FieldTable({ expr }: { expr: CronExpression }) {
   return (
     <table className="w-full text-xs">
       <thead>
-        <tr className="border-b border-gray-800">
-          <th className="py-1.5 pr-4 text-left text-[11px] font-medium uppercase tracking-wide text-gray-500">
+        <tr className="border-b border-edge">
+          <th className="py-1.5 pr-4 text-left text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
             Field
           </th>
-          <th className="py-1.5 pr-4 text-left text-[11px] font-medium uppercase tracking-wide text-gray-500">
+          <th className="py-1.5 pr-4 text-left text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
             Value
           </th>
-          <th className="py-1.5 text-left text-[11px] font-medium uppercase tracking-wide text-gray-500">
+          <th className="py-1.5 text-left text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
             Meaning
           </th>
         </tr>
@@ -122,13 +124,13 @@ function FieldTable({ expr }: { expr: CronExpression }) {
           const field = expr[key];
           if (!field || typeof field === 'string') return null;
           return (
-            <tr key={key} className="border-b border-gray-800 last:border-0">
-              <td className="py-2 pr-4 text-gray-500">
+            <tr key={key} className="border-b border-edge last:border-0">
+              <td className="py-2 pr-4 text-fg-tertiary">
                 {label}
-                <span className="ml-1.5 text-[10px] text-gray-700">{range}</span>
+                <span className="ml-1.5 text-[10px] text-fg-muted">{range}</span>
               </td>
               <td className="py-2 pr-4 font-mono text-gray-300">{field.raw}</td>
-              <td className="py-2 text-gray-400">{field.description}</td>
+              <td className="py-2 text-fg-secondary">{field.description}</td>
             </tr>
           );
         })}
@@ -157,7 +159,7 @@ function FieldSelect({
         onChange(Number(e.target.value));
       }}
       aria-label={label}
-      className="rounded border border-gray-700 bg-gray-800 px-2 py-1 text-sm text-gray-200 focus:border-accent-500 focus:outline-none"
+      className="rounded border border-edge-emphasis bg-surface-elevated px-2 py-1 text-sm text-gray-200 focus:border-accent-500 focus:outline-none"
     >
       {options.map((o) => (
         <option key={o.value} value={o.value}>
@@ -230,7 +232,7 @@ function CronBuilder({
     <div className="flex flex-col gap-5">
       {/* Mode selector */}
       <div>
-        <p className="mb-2 text-[11px] font-medium uppercase tracking-wide text-gray-500">
+        <p className="mb-2 text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
           Schedule type
         </p>
         <div className="flex flex-wrap gap-1.5">
@@ -245,7 +247,7 @@ function CronBuilder({
                 'rounded border px-2.5 py-1 text-xs transition-colors',
                 state.mode === mode
                   ? 'border-accent-600 bg-accent-600/20 text-accent-300'
-                  : 'border-gray-700 bg-gray-900 text-gray-400 hover:border-gray-600 hover:text-gray-200'
+                  : 'border-edge-emphasis bg-surface-raised text-fg-secondary hover:border-edge-emphasis hover:text-fg'
               )}
             >
               {label}
@@ -257,11 +259,11 @@ function CronBuilder({
       {/* Controls */}
       <div className="flex flex-col gap-3">
         {state.mode === 'every-minute' && (
-          <p className="text-sm text-gray-500">Runs every minute, 24/7.</p>
+          <p className="text-sm text-fg-tertiary">Runs every minute, 24/7.</p>
         )}
 
         {state.mode === 'every-n-minutes' && (
-          <div className="flex items-center gap-2 text-sm text-gray-400">
+          <div className="flex items-center gap-2 text-sm text-fg-secondary">
             Every
             <FieldSelect
               value={state.stepMinutes}
@@ -276,7 +278,7 @@ function CronBuilder({
         )}
 
         {state.mode === 'hourly' && (
-          <div className="flex items-center gap-2 text-sm text-gray-400">
+          <div className="flex items-center gap-2 text-sm text-fg-secondary">
             At minute
             <FieldSelect
               value={state.minute}
@@ -291,7 +293,7 @@ function CronBuilder({
         )}
 
         {(state.mode === 'daily' || state.mode === 'weekly' || state.mode === 'monthly') && (
-          <div className="flex items-center gap-2 text-sm text-gray-400">
+          <div className="flex items-center gap-2 text-sm text-fg-secondary">
             At
             <FieldSelect
               value={state.hour}
@@ -315,7 +317,7 @@ function CronBuilder({
 
         {state.mode === 'weekly' && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-400">On</span>
+            <span className="text-sm text-fg-secondary">On</span>
             <div className="flex gap-1">
               {DOW_LABELS.map((label, i) => (
                 <button
@@ -328,7 +330,7 @@ function CronBuilder({
                     'h-8 w-8 rounded text-xs font-medium transition-colors',
                     state.daysOfWeek.includes(i)
                       ? 'bg-accent-600 text-white'
-                      : 'bg-gray-800 text-gray-500 hover:bg-gray-700 hover:text-gray-200'
+                      : 'bg-surface-elevated text-fg-tertiary hover:bg-surface-raised hover:text-fg'
                   )}
                   aria-pressed={state.daysOfWeek.includes(i)}
                   aria-label={DOW_LABELS[i]}
@@ -341,7 +343,7 @@ function CronBuilder({
         )}
 
         {state.mode === 'monthly' && (
-          <div className="flex items-center gap-2 text-sm text-gray-400">
+          <div className="flex items-center gap-2 text-sm text-fg-secondary">
             On day
             <FieldSelect
               value={state.dayOfMonth}
@@ -367,9 +369,9 @@ function CronBuilder({
               ] as const
             ).map(({ key, label, placeholder, hint }) => (
               <div key={key} className="flex flex-col gap-1">
-                <label className="text-[10px] text-gray-600">
+                <label className="text-[10px] text-fg-muted">
                   {label}
-                  <span className="block text-[9px] text-gray-700">{hint}</span>
+                  <span className="block text-[9px] text-fg-muted">{hint}</span>
                 </label>
                 <input
                   type="text"
@@ -378,7 +380,7 @@ function CronBuilder({
                     set({ [key]: e.target.value });
                   }}
                   placeholder={placeholder}
-                  className="w-full rounded border border-gray-700 bg-gray-800 px-2 py-1 font-mono text-sm text-gray-200 placeholder-gray-700 focus:border-accent-500 focus:outline-none"
+                  className="w-full rounded border border-edge-emphasis bg-surface-elevated px-2 py-1 font-mono text-sm text-gray-200 placeholder-gray-700 focus:border-accent-500 focus:outline-none"
                   spellCheck={false}
                 />
               </div>
@@ -459,12 +461,12 @@ export default function CronExpressionExplainer() {
   return (
     <div className="flex h-full flex-col">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-gray-800 bg-gray-950 px-4 py-2">
-        <CalendarClock className="h-4 w-4 text-gray-500" aria-hidden="true" />
+      <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
+        <CalendarClock className="h-4 w-4 text-fg-tertiary" aria-hidden="true" />
         <h1 className="text-sm font-semibold text-gray-200">Cron Expression Explainer</h1>
 
         {/* Tab toggle */}
-        <div className="ml-3 flex rounded border border-gray-800 bg-gray-900 p-0.5">
+        <div className="ml-3 flex rounded border border-edge bg-surface-raised p-0.5">
           {(['explain', 'build'] as ActiveTab[]).map((tab) => (
             <button
               key={tab}
@@ -474,9 +476,7 @@ export default function CronExpressionExplainer() {
               }}
               className={cn(
                 'rounded px-3 py-0.5 text-xs font-medium transition-colors',
-                activeTab === tab
-                  ? 'bg-gray-700 text-gray-100'
-                  : 'text-gray-500 hover:text-gray-300'
+                activeTab === tab ? 'bg-surface-elevated text-fg' : 'text-fg-tertiary hover:text-fg'
               )}
             >
               {tab === 'explain' ? 'Explain' : 'Build'}
@@ -489,7 +489,7 @@ export default function CronExpressionExplainer() {
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-3 text-xs text-gray-500"
+          className="h-7 px-3 text-xs text-fg-tertiary"
           onClick={clear}
           disabled={activeTab === 'explain' ? !explainInput : false}
         >
@@ -497,7 +497,7 @@ export default function CronExpressionExplainer() {
         </Button>
         <button
           type="button"
-          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -513,13 +513,13 @@ export default function CronExpressionExplainer() {
         {/* ── Explain tab ───────────────────────────────────────────── */}
         {activeTab === 'explain' && (
           <section>
-            <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+            <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
               Expression
             </h2>
 
             <div className="flex items-center gap-2">
               <div className="flex items-center">
-                <span className="select-none rounded-l border border-r-0 border-gray-700 bg-gray-900 px-2.5 py-1.5 font-mono text-sm text-gray-600">
+                <span className="select-none rounded-l border border-r-0 border-edge-emphasis bg-surface-raised px-2.5 py-1.5 font-mono text-sm text-fg-muted">
                   ⏱
                 </span>
                 <input
@@ -529,7 +529,7 @@ export default function CronExpressionExplainer() {
                     setExplainInput(e.target.value);
                   }}
                   placeholder="* * * * *"
-                  className="w-64 rounded-none rounded-r border border-gray-700 bg-gray-900 px-3 py-1.5 font-mono text-sm text-gray-200 placeholder-gray-600 focus:border-accent-500 focus:outline-none"
+                  className="w-64 rounded-none rounded-r border border-edge-emphasis bg-surface-raised px-3 py-1.5 font-mono text-sm text-gray-200 placeholder-fg-muted focus:border-accent-500 focus:outline-none"
                   aria-label="Cron expression"
                   spellCheck={false}
                   autoComplete="off"
@@ -537,7 +537,7 @@ export default function CronExpressionExplainer() {
               </div>
               <div className="hidden items-center gap-3 sm:flex">
                 {['min', 'hr', 'dom', 'mon', 'dow'].map((f) => (
-                  <span key={f} className="text-[10px] text-gray-700">
+                  <span key={f} className="text-[10px] text-fg-muted">
                     {f}
                   </span>
                 ))}
@@ -553,10 +553,10 @@ export default function CronExpressionExplainer() {
                     setExplainInput(preset.value);
                   }}
                   className={cn(
-                    'rounded border border-gray-800 bg-gray-900 px-2 py-0.5 text-[11px] transition-colors hover:border-gray-700 hover:text-gray-300',
+                    'rounded border border-edge bg-surface-raised px-2 py-0.5 text-[11px] transition-colors hover:border-edge-emphasis hover:text-fg',
                     explainInput === preset.value
                       ? 'border-accent-700 text-accent-400'
-                      : 'text-gray-500'
+                      : 'text-fg-tertiary'
                   )}
                   title={preset.description}
                 >
@@ -566,17 +566,17 @@ export default function CronExpressionExplainer() {
             </div>
 
             {!explainInput.trim() && (
-              <p className="mt-4 text-xs text-gray-700">
+              <p className="mt-4 text-xs text-fg-muted">
                 Enter a cron expression or pick a preset. Supports{' '}
-                <code className="rounded border border-gray-800 bg-gray-900 px-1 text-[10px] text-gray-400">
+                <code className="rounded border border-edge bg-surface-raised px-1 text-[10px] text-fg-secondary">
                   @shortcuts
                 </code>
                 , named months{' '}
-                <code className="rounded border border-gray-800 bg-gray-900 px-1 text-[10px] text-gray-400">
+                <code className="rounded border border-edge bg-surface-raised px-1 text-[10px] text-fg-secondary">
                   jan–dec
                 </code>
                 , and day names{' '}
-                <code className="rounded border border-gray-800 bg-gray-900 px-1 text-[10px] text-gray-400">
+                <code className="rounded border border-edge bg-surface-raised px-1 text-[10px] text-fg-secondary">
                   mon–sun
                 </code>
                 .
@@ -588,19 +588,19 @@ export default function CronExpressionExplainer() {
         {/* ── Build tab ─────────────────────────────────────────────── */}
         {activeTab === 'build' && (
           <section>
-            <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+            <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
               Builder
             </h2>
-            <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
+            <div className="rounded-lg border border-edge bg-surface-raised/60 p-4">
               <CronBuilder state={builderState} onChange={setBuilderState} />
 
               {/* Generated expression */}
-              <div className="mt-5 border-t border-gray-800 pt-4">
-                <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-gray-500">
+              <div className="mt-5 border-t border-edge pt-4">
+                <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
                   Generated expression
                 </p>
                 <div className="flex items-center gap-2">
-                  <code className="flex-1 rounded border border-gray-700 bg-gray-950 px-3 py-1.5 font-mono text-sm text-accent-300">
+                  <code className="flex-1 rounded border border-edge-emphasis bg-surface px-3 py-1.5 font-mono text-sm text-accent-300">
                     {derivedExpression}
                   </code>
                   <button
@@ -608,7 +608,7 @@ export default function CronExpressionExplainer() {
                     onClick={() => {
                       void copyExpression(derivedExpression);
                     }}
-                    className="flex items-center gap-1.5 rounded border border-gray-700 bg-gray-800 px-2.5 py-1.5 text-xs text-gray-400 transition-colors hover:border-gray-600 hover:text-gray-200"
+                    className="flex items-center gap-1.5 rounded border border-edge-emphasis bg-surface-elevated px-2.5 py-1.5 text-xs text-fg-secondary transition-colors hover:border-edge-emphasis hover:text-fg"
                     aria-label="Copy expression"
                   >
                     {expressionCopied ? (
@@ -638,31 +638,31 @@ export default function CronExpressionExplainer() {
         {expression && (
           <>
             <section>
-              <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+              <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
                 In plain English
               </h2>
-              <div className="rounded-lg border border-gray-800 bg-gray-900 px-4 py-3">
-                <p className="text-base font-semibold text-gray-100">{expression.summary}</p>
+              <div className="rounded-lg border border-edge bg-surface-raised px-4 py-3">
+                <p className="text-base font-semibold text-fg">{expression.summary}</p>
               </div>
             </section>
 
             <div className="grid gap-6 lg:grid-cols-2">
               <section>
-                <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
                   Field breakdown
                 </h2>
-                <div className="overflow-hidden rounded-lg border border-gray-800 bg-gray-900 px-4 py-2">
+                <div className="overflow-hidden rounded-lg border border-edge bg-surface-raised px-4 py-2">
                   <FieldTable expr={expression} />
                 </div>
               </section>
 
               <section>
-                <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
                   Next 5 runs
-                  <span className="ml-2 text-[10px] font-normal text-gray-700">(local time)</span>
+                  <span className="ml-2 text-[10px] font-normal text-fg-muted">(local time)</span>
                 </h2>
                 {nextRuns && nextRuns.length > 0 ? (
-                  <div className="overflow-hidden rounded-lg border border-gray-800 bg-gray-900 px-4 py-1">
+                  <div className="overflow-hidden rounded-lg border border-edge bg-surface-raised px-4 py-1">
                     <table className="w-full">
                       <tbody>
                         {nextRuns.map((date, i) => (
@@ -672,7 +672,7 @@ export default function CronExpressionExplainer() {
                     </table>
                   </div>
                 ) : (
-                  <div className="rounded-lg border border-gray-800 bg-gray-900 px-4 py-3 text-xs text-gray-600">
+                  <div className="rounded-lg border border-edge bg-surface-raised px-4 py-3 text-xs text-fg-muted">
                     No upcoming runs found in the next 5 years.
                   </div>
                 )}

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 export interface SplitPaneProps {
   /**
@@ -18,9 +19,10 @@ export interface SplitPaneProps {
 }
 
 /**
- * Resizable split pane — left (input) and right (output) side by side.
+ * Resizable split pane — left (input) and right (output) side by side on desktop,
+ * stacked vertically on mobile (below md breakpoint).
  *
- * Drag the handle or use ArrowLeft/ArrowRight keys to resize.
+ * Drag the handle or use ArrowLeft/ArrowRight keys to resize (desktop only).
  * No external library — keeps bundle lean and avoids SSR hydration mismatches.
  */
 export function SplitPane({
@@ -34,6 +36,7 @@ export function SplitPane({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const isDragging = React.useRef(false);
   const [splitPct, setSplitPct] = React.useState(defaultSplit);
+  const isMobile = useMediaQuery('(max-width: 767px)');
 
   const handleDragStart = React.useCallback((e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
@@ -78,6 +81,23 @@ export function SplitPane({
     };
   }, []);
 
+  if (isMobile) {
+    return (
+      <div
+        className={cn('flex h-full min-h-0 w-full flex-col overflow-hidden', className)}
+        role="group"
+      >
+        <section className="flex min-h-0 flex-1 flex-col overflow-hidden" aria-label={leftLabel}>
+          {left}
+        </section>
+        <div className="h-px w-full shrink-0 bg-edge" aria-hidden="true" />
+        <section className="flex min-h-0 flex-1 flex-col overflow-hidden" aria-label={rightLabel}>
+          {right}
+        </section>
+      </div>
+    );
+  }
+
   return (
     <div
       ref={containerRef}
@@ -102,7 +122,7 @@ export function SplitPane({
         aria-valuenow={splitPct}
         aria-valuemin={20}
         aria-valuemax={80}
-        className="group relative flex w-1 shrink-0 cursor-col-resize items-center justify-center bg-gray-800 transition-colors hover:bg-accent-600/60 focus-visible:bg-accent-600/60 focus-visible:outline-none"
+        className="group relative flex w-1 shrink-0 cursor-col-resize items-center justify-center bg-surface-elevated transition-colors hover:bg-accent-600/60 focus-visible:bg-accent-600/60 focus-visible:outline-none"
         onMouseDown={handleDragStart}
         onTouchStart={handleDragStart}
         onKeyDown={(e) => {
@@ -117,7 +137,7 @@ export function SplitPane({
         {/* Visual grip dots */}
         <div className="flex flex-col gap-0.5 opacity-40 group-hover:opacity-70">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-1 w-1 rounded-full bg-gray-400" aria-hidden="true" />
+            <div key={i} className="h-1 w-1 rounded-full bg-fg-secondary" aria-hidden="true" />
           ))}
         </div>
       </button>

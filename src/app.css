@@ -25,12 +25,47 @@
   --color-accent-800: oklch(33% 0.13 290);
   --color-accent-900: oklch(24% 0.08 290);
   --color-accent-950: oklch(16% 0.05 290);
+
+  /* Semantic surface/foreground/edge colors — resolve via CSS variables set on .dark/.light */
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-edge: var(--edge);
+  --color-edge-emphasis: var(--edge-emphasis);
+  --color-fg: var(--fg);
+  --color-fg-secondary: var(--fg-secondary);
+  --color-fg-tertiary: var(--fg-tertiary);
+  --color-fg-muted: var(--fg-muted);
 }
 
 /* Base layer — applied to all elements */
 @layer base {
-  :root {
+  /* Dark theme (default) */
+  .dark {
     color-scheme: dark;
+    --surface: oklch(9% 0 0); /* gray-950 */
+    --surface-raised: oklch(13% 0 0); /* gray-900 */
+    --surface-elevated: oklch(20% 0 0); /* gray-800 */
+    --edge: oklch(20% 0 0); /* gray-800 */
+    --edge-emphasis: oklch(27% 0 0); /* gray-700 */
+    --fg: oklch(93% 0 0); /* gray-100 */
+    --fg-secondary: oklch(56% 0 0); /* gray-400 */
+    --fg-tertiary: oklch(45% 0 0); /* gray-500 */
+    --fg-muted: oklch(37% 0 0); /* gray-600 */
+  }
+
+  /* Light theme */
+  .light {
+    color-scheme: light;
+    --surface: oklch(100% 0 0); /* white */
+    --surface-raised: oklch(98% 0 0); /* gray-50 */
+    --surface-elevated: oklch(94% 0 0); /* gray-200 */
+    --edge: oklch(90% 0 0); /* gray-300 */
+    --edge-emphasis: oklch(85% 0 0); /* gray-400 */
+    --fg: oklch(15% 0 0); /* gray-900 */
+    --fg-secondary: oklch(40% 0 0); /* gray-600 */
+    --fg-tertiary: oklch(50% 0 0); /* gray-500 */
+    --fg-muted: oklch(60% 0 0); /* gray-400 */
   }
 
   html {
@@ -57,7 +92,7 @@
     outline: none;
   }
 
-  /* Scrollbar styling for webkit — subtle dark scrollbars */
+  /* Scrollbar styling for webkit — subtle scrollbars that adapt to theme */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -67,12 +102,21 @@
     background: transparent;
   }
 
-  ::-webkit-scrollbar-thumb {
+  .dark ::-webkit-scrollbar-thumb {
     background: oklch(35% 0 0);
     border-radius: 4px;
   }
 
-  ::-webkit-scrollbar-thumb:hover {
+  .dark ::-webkit-scrollbar-thumb:hover {
     background: oklch(45% 0 0);
+  }
+
+  .light ::-webkit-scrollbar-thumb {
+    background: oklch(75% 0 0);
+    border-radius: 4px;
+  }
+
+  .light ::-webkit-scrollbar-thumb:hover {
+    background: oklch(65% 0 0);
   }
 }

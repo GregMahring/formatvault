@@ -42,8 +42,8 @@ export function MarkdownPreview({ source, className }: MarkdownPreviewProps) {
   return (
     <div className={`flex h-full flex-col ${className ?? ''}`}>
       {/* Panel header */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1.5">
-        <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
+      <div className="flex items-center justify-between border-b border-edge px-3 py-1.5">
+        <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
           Markdown Preview
         </span>
         <div className="flex items-center gap-1">
@@ -53,7 +53,7 @@ export function MarkdownPreview({ source, className }: MarkdownPreviewProps) {
               void copy(source);
             }}
             disabled={!source.trim()}
-            className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-gray-500 hover:bg-gray-800 hover:text-gray-400 disabled:opacity-40"
+            className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary disabled:opacity-40"
             title="Copy markdown source"
           >
             {copied ? (
@@ -69,7 +69,7 @@ export function MarkdownPreview({ source, className }: MarkdownPreviewProps) {
               download(source, 'preview.md');
             }}
             disabled={!source.trim()}
-            className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-gray-500 hover:bg-gray-800 hover:text-gray-400 disabled:opacity-40"
+            className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary disabled:opacity-40"
             title="Download as .md file"
           >
             <Download className="h-3 w-3" aria-hidden="true" />
@@ -79,27 +79,28 @@ export function MarkdownPreview({ source, className }: MarkdownPreviewProps) {
       </div>
 
       {/* Rendered preview */}
-      <div className="flex-1 overflow-y-auto bg-gray-900">
+      <div className="flex-1 overflow-y-auto bg-surface-raised">
         {html ? (
           <div
-            className="prose prose-invert prose-sm max-w-none px-5 py-4
-              prose-headings:text-gray-100
-              prose-p:text-gray-300
+            className="prose prose-sm max-w-none px-5 py-4
+              dark:prose-invert
+              dark:prose-headings:text-gray-100
+              dark:prose-p:text-gray-300
               prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline
-              prose-code:rounded prose-code:bg-gray-800 prose-code:px-1 prose-code:py-0.5
-              prose-code:text-cyan-300 prose-code:text-xs prose-code:font-mono
-              prose-pre:bg-gray-800 prose-pre:border prose-pre:border-gray-700
-              prose-blockquote:border-gray-700 prose-blockquote:text-gray-400
-              prose-hr:border-gray-800
-              prose-strong:text-gray-100
+              prose-code:rounded dark:prose-code:bg-gray-800 prose-code:px-1 prose-code:py-0.5
+              dark:prose-code:text-cyan-300 prose-code:text-xs prose-code:font-mono
+              dark:prose-pre:bg-gray-800 prose-pre:border dark:prose-pre:border-gray-700
+              dark:prose-blockquote:border-gray-700 dark:prose-blockquote:text-gray-400
+              dark:prose-hr:border-gray-800
+              dark:prose-strong:text-gray-100
               prose-table:text-xs
-              prose-th:text-gray-400 prose-th:border-gray-700
-              prose-td:border-gray-800"
+              dark:prose-th:text-gray-400 dark:prose-th:border-gray-700
+              dark:prose-td:border-gray-800"
             // DOMPurify already sanitized — safe to set as innerHTML (ADR-0008)
             dangerouslySetInnerHTML={{ __html: html }}
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-xs text-gray-700">
+          <div className="flex h-full items-center justify-center text-xs text-fg-muted">
             {source.trim() ? 'Nothing to preview' : 'No markdown content to preview'}
           </div>
         )}

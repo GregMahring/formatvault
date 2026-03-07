@@ -37,7 +37,7 @@ export function RouteErrorBoundary() {
     >
       <p className="text-4xl">{status === 404 ? '🔍' : '⚠️'}</p>
       <h2 className="text-xl font-semibold text-gray-200">{heading}</h2>
-      <p className="max-w-sm text-sm text-gray-500">{message}</p>
+      <p className="max-w-sm text-sm text-fg-tertiary">{message}</p>
       <div className="flex gap-2">
         {status !== 404 && (
           <Button

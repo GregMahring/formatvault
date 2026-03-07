@@ -151,10 +151,10 @@ export default function JsonSchemaGenerator() {
   return (
     <div className="flex h-full flex-col">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-gray-800 bg-gray-950 px-4 py-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <h1 className="text-sm font-semibold text-gray-200">JSON Schema</h1>
 
-        <div className="h-4 w-px bg-gray-800" aria-hidden="true" />
+        <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
         {/* Mode tabs */}
         <Tabs
@@ -208,7 +208,9 @@ export default function JsonSchemaGenerator() {
           disabled={!schema.jsonInput.trim() || schema.isProcessing}
         >
           {schema.mode === 'generate' ? 'Generate' : 'Validate'}
-          <kbd className="ml-1 rounded bg-gray-800 px-1 text-[10px] text-gray-400">⌘↵</kbd>
+          <kbd className="ml-1 rounded bg-surface-elevated px-1 text-[10px] text-fg-secondary">
+            ⌘↵
+          </kbd>
         </Button>
 
         {schema.mode === 'generate' && schema.schemaOutput && (
@@ -228,7 +230,7 @@ export default function JsonSchemaGenerator() {
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-3 text-xs text-gray-500"
+          className="h-7 px-3 text-xs text-fg-tertiary"
           onClick={schema.clear}
           disabled={!schema.jsonInput.trim()}
         >
@@ -237,7 +239,7 @@ export default function JsonSchemaGenerator() {
 
         <button
           type="button"
-          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -268,8 +270,8 @@ export default function JsonSchemaGenerator() {
         >
           {/* Left: JSON input */}
           <div className="flex h-full flex-col">
-            <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
+            <div className="flex items-center justify-between border-b border-edge px-3 py-1">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
                 JSON Input
               </span>
             </div>
@@ -286,8 +288,8 @@ export default function JsonSchemaGenerator() {
 
           {/* Right: Schema output/input + validation results */}
           <div className="flex h-full flex-col">
-            <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
+            <div className="flex items-center justify-between border-b border-edge px-3 py-1">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
                 {schema.mode === 'generate' ? 'JSON Schema' : 'Schema'}
               </span>
               {schema.mode === 'generate' && (
@@ -326,7 +328,7 @@ export default function JsonSchemaGenerator() {
                 />
 
                 {schema.validationResult && (
-                  <div className="border-t border-gray-800 p-3">
+                  <div className="border-t border-edge p-3">
                     <ValidationResults result={schema.validationResult} />
                   </div>
                 )}

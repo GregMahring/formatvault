@@ -171,12 +171,12 @@ export default function CsvFormatter() {
   return (
     <div className="flex h-full flex-col">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-gray-800 bg-gray-950 px-4 py-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <h1 className="text-sm font-semibold text-gray-200">CSV Formatter</h1>
 
-        <div className="h-4 w-px bg-gray-800" aria-hidden="true" />
+        <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
-        <label htmlFor="delimiter-select" className="text-xs text-gray-400">
+        <label htmlFor="delimiter-select" className="text-xs text-fg-secondary">
           Delimiter
         </label>
         <select
@@ -185,7 +185,7 @@ export default function CsvFormatter() {
           onChange={(e) => {
             fmt.setDelimiter(e.target.value as Delimiter);
           }}
-          className="rounded border border-gray-700 bg-gray-900 px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
+          className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
         >
           {DELIMITERS.map((d) => (
             <option key={d.value} value={d.value}>
@@ -194,9 +194,9 @@ export default function CsvFormatter() {
           ))}
         </select>
 
-        <div className="h-4 w-px bg-gray-800" aria-hidden="true" />
+        <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
-        <label className="flex cursor-pointer items-center gap-1.5 text-xs text-gray-400">
+        <label className="flex cursor-pointer items-center gap-1.5 text-xs text-fg-secondary">
           <input
             type="checkbox"
             className="h-3 w-3 accent-accent-500"
@@ -226,7 +226,7 @@ export default function CsvFormatter() {
             'rounded px-2 py-1 text-xs transition-colors',
             showDiff
               ? 'bg-accent-700/40 text-accent-300'
-              : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
+              : 'text-fg-tertiary hover:bg-surface-elevated hover:text-fg'
           )}
           onClick={() => {
             setShowDiff((v) => !v);
@@ -244,7 +244,7 @@ export default function CsvFormatter() {
             'rounded px-2 py-1 text-xs transition-colors',
             showMarkdown
               ? 'bg-accent-700/40 text-accent-300'
-              : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
+              : 'text-fg-tertiary hover:bg-surface-elevated hover:text-fg'
           )}
           onClick={() => {
             setShowMarkdown((v) => !v);
@@ -275,12 +275,14 @@ export default function CsvFormatter() {
           disabled={!fmt.input.trim()}
         >
           Format
-          <kbd className="ml-1 rounded bg-gray-800 px-1 text-[10px] text-gray-400">⌘↵</kbd>
+          <kbd className="ml-1 rounded bg-surface-elevated px-1 text-[10px] text-fg-secondary">
+            ⌘↵
+          </kbd>
         </Button>
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-3 text-xs text-gray-400"
+          className="h-7 px-3 text-xs text-fg-secondary"
           onClick={fmt.clear}
           disabled={!fmt.input.trim()}
         >
@@ -289,7 +291,7 @@ export default function CsvFormatter() {
 
         <button
           type="button"
-          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -334,8 +336,8 @@ export default function CsvFormatter() {
             className="flex-1"
           >
             <div className="flex h-full flex-col">
-              <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-                <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
+              <div className="flex items-center justify-between border-b border-edge px-3 py-1">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
                   Input
                 </span>
                 <FileUploadZone
@@ -359,8 +361,8 @@ export default function CsvFormatter() {
               <MarkdownPreview source={fmt.output || fmt.input} className="h-full" />
             ) : (
               <div className="flex h-full flex-col">
-                <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-                  <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
+                <div className="flex items-center justify-between border-b border-edge px-3 py-1">
+                  <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
                     Output
                   </span>
                   <div className="flex items-center gap-1">

@@ -14,7 +14,7 @@ export function LoadingSpinner({ className, label = 'Loading…' }: LoadingSpinn
       className={cn('flex items-center justify-center', className)}
     >
       <div
-        className="h-5 w-5 animate-spin rounded-full border-2 border-gray-700 border-t-accent-500"
+        className="h-5 w-5 animate-spin rounded-full border-2 border-edge-emphasis border-t-accent-500"
         aria-hidden="true"
       />
       <span className="sr-only">{label}</span>

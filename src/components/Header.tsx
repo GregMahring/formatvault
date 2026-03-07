@@ -38,21 +38,21 @@ export function Header({ className, onOpenCommandPalette }: HeaderProps) {
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 flex h-12 items-center gap-4 border-b border-gray-800 bg-gray-950/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-gray-950/80',
+        'sticky top-0 z-50 flex h-12 items-center gap-4 border-b border-edge bg-surface/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-surface/80',
         className
       )}
     >
       {/* Logo */}
       <NavLink
         to="/"
-        className="flex items-center gap-2 text-sm font-semibold text-gray-100 hover:text-white"
+        className="flex items-center gap-2 text-sm font-semibold text-fg hover:text-white"
         aria-label="formatvault home"
       >
         <Braces className="h-4 w-4 text-accent-400" aria-hidden="true" />
         <span>formatvault</span>
       </NavLink>
 
-      <div className="h-4 w-px bg-gray-800" aria-hidden="true" />
+      <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
       {/* Primary nav */}
       <nav aria-label="Main navigation">
@@ -65,8 +65,8 @@ export function Header({ className, onOpenCommandPalette }: HeaderProps) {
                   cn(
                     'rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors',
                     isActive
-                      ? 'bg-gray-800 text-gray-100'
-                      : 'text-gray-400 hover:bg-gray-800/60 hover:text-gray-200'
+                      ? 'bg-surface-elevated text-fg'
+                      : 'text-fg-secondary hover:bg-surface-elevated/60 hover:text-gray-200'
                   )
                 }
               >
@@ -87,11 +87,11 @@ export function Header({ className, onOpenCommandPalette }: HeaderProps) {
             <button
               type="button"
               onClick={onOpenCommandPalette}
-              className="flex items-center gap-1.5 rounded-md border border-gray-800 bg-gray-900 px-2.5 py-1 text-xs text-gray-400 transition-colors hover:border-gray-700 hover:text-gray-300"
+              className="flex items-center gap-1.5 rounded-md border border-edge bg-surface-raised px-2.5 py-1 text-xs text-fg-secondary transition-colors hover:border-edge-emphasis hover:text-fg"
               aria-label="Search commands"
             >
               <span className="hidden sm:inline">Search commands</span>
-              <kbd className="rounded border border-gray-700 bg-gray-800 px-1 py-0.5 text-[10px] font-medium text-gray-400">
+              <kbd className="rounded border border-edge-emphasis bg-surface-elevated px-1 py-0.5 text-[10px] font-medium text-fg-secondary">
                 ⌘K
               </kbd>
             </button>
@@ -110,9 +110,9 @@ export function Header({ className, onOpenCommandPalette }: HeaderProps) {
             aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           >
             {theme === 'dark' ? (
-              <Sun className="h-4 w-4 text-gray-400" aria-hidden="true" />
+              <Sun className="h-4 w-4 text-fg-secondary" aria-hidden="true" />
             ) : (
-              <Moon className="h-4 w-4 text-gray-400" aria-hidden="true" />
+              <Moon className="h-4 w-4 text-fg-secondary" aria-hidden="true" />
             )}
           </Button>
         </TooltipTrigger>

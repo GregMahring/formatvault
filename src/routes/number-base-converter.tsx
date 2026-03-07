@@ -46,14 +46,14 @@ function BaseRow({ label, prefix, placeholder, value, base, hasError, onChange }
   const copyValue = formatWithPrefix(value, base);
 
   return (
-    <div className="flex items-center gap-3 border-b border-gray-800 py-3 last:border-0">
-      <span className="w-10 shrink-0 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+    <div className="flex items-center gap-3 border-b border-edge py-3 last:border-0">
+      <span className="w-10 shrink-0 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
         {label}
       </span>
 
       <div className="flex min-w-0 flex-1 items-center">
         {prefix && (
-          <span className="select-none rounded-l border border-r-0 border-gray-700 bg-gray-900 px-2 py-1.5 font-mono text-sm text-gray-600">
+          <span className="select-none rounded-l border border-r-0 border-edge-emphasis bg-surface-raised px-2 py-1.5 font-mono text-sm text-fg-muted">
             {prefix}
           </span>
         )}
@@ -68,10 +68,10 @@ function BaseRow({ label, prefix, placeholder, value, base, hasError, onChange }
           autoComplete="off"
           aria-label={`${label} value`}
           className={cn(
-            'min-w-0 flex-1 bg-gray-900 px-3 py-1.5 font-mono text-sm text-gray-100 placeholder-gray-700 focus:outline-none focus:ring-1',
+            'min-w-0 flex-1 bg-surface-raised px-3 py-1.5 font-mono text-sm text-fg placeholder-fg-muted focus:outline-none focus:ring-1',
             prefix
-              ? 'rounded-r border border-gray-700 focus:ring-accent-500'
-              : 'rounded border border-gray-700 focus:ring-accent-500',
+              ? 'rounded-r border border-edge-emphasis focus:ring-accent-500'
+              : 'rounded border border-edge-emphasis focus:ring-accent-500',
             hasError && value ? 'border-red-800 focus:ring-red-700' : ''
           )}
         />
@@ -83,7 +83,7 @@ function BaseRow({ label, prefix, placeholder, value, base, hasError, onChange }
           if (copyValue) void copy(copyValue);
         }}
         disabled={!value}
-        className="flex shrink-0 items-center gap-1.5 rounded border border-gray-700 bg-gray-800 px-2.5 py-1 text-xs text-gray-400 transition-colors hover:border-gray-600 hover:text-gray-200 disabled:cursor-not-allowed disabled:opacity-30"
+        className="flex shrink-0 items-center gap-1.5 rounded border border-edge-emphasis bg-surface-elevated px-2.5 py-1 text-xs text-fg-secondary transition-colors hover:border-edge-emphasis hover:text-fg disabled:cursor-not-allowed disabled:opacity-30"
         aria-label={`Copy ${label} value`}
       >
         {copied ? (
@@ -192,8 +192,8 @@ export default function NumberBaseConverter() {
   return (
     <div className="flex h-full flex-col">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-gray-800 bg-gray-950 px-4 py-2">
-        <Binary className="h-4 w-4 text-gray-500" aria-hidden="true" />
+      <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
+        <Binary className="h-4 w-4 text-fg-tertiary" aria-hidden="true" />
         <h1 className="text-sm font-semibold text-gray-200">Number Base Converter</h1>
 
         <div className="flex-1" />
@@ -201,7 +201,7 @@ export default function NumberBaseConverter() {
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-3 text-xs text-gray-500"
+          className="h-7 px-3 text-xs text-fg-tertiary"
           onClick={clear}
           disabled={isEmpty}
         >
@@ -209,7 +209,7 @@ export default function NumberBaseConverter() {
         </Button>
         <button
           type="button"
-          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -224,10 +224,10 @@ export default function NumberBaseConverter() {
       <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-6">
         {/* ── Inputs ────────────────────────────────────────────────── */}
         <section>
-          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
             Number
           </h2>
-          <div className="overflow-hidden rounded-lg border border-gray-800 bg-gray-900 px-4">
+          <div className="overflow-hidden rounded-lg border border-edge bg-surface-raised px-4">
             {BASES.map(({ base, label, prefix, placeholder }) => (
               <BaseRow
                 key={base}
@@ -251,7 +251,7 @@ export default function NumberBaseConverter() {
 
         {/* ── Presets ───────────────────────────────────────────────── */}
         <section>
-          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
             Common values
           </h2>
           <div className="flex flex-wrap gap-1.5">
@@ -266,7 +266,7 @@ export default function NumberBaseConverter() {
                   'rounded border px-2.5 py-1 text-xs transition-colors',
                   displayValues[10] === String(preset.value)
                     ? 'border-accent-700 bg-accent-600/20 text-accent-300'
-                    : 'border-gray-700 bg-gray-900 text-gray-500 hover:border-gray-600 hover:text-gray-200'
+                    : 'border-edge-emphasis bg-surface-raised text-fg-tertiary hover:border-edge-emphasis hover:text-fg'
                 )}
               >
                 {preset.label}
@@ -276,7 +276,7 @@ export default function NumberBaseConverter() {
         </section>
 
         {isEmpty && !error && (
-          <p className="text-xs text-gray-700">
+          <p className="text-xs text-fg-muted">
             Type a number in any field — all bases update live. Supports negative integers and
             arbitrarily large values.
           </p>

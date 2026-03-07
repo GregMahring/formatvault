@@ -17,7 +17,7 @@ export function ProgressBar({ percent, label = 'Processing…', className }: Pro
       aria-valuemin={0}
       aria-valuemax={100}
       aria-label={label}
-      className={cn('h-0.5 w-full overflow-hidden bg-gray-800', className)}
+      className={cn('h-0.5 w-full overflow-hidden bg-surface-elevated', className)}
     >
       <div
         className="h-full bg-accent-500 transition-all duration-200 ease-out"

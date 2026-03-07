@@ -38,9 +38,10 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
       ...defaults,
 
       setTheme: (theme) => {
-        // Sync the dark/light class on <html> immediately
+        // Sync the dark/light class and color-scheme on <html> immediately
         document.documentElement.classList.toggle('dark', theme === 'dark');
         document.documentElement.classList.toggle('light', theme === 'light');
+        document.documentElement.style.colorScheme = theme;
         set({ theme });
       },
 

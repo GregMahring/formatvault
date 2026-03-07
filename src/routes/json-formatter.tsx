@@ -247,10 +247,10 @@ export default function JsonFormatter() {
   return (
     <div className="flex h-full flex-col">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-gray-800 bg-gray-950 px-4 py-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <h1 className="text-sm font-semibold text-gray-200">JSON Formatter</h1>
 
-        <div className="h-4 w-px bg-gray-800" aria-hidden="true" />
+        <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
         {/* Mode tabs */}
         <Tabs
@@ -275,10 +275,10 @@ export default function JsonFormatter() {
           <TabsContent value="validate" className="hidden" />
         </Tabs>
 
-        <div className="h-4 w-px bg-gray-800" aria-hidden="true" />
+        <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
         {/* Options */}
-        <label className="flex cursor-pointer items-center gap-1.5 text-xs text-gray-400">
+        <label className="flex cursor-pointer items-center gap-1.5 text-xs text-fg-secondary">
           <input
             type="checkbox"
             className="h-3 w-3 accent-accent-500"
@@ -289,7 +289,7 @@ export default function JsonFormatter() {
           />
           JSON5
         </label>
-        <label className="flex cursor-pointer items-center gap-1.5 text-xs text-gray-400">
+        <label className="flex cursor-pointer items-center gap-1.5 text-xs text-fg-secondary">
           <input
             type="checkbox"
             className="h-3 w-3 accent-accent-500"
@@ -301,10 +301,10 @@ export default function JsonFormatter() {
           Sort keys
         </label>
 
-        <div className="h-4 w-px bg-gray-800" aria-hidden="true" />
+        <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
         {/* Indent character toggle */}
-        <div className="flex items-center rounded-md border border-gray-800 bg-gray-900 p-0.5">
+        <div className="flex items-center rounded-md border border-edge bg-surface-raised p-0.5">
           <button
             type="button"
             onClick={() => {
@@ -312,7 +312,7 @@ export default function JsonFormatter() {
             }}
             className={cn(
               'rounded px-2 py-0.5 text-xs transition-colors',
-              !indentWithTabs ? 'bg-gray-700 text-gray-100' : 'text-gray-400 hover:text-gray-300'
+              !indentWithTabs ? 'bg-gray-700 text-gray-100' : 'text-fg-secondary hover:text-fg'
             )}
           >
             Spaces
@@ -324,7 +324,7 @@ export default function JsonFormatter() {
             }}
             className={cn(
               'rounded px-2 py-0.5 text-xs transition-colors',
-              indentWithTabs ? 'bg-gray-700 text-gray-100' : 'text-gray-400 hover:text-gray-300'
+              indentWithTabs ? 'bg-gray-700 text-gray-100' : 'text-fg-secondary hover:text-fg'
             )}
           >
             Tabs
@@ -340,7 +340,7 @@ export default function JsonFormatter() {
             'rounded px-2 py-1 text-xs transition-colors',
             showDiff
               ? 'bg-accent-700/40 text-accent-300'
-              : 'text-gray-400 hover:bg-gray-800 hover:text-gray-300'
+              : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg'
           )}
           onClick={() => {
             setShowDiff((v) => !v);
@@ -359,7 +359,7 @@ export default function JsonFormatter() {
             'rounded px-2 py-1 text-xs transition-colors',
             showMarkdown
               ? 'bg-accent-700/40 text-accent-300'
-              : 'text-gray-400 hover:bg-gray-800 hover:text-gray-300'
+              : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg'
           )}
           onClick={() => {
             setShowMarkdown((v) => !v);
@@ -379,7 +379,7 @@ export default function JsonFormatter() {
             'rounded px-2 py-1 text-xs transition-colors',
             showTree
               ? 'bg-accent-700/40 text-accent-300'
-              : 'text-gray-400 hover:bg-gray-800 hover:text-gray-300'
+              : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg'
           )}
           onClick={() => {
             setShowTree((v) => !v);
@@ -414,12 +414,14 @@ export default function JsonFormatter() {
           disabled={!fmt.input.trim()}
         >
           {fmt.isQueryMode ? 'Run query' : 'Format'}
-          <kbd className="ml-1 rounded bg-gray-800 px-1 text-[10px] text-gray-400">⌘↵</kbd>
+          <kbd className="ml-1 rounded bg-surface-elevated px-1 text-[10px] text-fg-secondary">
+            ⌘↵
+          </kbd>
         </Button>
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-3 text-xs text-gray-400"
+          className="h-7 px-3 text-xs text-fg-secondary"
           onClick={fmt.clear}
           disabled={!fmt.input.trim()}
         >
@@ -429,7 +431,7 @@ export default function JsonFormatter() {
         {/* Shortcuts help */}
         <button
           type="button"
-          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -497,8 +499,8 @@ export default function JsonFormatter() {
 
       {/* JSONPath bar */}
       {fmt.isQueryMode && (
-        <div className="flex items-center gap-2 border-b border-gray-800 bg-gray-900/50 px-4 py-2">
-          <label htmlFor="jsonpath-input" className="shrink-0 text-xs text-gray-400">
+        <div className="flex items-center gap-2 border-b border-edge bg-surface-raised/50 px-4 py-2">
+          <label htmlFor="jsonpath-input" className="shrink-0 text-xs text-fg-secondary">
             JSONPath
           </label>
           <input
@@ -511,7 +513,7 @@ export default function JsonFormatter() {
             onKeyDown={(e) => {
               if (e.key === 'Enter') fmt.runQuery();
             }}
-            className="flex-1 rounded border border-gray-700 bg-gray-900 px-2 py-1 font-mono text-xs text-gray-200 placeholder-gray-600 focus:border-accent-500 focus:outline-none"
+            className="flex-1 rounded border border-edge-emphasis bg-surface-raised px-2 py-1 font-mono text-xs text-gray-200 placeholder-fg-muted focus:border-accent-500 focus:outline-none"
             placeholder="$.store.book[*].title"
           />
           <Button size="sm" variant="outline" className="h-7 px-3 text-xs" onClick={fmt.runQuery}>
@@ -534,8 +536,8 @@ export default function JsonFormatter() {
           >
             {/* Left: input */}
             <div className="flex h-full flex-col">
-              <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-                <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
+              <div className="flex items-center justify-between border-b border-edge px-3 py-1">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
                   Input
                 </span>
                 <div className="flex items-center gap-1">
@@ -547,8 +549,8 @@ export default function JsonFormatter() {
                   <button
                     type="button"
                     className={cn(
-                      'rounded px-1.5 py-0.5 text-[11px] transition-colors hover:bg-gray-800',
-                      fmt.isQueryMode ? 'text-accent-400' : 'text-gray-400 hover:text-gray-300'
+                      'rounded px-1.5 py-0.5 text-[11px] transition-colors hover:bg-surface-elevated',
+                      fmt.isQueryMode ? 'text-accent-400' : 'text-fg-secondary hover:text-fg'
                     )}
                     onClick={() => {
                       fmt.setQueryMode(!fmt.isQueryMode);
@@ -576,8 +578,8 @@ export default function JsonFormatter() {
               <MarkdownPreview source={fmt.output || fmt.input} className="h-full" />
             ) : (
               <div className="flex h-full flex-col">
-                <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-                  <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
+                <div className="flex items-center justify-between border-b border-edge px-3 py-1">
+                  <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
                     Output
                   </span>
                   <div className="flex items-center gap-1">

@@ -295,7 +295,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <TooltipProvider delayDuration={300}>
-      <div className="flex h-screen flex-col bg-gray-950">
+      <div className="flex h-screen flex-col bg-surface">
         {/* Skip-to-content link — WCAG 2.1 AA requirement */}
         <a
           href="#main-content"
@@ -310,7 +310,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           }}
         />
 
-        <main id="main-content" className="flex min-h-0 flex-1 flex-col">
+        <main id="main-content" className="flex min-h-0 flex-1 flex-col overflow-y-auto">
           {children}
         </main>
 

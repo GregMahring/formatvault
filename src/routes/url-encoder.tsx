@@ -140,12 +140,12 @@ export default function UrlEncoderPage() {
   return (
     <div className="flex h-full flex-col">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-gray-800 bg-gray-950 px-4 py-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <h1 className="text-sm font-semibold text-gray-200">URL Encoder / Decoder</h1>
-        <div className="h-4 w-px bg-gray-800" aria-hidden="true" />
+        <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
         {/* Mode toggle */}
-        <div className="flex items-center rounded-md border border-gray-800 bg-gray-900 p-0.5">
+        <div className="flex items-center rounded-md border border-edge bg-surface-raised p-0.5">
           {(['encode', 'decode'] as UrlMode[]).map((m) => (
             <button
               key={m}
@@ -155,7 +155,7 @@ export default function UrlEncoderPage() {
               }}
               className={cn(
                 'rounded px-3 py-1 text-xs font-medium capitalize transition-colors',
-                mode === m ? 'bg-gray-700 text-gray-100' : 'text-gray-500 hover:text-gray-300'
+                mode === m ? 'bg-gray-700 text-gray-100' : 'text-fg-tertiary hover:text-fg'
               )}
             >
               {m}
@@ -165,7 +165,7 @@ export default function UrlEncoderPage() {
 
         {/* Variant toggle (encode only) */}
         {mode === 'encode' && (
-          <div className="flex items-center rounded-md border border-gray-800 bg-gray-900 p-0.5">
+          <div className="flex items-center rounded-md border border-edge bg-surface-raised p-0.5">
             {(['component', 'full'] as UrlEncodeVariant[]).map((v) => (
               <button
                 key={v}
@@ -175,7 +175,7 @@ export default function UrlEncoderPage() {
                 }}
                 className={cn(
                   'rounded px-3 py-1 text-xs font-medium transition-colors',
-                  variant === v ? 'bg-gray-700 text-gray-100' : 'text-gray-500 hover:text-gray-300'
+                  variant === v ? 'bg-gray-700 text-gray-100' : 'text-fg-tertiary hover:text-fg'
                 )}
                 title={
                   v === 'component'
@@ -221,7 +221,7 @@ export default function UrlEncoderPage() {
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 gap-1.5 px-3 text-xs text-gray-400"
+          className="h-7 gap-1.5 px-3 text-xs text-fg-secondary"
           onClick={swap}
           disabled={!output}
           title="Swap input and output (⌘⇧S)"
@@ -232,7 +232,7 @@ export default function UrlEncoderPage() {
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-3 text-xs text-gray-400"
+          className="h-7 px-3 text-xs text-fg-secondary"
           onClick={clear}
           disabled={!input}
         >
@@ -241,7 +241,7 @@ export default function UrlEncoderPage() {
 
         <button
           type="button"
-          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -265,16 +265,16 @@ export default function UrlEncoderPage() {
 
       {/* Main split layout */}
       <div className="flex min-h-0 flex-1 flex-col">
-        <div className="flex min-h-0 flex-1">
+        <div className="flex min-h-0 flex-1 flex-col md:flex-row">
           {/* Input */}
-          <div className="flex w-1/2 flex-col border-r border-gray-800">
-            <div className="flex items-center border-b border-gray-800 px-3 py-1.5">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
+          <div className="flex w-full flex-col border-b border-r-0 border-edge md:w-1/2 md:border-b-0 md:border-r">
+            <div className="flex items-center border-b border-edge px-3 py-1.5">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
                 {mode === 'encode' ? 'Decoded / plain text' : 'Encoded URL'}
               </span>
             </div>
             <textarea
-              className="flex-1 resize-none bg-gray-950 p-4 font-mono text-sm text-gray-200 placeholder-gray-700 focus:outline-none"
+              className="flex-1 resize-none bg-surface p-4 font-mono text-sm text-gray-200 placeholder-gray-700 focus:outline-none"
               placeholder={
                 mode === 'encode'
                   ? 'Paste or type text to encode…\n\ne.g. hello world & more'
@@ -290,9 +290,9 @@ export default function UrlEncoderPage() {
           </div>
 
           {/* Output */}
-          <div className="flex w-1/2 flex-col">
-            <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1.5">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
+          <div className="flex w-full flex-col md:w-1/2">
+            <div className="flex items-center justify-between border-b border-edge px-3 py-1.5">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
                 {mode === 'encode' ? 'Encoded URL' : 'Decoded / plain text'}
               </span>
               <div className="flex items-center gap-1">
@@ -304,7 +304,7 @@ export default function UrlEncoderPage() {
               </div>
             </div>
             <textarea
-              className="flex-1 resize-none bg-gray-900 p-4 font-mono text-sm text-gray-300 placeholder-gray-700 focus:outline-none"
+              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-gray-300 placeholder-gray-700 focus:outline-none"
               placeholder={mode === 'encode' ? 'Encoded output…' : 'Decoded output…'}
               value={pii.displayContent}
               readOnly
@@ -316,26 +316,26 @@ export default function UrlEncoderPage() {
 
         {/* Parsed query params panel */}
         {showParsed && looksLikeQuery && (
-          <div className="border-t border-gray-800 bg-gray-950">
+          <div className="border-t border-edge bg-surface">
             <div className="flex items-center gap-6 overflow-x-auto px-4 py-3">
               {/* Input params */}
               {inputParams && inputParams.length > 0 && (
                 <table className="min-w-[200px] text-xs">
                   <thead>
                     <tr>
-                      <th className="pb-1 text-left font-semibold text-gray-600 pr-4">
+                      <th className="pb-1 text-left font-semibold text-fg-muted pr-4">
                         Input params
                       </th>
                     </tr>
-                    <tr className="border-b border-gray-800">
-                      <th className="pb-1 text-left font-medium text-gray-700 pr-4">Key</th>
-                      <th className="pb-1 text-left font-medium text-gray-700">Value</th>
+                    <tr className="border-b border-edge">
+                      <th className="pb-1 text-left font-medium text-fg-muted pr-4">Key</th>
+                      <th className="pb-1 text-left font-medium text-fg-muted">Value</th>
                     </tr>
                   </thead>
                   <tbody>
                     {inputParams.map(({ key, value }, i) => (
-                      <tr key={i} className="border-b border-gray-900">
-                        <td className="py-1 pr-4 font-mono text-gray-400">{key}</td>
+                      <tr key={i} className="border-b border-surface-raised">
+                        <td className="py-1 pr-4 font-mono text-fg-secondary">{key}</td>
                         <td className="py-1 font-mono text-gray-300">{value}</td>
                       </tr>
                     ))}
@@ -348,19 +348,19 @@ export default function UrlEncoderPage() {
                 <table className="min-w-[200px] text-xs">
                   <thead>
                     <tr>
-                      <th className="pb-1 text-left font-semibold text-gray-600 pr-4">
+                      <th className="pb-1 text-left font-semibold text-fg-muted pr-4">
                         Output params
                       </th>
                     </tr>
-                    <tr className="border-b border-gray-800">
-                      <th className="pb-1 text-left font-medium text-gray-700 pr-4">Key</th>
-                      <th className="pb-1 text-left font-medium text-gray-700">Value</th>
+                    <tr className="border-b border-edge">
+                      <th className="pb-1 text-left font-medium text-fg-muted pr-4">Key</th>
+                      <th className="pb-1 text-left font-medium text-fg-muted">Value</th>
                     </tr>
                   </thead>
                   <tbody>
                     {parsedParams.map(({ key, value }, i) => (
-                      <tr key={i} className="border-b border-gray-900">
-                        <td className="py-1 pr-4 font-mono text-gray-400">{key}</td>
+                      <tr key={i} className="border-b border-surface-raised">
+                        <td className="py-1 pr-4 font-mono text-fg-secondary">{key}</td>
                         <td className="py-1 font-mono text-gray-300">{value}</td>
                       </tr>
                     ))}

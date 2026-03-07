@@ -100,7 +100,7 @@ export function FileUploadZone({
 
       {/* Drag overlay — visible when dragging */}
       {isDragOver && (
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 rounded-md border-2 border-dashed border-accent-500 bg-gray-950/90 backdrop-blur-sm">
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 rounded-md border-2 border-dashed border-accent-500 bg-surface/90 backdrop-blur-sm">
           <Upload className="h-8 w-8 text-accent-400" aria-hidden="true" />
           <span className="text-sm font-medium text-accent-300">Drop file to upload</span>
         </div>
@@ -131,7 +131,7 @@ export function FileUploadZone({
         type="button"
         onClick={openFilePicker}
         disabled={disabled}
-        className="flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-300 disabled:opacity-40"
+        className="flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] text-fg-secondary transition-colors hover:bg-surface-elevated hover:text-fg disabled:opacity-40"
         aria-label="Upload file"
         title="Upload file"
       >

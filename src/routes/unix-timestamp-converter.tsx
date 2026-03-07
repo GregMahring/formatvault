@@ -37,8 +37,8 @@ function ResultRow({ label, value }: { label: string; value: string }) {
   const { copy, copied } = useCopyToClipboard();
 
   return (
-    <tr className="border-b border-gray-800 last:border-0">
-      <td className="w-28 py-2.5 pr-4 align-top text-[11px] font-medium uppercase tracking-wide text-gray-500">
+    <tr className="border-b border-edge last:border-0">
+      <td className="w-28 py-2.5 pr-4 align-top text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
         {label}
       </td>
       <td className="py-2.5 pr-2 font-mono text-xs text-gray-200 break-all">{value}</td>
@@ -48,7 +48,7 @@ function ResultRow({ label, value }: { label: string; value: string }) {
           onClick={() => {
             void copy(value);
           }}
-          className="rounded p-1 text-gray-700 transition-colors hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-fg-muted transition-colors hover:bg-surface-elevated hover:text-fg-secondary"
           aria-label={`Copy ${label}`}
           title={`Copy ${label}`}
         >
@@ -71,7 +71,7 @@ function TimestampCopyRow({ label, value }: { label: string; value: number }) {
 
   return (
     <div className="flex items-center gap-3">
-      <span className="w-24 text-[11px] font-medium uppercase tracking-wide text-gray-500">
+      <span className="w-24 text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
         {label}
       </span>
       <span className="flex-1 font-mono text-sm text-gray-200">{display}</span>
@@ -80,7 +80,7 @@ function TimestampCopyRow({ label, value }: { label: string; value: number }) {
         onClick={() => {
           void copy(display);
         }}
-        className="rounded p-1 text-gray-700 transition-colors hover:bg-gray-800 hover:text-gray-400"
+        className="rounded p-1 text-fg-muted transition-colors hover:bg-surface-elevated hover:text-fg-secondary"
         aria-label={`Copy ${label}`}
       >
         {copied ? (
@@ -189,8 +189,8 @@ export default function UnixTimestampConverter() {
   return (
     <div className="flex h-full flex-col">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-gray-800 bg-gray-950 px-4 py-2">
-        <Clock className="h-4 w-4 text-gray-500" aria-hidden="true" />
+      <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
+        <Clock className="h-4 w-4 text-fg-tertiary" aria-hidden="true" />
         <h1 className="text-sm font-semibold text-gray-200">Unix Timestamp Converter</h1>
 
         <div className="flex-1" />
@@ -198,7 +198,7 @@ export default function UnixTimestampConverter() {
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-3 text-xs text-gray-500"
+          className="h-7 px-3 text-xs text-fg-tertiary"
           onClick={clear}
           disabled={!input && !reverseInput}
         >
@@ -206,7 +206,7 @@ export default function UnixTimestampConverter() {
         </Button>
         <button
           type="button"
-          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -221,7 +221,7 @@ export default function UnixTimestampConverter() {
       <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-6">
         {/* ── Timestamp → Date ─────────────────────────────────── */}
         <section>
-          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
             Timestamp → Date
           </h2>
 
@@ -236,13 +236,13 @@ export default function UnixTimestampConverter() {
                 setForceUnit(undefined);
               }}
               placeholder="e.g. 1735689600"
-              className="w-52 rounded border border-gray-700 bg-gray-900 px-3 py-1.5 font-mono text-sm text-gray-200 placeholder-gray-600 focus:border-accent-500 focus:outline-none"
+              className="w-52 rounded border border-edge-emphasis bg-surface-raised px-3 py-1.5 font-mono text-sm text-gray-200 placeholder-fg-muted focus:border-accent-500 focus:outline-none"
               aria-label="Unix timestamp"
               spellCheck={false}
             />
 
             {/* Seconds / ms toggle */}
-            <div className="flex items-center rounded-md border border-gray-800 bg-gray-900 p-0.5">
+            <div className="flex items-center rounded-md border border-edge bg-surface-raised p-0.5">
               {(['seconds', 'milliseconds'] as TimestampUnit[]).map((unit) => (
                 <button
                   key={unit}
@@ -253,8 +253,8 @@ export default function UnixTimestampConverter() {
                   className={cn(
                     'rounded px-2.5 py-1 text-xs transition-colors',
                     effectiveUnit === unit && input.trim()
-                      ? 'bg-gray-700 text-gray-100'
-                      : 'text-gray-500 hover:text-gray-300'
+                      ? 'bg-surface-elevated text-fg'
+                      : 'text-fg-tertiary hover:text-fg'
                   )}
                   title={unit === 'seconds' ? 'Treat as seconds' : 'Treat as milliseconds'}
                 >
@@ -277,7 +277,7 @@ export default function UnixTimestampConverter() {
 
             {/* Auto-detect label */}
             {input.trim() && !forceUnit && result && !isTimestampError(result) && (
-              <span className="text-[11px] text-gray-500">
+              <span className="text-[11px] text-fg-tertiary">
                 auto-detected: {result.detectedUnit}
               </span>
             )}
@@ -295,7 +295,7 @@ export default function UnixTimestampConverter() {
 
           {/* Results table */}
           {breakdown && (
-            <div className="mt-4 overflow-hidden rounded-lg border border-gray-800 bg-gray-900">
+            <div className="mt-4 overflow-hidden rounded-lg border border-edge bg-surface-raised">
               <table className="w-full">
                 <tbody>
                   <ResultRow label="UTC" value={breakdown.utc} />
@@ -311,9 +311,9 @@ export default function UnixTimestampConverter() {
 
           {/* Empty state */}
           {!input.trim() && (
-            <p className="mt-4 text-xs text-gray-700">
+            <p className="mt-4 text-xs text-fg-muted">
               Paste a Unix timestamp above, or press{' '}
-              <kbd className="rounded border border-gray-800 bg-gray-900 px-1 py-px text-[10px]">
+              <kbd className="rounded border border-edge bg-surface-raised px-1 py-px text-[10px]">
                 ⌘↵
               </kbd>{' '}
               to use the current time.
@@ -323,7 +323,7 @@ export default function UnixTimestampConverter() {
 
         {/* ── Date → Timestamp ─────────────────────────────────── */}
         <section>
-          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
             Date → Timestamp
           </h2>
 
@@ -334,20 +334,20 @@ export default function UnixTimestampConverter() {
               onChange={(e) => {
                 setReverseInput(e.target.value);
               }}
-              className="rounded border border-gray-700 bg-gray-900 px-3 py-1.5 text-sm text-gray-200 focus:border-accent-500 focus:outline-none [color-scheme:dark]"
+              className="rounded border border-edge-emphasis bg-surface-raised px-3 py-1.5 text-sm text-gray-200 focus:border-accent-500 focus:outline-none [color-scheme:dark]"
               aria-label="Date and time"
             />
           </div>
 
           {reverseResult && (
-            <div className="mt-4 flex flex-col gap-2 overflow-hidden rounded-lg border border-gray-800 bg-gray-900 px-4 py-3">
+            <div className="mt-4 flex flex-col gap-2 overflow-hidden rounded-lg border border-edge bg-surface-raised px-4 py-3">
               <TimestampCopyRow label="Unix (s)" value={reverseResult.seconds} />
               <TimestampCopyRow label="Unix (ms)" value={reverseResult.milliseconds} />
             </div>
           )}
 
           {!reverseInput && (
-            <p className="mt-4 text-xs text-gray-700">
+            <p className="mt-4 text-xs text-fg-muted">
               Pick a date and time to get the corresponding Unix timestamp.
             </p>
           )}

@@ -185,12 +185,12 @@ export function ConverterLayout({
   return (
     <div className="flex h-full flex-col">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-gray-800 bg-gray-950 px-4 py-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <h1 className="text-sm font-semibold text-gray-200">{title}</h1>
 
         {toolbarSlot && (
           <>
-            <div className="h-4 w-px bg-gray-800" aria-hidden="true" />
+            <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
             {toolbarSlot}
           </>
         )}
@@ -218,12 +218,14 @@ export function ConverterLayout({
           disabled={!input.trim()}
         >
           Convert
-          <kbd className="ml-1 rounded bg-gray-800 px-1 text-[10px] text-gray-400">⌘↵</kbd>
+          <kbd className="ml-1 rounded bg-surface-elevated px-1 text-[10px] text-fg-secondary">
+            ⌘↵
+          </kbd>
         </Button>
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-3 text-xs text-gray-500"
+          className="h-7 px-3 text-xs text-fg-tertiary"
           onClick={clear}
           disabled={!input.trim()}
         >
@@ -232,7 +234,7 @@ export function ConverterLayout({
 
         <button
           type="button"
-          className="rounded p-1 text-gray-600 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-fg-muted hover:bg-surface-elevated hover:text-fg-secondary"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -278,8 +280,8 @@ export function ConverterLayout({
         >
           {/* Left: input */}
           <div className="flex h-full flex-col">
-            <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
+            <div className="flex items-center justify-between border-b border-edge px-3 py-1">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
                 {fromLanguage.toUpperCase()} Input
               </span>
               <FileUploadZone
@@ -307,8 +309,8 @@ export function ConverterLayout({
 
           {/* Right: output */}
           <div className="flex h-full flex-col">
-            <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
+            <div className="flex items-center justify-between border-b border-edge px-3 py-1">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
                 {toLanguage.toUpperCase()} Output
               </span>
               <div className="flex items-center gap-1">

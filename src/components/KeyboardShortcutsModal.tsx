@@ -49,14 +49,14 @@ export function KeyboardShortcutsModal({
         tabIndex={-1}
       />
       {/* Panel */}
-      <div className="relative w-full max-w-sm rounded-lg border border-gray-700 bg-gray-900 shadow-2xl">
+      <div className="relative w-full max-w-sm rounded-lg border border-edge-emphasis bg-surface-raised shadow-2xl">
         {/* Header */}
-        <div className="flex items-center gap-2 border-b border-gray-800 px-4 py-3">
-          <Keyboard className="h-4 w-4 text-gray-400" aria-hidden="true" />
+        <div className="flex items-center gap-2 border-b border-edge px-4 py-3">
+          <Keyboard className="h-4 w-4 text-fg-secondary" aria-hidden="true" />
           <h2 className="flex-1 text-sm font-semibold text-gray-200">Keyboard shortcuts</h2>
           <button
             type="button"
-            className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
+            className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
             onClick={onClose}
             aria-label="Close shortcuts"
           >
@@ -65,13 +65,13 @@ export function KeyboardShortcutsModal({
         </div>
 
         {/* Shortcut list */}
-        <ul className="divide-y divide-gray-800">
+        <ul className="divide-y divide-edge">
           {shortcuts.map((s, i) => (
             <li key={i} className="flex items-center justify-between px-4 py-2.5">
               <span className="text-sm text-gray-300">{s.label}</span>
               <kbd
                 className={cn(
-                  'rounded border border-gray-700 bg-gray-800 px-2 py-0.5 font-mono text-xs text-gray-400'
+                  'rounded border border-edge-emphasis bg-surface-elevated px-2 py-0.5 font-mono text-xs text-fg-secondary'
                 )}
               >
                 {s.display}
@@ -81,13 +81,13 @@ export function KeyboardShortcutsModal({
         </ul>
 
         {/* Footer hint */}
-        <div className="border-t border-gray-800 px-4 py-2.5 text-center text-xs text-gray-600">
+        <div className="border-t border-edge px-4 py-2.5 text-center text-xs text-fg-muted">
           Press{' '}
-          <kbd className="rounded border border-gray-700 bg-gray-800 px-1 py-0.5 font-mono text-[10px]">
+          <kbd className="rounded border border-edge-emphasis bg-surface-elevated px-1 py-0.5 font-mono text-[10px]">
             ?
           </kbd>{' '}
           or{' '}
-          <kbd className="rounded border border-gray-700 bg-gray-800 px-1 py-0.5 font-mono text-[10px]">
+          <kbd className="rounded border border-edge-emphasis bg-surface-elevated px-1 py-0.5 font-mono text-[10px]">
             Esc
           </kbd>{' '}
           to dismiss

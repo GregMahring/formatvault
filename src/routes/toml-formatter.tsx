@@ -159,7 +159,7 @@ export default function TomlFormatter() {
   return (
     <div className="flex h-full flex-col">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-gray-800 bg-gray-950 px-4 py-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <h1 className="text-sm font-semibold text-gray-200">TOML Formatter</h1>
 
         <div className="flex-1" />
@@ -171,7 +171,7 @@ export default function TomlFormatter() {
             'rounded px-2 py-1 text-xs transition-colors',
             showTree
               ? 'bg-accent-700/40 text-accent-300'
-              : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
+              : 'text-fg-tertiary hover:bg-surface-elevated hover:text-fg'
           )}
           onClick={() => {
             setShowTree((v) => !v);
@@ -196,12 +196,14 @@ export default function TomlFormatter() {
           disabled={!fmt.input.trim()}
         >
           Format
-          <kbd className="ml-1 rounded bg-gray-800 px-1 text-[10px] text-gray-400">⌘↵</kbd>
+          <kbd className="ml-1 rounded bg-surface-elevated px-1 text-[10px] text-fg-secondary">
+            ⌘↵
+          </kbd>
         </Button>
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-3 text-xs text-gray-400"
+          className="h-7 px-3 text-xs text-fg-secondary"
           onClick={fmt.clear}
           disabled={!fmt.input.trim()}
         >
@@ -210,7 +212,7 @@ export default function TomlFormatter() {
 
         <button
           type="button"
-          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -245,8 +247,8 @@ export default function TomlFormatter() {
           className="flex-1"
         >
           <div className="flex h-full flex-col">
-            <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
+            <div className="flex items-center justify-between border-b border-edge px-3 py-1">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
                 Input
               </span>
               <FileUploadZone
@@ -270,8 +272,8 @@ export default function TomlFormatter() {
             <TreeView data={treeData} className="h-full" />
           ) : (
             <div className="flex h-full flex-col">
-              <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1">
-                <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
+              <div className="flex items-center justify-between border-b border-edge px-3 py-1">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
                   Output
                 </span>
                 <div className="flex items-center gap-1">

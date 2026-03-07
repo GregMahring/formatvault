@@ -27,10 +27,10 @@ export function TreeView({ data, className }: TreeViewProps) {
   return (
     <div className={cn('flex h-full flex-col', className)}>
       {/* Header: search + controls */}
-      <div className="flex items-center gap-2 border-b border-gray-800 px-3 py-1.5">
+      <div className="flex items-center gap-2 border-b border-edge px-3 py-1.5">
         <div className="relative flex-1">
           <Search
-            className="absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 text-gray-600"
+            className="absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 text-fg-muted"
             aria-hidden="true"
           />
           <input
@@ -40,7 +40,7 @@ export function TreeView({ data, className }: TreeViewProps) {
               tree.setSearchQuery(e.target.value);
             }}
             placeholder="Search keys and values..."
-            className="w-full rounded border border-gray-700 bg-gray-900 py-1 pl-7 pr-2 text-xs text-gray-200 placeholder:text-gray-600 focus:border-accent-500 focus:outline-none"
+            className="w-full rounded border border-edge-emphasis bg-surface-raised py-1 pl-7 pr-2 text-xs text-gray-200 placeholder:text-fg-muted focus:border-accent-500 focus:outline-none"
             aria-label="Search tree"
           />
         </div>
@@ -48,7 +48,7 @@ export function TreeView({ data, className }: TreeViewProps) {
         <button
           type="button"
           onClick={tree.expandAll}
-          className="rounded p-1 text-gray-600 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-fg-muted hover:bg-surface-elevated hover:text-fg-secondary"
           title="Expand all"
           aria-label="Expand all nodes"
         >
@@ -58,14 +58,14 @@ export function TreeView({ data, className }: TreeViewProps) {
         <button
           type="button"
           onClick={tree.collapseAll}
-          className="rounded p-1 text-gray-600 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-fg-muted hover:bg-surface-elevated hover:text-fg-secondary"
           title="Collapse all"
           aria-label="Collapse all nodes"
         >
           <ChevronsDownUp className="h-3.5 w-3.5" aria-hidden="true" />
         </button>
 
-        <span className="text-[10px] text-gray-600">{String(tree.totalNodes)} nodes</span>
+        <span className="text-[10px] text-fg-muted">{String(tree.totalNodes)} nodes</span>
       </div>
 
       {/* Warning for very large trees */}
@@ -81,7 +81,7 @@ export function TreeView({ data, className }: TreeViewProps) {
 
       {/* Search results info */}
       {tree.isSearching && (
-        <div className="border-b border-gray-800 bg-gray-900/50 px-3 py-1 text-[11px] text-gray-400">
+        <div className="border-b border-edge bg-surface-raised/50 px-3 py-1 text-[11px] text-fg-secondary">
           {tree.matchingPaths.size > 0
             ? `${String(tree.matchingPaths.size)} matches`
             : 'No matches'}

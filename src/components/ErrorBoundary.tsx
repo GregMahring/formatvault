@@ -50,7 +50,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
         >
           <p className="text-4xl">⚠️</p>
           <h2 className="text-xl font-semibold text-gray-200">Something went wrong</h2>
-          <p className="max-w-sm text-sm text-gray-500">
+          <p className="max-w-sm text-sm text-fg-tertiary">
             An unexpected error occurred in this tool. Your data has not been sent anywhere.
           </p>
           <Button variant="secondary" size="sm" onClick={this.handleReset}>

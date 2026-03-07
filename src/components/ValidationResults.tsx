@@ -35,7 +35,7 @@ export function ValidationResults({ result, className }: ValidationResultsProps)
         </p>
       </div>
 
-      <ul className="max-h-48 overflow-auto rounded-md border border-gray-800 bg-gray-950">
+      <ul className="max-h-48 overflow-auto rounded-md border border-edge bg-surface">
         {result.errors.map((err, i) => (
           <li
             key={`${err.path}-${err.keyword}-${String(i)}`}
@@ -44,9 +44,9 @@ export function ValidationResults({ result, className }: ValidationResultsProps)
             <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0 text-red-500" aria-hidden="true" />
             <div className="min-w-0 flex-1">
               <span className="font-mono text-xs text-red-400">{err.path || '/'}</span>
-              <p className="text-xs text-gray-400">{err.message}</p>
+              <p className="text-xs text-fg-secondary">{err.message}</p>
             </div>
-            <span className="shrink-0 rounded bg-gray-800 px-1.5 py-0.5 text-[10px] text-gray-400">
+            <span className="shrink-0 rounded bg-surface-elevated px-1.5 py-0.5 text-[10px] text-fg-secondary">
               {err.keyword}
             </span>
           </li>

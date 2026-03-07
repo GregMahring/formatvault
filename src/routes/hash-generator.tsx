@@ -33,16 +33,16 @@ function CopyButton({ text, label }: { text: string; label: string }) {
         void copy(text);
       }}
       disabled={!text}
-      className="flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] transition-colors hover:bg-gray-800 disabled:opacity-30"
+      className="flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] transition-colors hover:bg-surface-elevated disabled:opacity-30"
       aria-label={`Copy ${label}`}
       title={`Copy ${label}`}
     >
       {copied ? (
         <Check className="h-3 w-3 text-green-400" aria-hidden="true" />
       ) : (
-        <Copy className="h-3 w-3 text-gray-500" aria-hidden="true" />
+        <Copy className="h-3 w-3 text-fg-tertiary" aria-hidden="true" />
       )}
-      <span className={cn('text-gray-500', copied && 'text-green-400')}>
+      <span className={cn('text-fg-tertiary', copied && 'text-green-400')}>
         {copied ? 'Copied!' : 'Copy'}
       </span>
     </button>
@@ -98,13 +98,13 @@ export default function HashGenerator() {
   return (
     <div className="flex h-full flex-col">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-gray-800 bg-gray-950 px-4 py-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <h1 className="text-sm font-semibold text-gray-200">Hash Generator</h1>
-        <div className="h-4 w-px bg-gray-800" aria-hidden="true" />
+        <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
         {/* Algorithm tabs */}
         <div
-          className="flex items-center gap-0.5 rounded-md bg-gray-900 p-0.5"
+          className="flex items-center gap-0.5 rounded-md bg-surface-raised p-0.5"
           role="tablist"
           aria-label="Hash algorithm"
         >
@@ -121,7 +121,7 @@ export default function HashGenerator() {
                 'rounded px-2.5 py-1 text-xs font-medium transition-colors',
                 hash.algorithm === value
                   ? 'bg-accent-600/30 text-accent-300 ring-1 ring-accent-500/50'
-                  : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
+                  : 'text-fg-tertiary hover:bg-surface-elevated hover:text-fg'
               )}
             >
               {label}
@@ -129,11 +129,11 @@ export default function HashGenerator() {
           ))}
         </div>
 
-        <div className="h-4 w-px bg-gray-800" aria-hidden="true" />
+        <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
         {/* Input mode toggle */}
         <div
-          className="flex items-center gap-0.5 rounded-md bg-gray-900 p-0.5"
+          className="flex items-center gap-0.5 rounded-md bg-surface-raised p-0.5"
           role="tablist"
           aria-label="Input mode"
         >
@@ -150,7 +150,7 @@ export default function HashGenerator() {
                 'rounded px-2.5 py-1 text-xs font-medium capitalize transition-colors',
                 hash.inputMode === mode
                   ? 'bg-gray-700 text-gray-200'
-                  : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
+                  : 'text-fg-tertiary hover:bg-surface-elevated hover:text-fg'
               )}
             >
               {mode}
@@ -163,7 +163,7 @@ export default function HashGenerator() {
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-3 text-xs text-gray-500"
+          className="h-7 px-3 text-xs text-fg-tertiary"
           onClick={hash.clear}
           disabled={!hash.input && !hash.result}
         >
@@ -172,7 +172,7 @@ export default function HashGenerator() {
 
         <button
           type="button"
-          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -199,7 +199,7 @@ export default function HashGenerator() {
         {/* Input section */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
               {hash.inputMode === 'text' ? 'Input text' : 'File'}
             </span>
           </div>
@@ -213,39 +213,39 @@ export default function HashGenerator() {
               placeholder="Type or paste text to hash…"
               spellCheck={false}
               aria-label="Text input to hash"
-              className="h-32 w-full resize-none rounded-md border border-gray-800 bg-gray-900 p-3 font-mono text-sm text-gray-200 placeholder-gray-700 focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
+              className="h-32 w-full resize-none rounded-md border border-edge bg-surface-raised p-3 font-mono text-sm text-gray-200 placeholder-gray-700 focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
             />
           ) : (
             /* Full-area drag-and-drop zone for file upload */
             <FileUploadZone
               onFile={handleFileUpload}
               disabled={hash.isHashing}
-              className="flex h-32 w-full items-center justify-center rounded-md border border-dashed border-gray-700 bg-gray-900/50"
+              className="flex h-32 w-full items-center justify-center rounded-md border border-dashed border-edge-emphasis bg-surface-raised/50"
             />
           )}
 
           {/* Show selected filename below the drop zone */}
           {hash.inputMode === 'file' && hash.fileName && (
             <div className="flex items-center gap-2 text-xs">
-              <span className="text-gray-400">{hash.fileName}</span>
-              {hash.isHashing && <span className="text-gray-600">Hashing…</span>}
+              <span className="text-fg-secondary">{hash.fileName}</span>
+              {hash.isHashing && <span className="text-fg-muted">Hashing…</span>}
             </div>
           )}
         </div>
 
         {/* Output section */}
         {hash.isHashing && hash.result === null && (
-          <div className="flex items-center gap-2 text-xs text-gray-500">
-            <span className="inline-block h-3 w-3 animate-spin rounded-full border border-gray-600 border-t-accent-500" />
+          <div className="flex items-center gap-2 text-xs text-fg-tertiary">
+            <span className="inline-block h-3 w-3 animate-spin rounded-full border border-surface-elevated border-t-accent-500" />
             Hashing…
           </div>
         )}
 
         {hash.result !== null && !isHashError(hash.result) && (
-          <div className="flex flex-col gap-0 overflow-hidden rounded-md border border-gray-800">
+          <div className="flex flex-col gap-0 overflow-hidden rounded-md border border-edge">
             {/* Hex row */}
-            <div className="flex items-center gap-3 border-b border-gray-800 bg-gray-900/60 px-4 py-3">
-              <span className="w-14 shrink-0 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+            <div className="flex items-center gap-3 border-b border-edge bg-surface-raised/60 px-4 py-3">
+              <span className="w-14 shrink-0 text-[11px] font-semibold uppercase tracking-wide text-fg-tertiary">
                 Hex
               </span>
               <span
@@ -258,8 +258,8 @@ export default function HashGenerator() {
             </div>
 
             {/* Base64 row */}
-            <div className="flex items-center gap-3 bg-gray-900/40 px-4 py-3">
-              <span className="w-14 shrink-0 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+            <div className="flex items-center gap-3 bg-surface-raised/40 px-4 py-3">
+              <span className="w-14 shrink-0 text-[11px] font-semibold uppercase tracking-wide text-fg-tertiary">
                 Base64
               </span>
               <span
@@ -275,8 +275,8 @@ export default function HashGenerator() {
 
         {!hash.isHashing && !hash.result && hash.inputMode === 'text' && !hash.input && (
           <div className="flex flex-col items-center gap-1 py-8 text-center">
-            <p className="text-sm text-gray-600">Type text above to generate a hash</p>
-            <p className="text-xs text-gray-700">
+            <p className="text-sm text-fg-muted">Type text above to generate a hash</p>
+            <p className="text-xs text-fg-muted">
               Supports MD5, SHA-256, and SHA-512 — shows hex and Base64 output
             </p>
           </div>

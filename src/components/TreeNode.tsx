@@ -21,16 +21,16 @@ const TYPE_COLORS: Record<ValueType, string> = {
   string: 'text-green-400',
   number: 'text-cyan-400',
   boolean: 'text-yellow-400',
-  null: 'text-gray-500',
-  object: 'text-gray-400',
-  array: 'text-gray-400',
+  null: 'text-fg-tertiary',
+  object: 'text-fg-secondary',
+  array: 'text-fg-secondary',
 };
 
 const TYPE_BADGES: Record<ValueType, string> = {
   string: 'bg-green-900/30 text-green-500',
   number: 'bg-cyan-900/30 text-cyan-500',
   boolean: 'bg-yellow-900/30 text-yellow-500',
-  null: 'bg-gray-800 text-gray-600',
+  null: 'bg-surface-elevated text-fg-muted',
   object: 'bg-purple-900/30 text-purple-500',
   array: 'bg-blue-900/30 text-blue-500',
 };
@@ -81,7 +81,7 @@ export const TreeNodeComponent = memo(function TreeNodeComponent({
   return (
     <div
       className={cn(
-        'group flex items-center gap-1 border-b border-gray-900/50 py-0.5 pr-2 text-xs hover:bg-gray-800/40',
+        'group flex items-center gap-1 border-b border-gray-900/50 py-0.5 pr-2 text-xs hover:bg-surface-elevated/40',
         searchMatch && 'bg-accent-900/20'
       )}
       style={{ paddingLeft: `${String(depth * 16 + 8)}px` }}
@@ -96,14 +96,16 @@ export const TreeNodeComponent = memo(function TreeNodeComponent({
       <span className="flex h-4 w-4 shrink-0 items-center justify-center">
         {hasChildren ? (
           <ChevronRight
-            className={cn('h-3 w-3 text-gray-600 transition-transform', isExpanded && 'rotate-90')}
+            className={cn('h-3 w-3 text-fg-muted transition-transform', isExpanded && 'rotate-90')}
             aria-hidden="true"
           />
         ) : null}
       </span>
 
       {/* Key */}
-      <span className={cn('shrink-0 font-mono', isArrayIndex ? 'text-gray-500' : 'text-gray-300')}>
+      <span
+        className={cn('shrink-0 font-mono', isArrayIndex ? 'text-fg-tertiary' : 'text-gray-300')}
+      >
         {isArrayIndex ? `[${nodeKey}]` : nodeKey}
       </span>
 
@@ -113,7 +115,7 @@ export const TreeNodeComponent = memo(function TreeNodeComponent({
 
       {/* Value preview */}
       {isContainer ? (
-        <span className="truncate text-gray-500">
+        <span className="truncate text-fg-tertiary">
           {type === 'array' ? `[${String(childCount)}]` : `{${String(childCount)}}`}
         </span>
       ) : (
@@ -135,7 +137,7 @@ export const TreeNodeComponent = memo(function TreeNodeComponent({
       {/* Copy path button */}
       <button
         type="button"
-        className="shrink-0 rounded p-0.5 text-gray-700 opacity-0 transition-opacity hover:bg-gray-700 hover:text-gray-400 group-hover:opacity-100"
+        className="shrink-0 rounded p-0.5 text-gray-700 opacity-0 transition-opacity hover:bg-gray-700 hover:text-fg-secondary group-hover:opacity-100"
         onClick={handleCopy}
         title={`Copy path: ${path}`}
         aria-label={`Copy path ${path}`}

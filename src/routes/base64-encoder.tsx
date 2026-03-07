@@ -130,12 +130,12 @@ export default function Base64Encoder() {
   return (
     <div className="flex h-full flex-col">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-gray-800 bg-gray-950 px-4 py-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <h1 className="text-sm font-semibold text-gray-200">Base64 Encoder / Decoder</h1>
-        <div className="h-4 w-px bg-gray-800" aria-hidden="true" />
+        <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
         {/* Mode toggle */}
-        <div className="flex items-center rounded-md border border-gray-800 bg-gray-900 p-0.5">
+        <div className="flex items-center rounded-md border border-edge bg-surface-raised p-0.5">
           {(['encode', 'decode'] as Base64Mode[]).map((m) => (
             <button
               key={m}
@@ -145,7 +145,7 @@ export default function Base64Encoder() {
               }}
               className={cn(
                 'rounded px-3 py-1 text-xs font-medium capitalize transition-colors',
-                mode === m ? 'bg-gray-700 text-gray-100' : 'text-gray-500 hover:text-gray-300'
+                mode === m ? 'bg-gray-700 text-gray-100' : 'text-fg-tertiary hover:text-fg'
               )}
             >
               {m}
@@ -156,8 +156,8 @@ export default function Base64Encoder() {
         {/* URL-safe toggle (encode mode only) */}
         {mode === 'encode' && (
           <>
-            <div className="h-4 w-px bg-gray-800" aria-hidden="true" />
-            <div className="flex items-center rounded-md border border-gray-800 bg-gray-900 p-0.5">
+            <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
+            <div className="flex items-center rounded-md border border-edge bg-surface-raised p-0.5">
               <button
                 type="button"
                 onClick={() => {
@@ -165,7 +165,7 @@ export default function Base64Encoder() {
                 }}
                 className={cn(
                   'rounded px-2 py-0.5 text-xs transition-colors',
-                  !urlSafe ? 'bg-gray-700 text-gray-100' : 'text-gray-500 hover:text-gray-300'
+                  !urlSafe ? 'bg-gray-700 text-gray-100' : 'text-fg-tertiary hover:text-fg'
                 )}
               >
                 Standard
@@ -177,7 +177,7 @@ export default function Base64Encoder() {
                 }}
                 className={cn(
                   'rounded px-2 py-0.5 text-xs transition-colors',
-                  urlSafe ? 'bg-gray-700 text-gray-100' : 'text-gray-500 hover:text-gray-300'
+                  urlSafe ? 'bg-gray-700 text-gray-100' : 'text-fg-tertiary hover:text-fg'
                 )}
               >
                 URL-safe
@@ -202,7 +202,7 @@ export default function Base64Encoder() {
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 gap-1.5 px-3 text-xs text-gray-400"
+          className="h-7 gap-1.5 px-3 text-xs text-fg-secondary"
           onClick={swap}
           disabled={!output}
           title="Swap input and output (⌘⇧S)"
@@ -213,7 +213,7 @@ export default function Base64Encoder() {
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-3 text-xs text-gray-400"
+          className="h-7 px-3 text-xs text-fg-secondary"
           onClick={clear}
           disabled={!input}
         >
@@ -222,7 +222,7 @@ export default function Base64Encoder() {
 
         <button
           type="button"
-          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-400"
+          className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -245,16 +245,16 @@ export default function Base64Encoder() {
       )}
 
       {/* Split layout */}
-      <div className="flex min-h-0 flex-1">
+      <div className="flex min-h-0 flex-1 flex-col md:flex-row">
         {/* Input */}
-        <div className="flex w-1/2 flex-col border-r border-gray-800">
-          <div className="flex items-center border-b border-gray-800 px-3 py-1.5">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
+        <div className="flex w-full flex-col border-b border-r-0 border-edge md:w-1/2 md:border-b-0 md:border-r">
+          <div className="flex items-center border-b border-edge px-3 py-1.5">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
               {mode === 'encode' ? 'Plain text' : 'Base64'}
             </span>
           </div>
           <textarea
-            className="flex-1 resize-none bg-gray-950 p-4 font-mono text-sm text-gray-200 placeholder-gray-700 focus:outline-none"
+            className="flex-1 resize-none bg-surface p-4 font-mono text-sm text-gray-200 placeholder-gray-700 focus:outline-none"
             placeholder={
               mode === 'encode' ? 'Paste or type text to encode…' : 'Paste Base64 to decode…'
             }
@@ -267,16 +267,16 @@ export default function Base64Encoder() {
           />
           {/* Character/byte stats */}
           {input && (
-            <div className="border-t border-gray-800 px-3 py-1.5 text-[10px] text-gray-700">
+            <div className="border-t border-edge px-3 py-1.5 text-[10px] text-fg-muted">
               {String(input.length)} chars · {String(new TextEncoder().encode(input).length)} bytes
             </div>
           )}
         </div>
 
         {/* Output */}
-        <div className="flex w-1/2 flex-col">
-          <div className="flex items-center justify-between border-b border-gray-800 px-3 py-1.5">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
+        <div className="flex w-full flex-col md:w-1/2">
+          <div className="flex items-center justify-between border-b border-edge px-3 py-1.5">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
               {mode === 'encode' ? 'Base64' : 'Plain text'}
             </span>
             <div className="flex items-center gap-1">
@@ -288,7 +288,7 @@ export default function Base64Encoder() {
             </div>
           </div>
           <textarea
-            className="flex-1 resize-none bg-gray-900 p-4 font-mono text-sm text-gray-300 placeholder-gray-700 focus:outline-none"
+            className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-gray-300 placeholder-gray-700 focus:outline-none"
             placeholder={mode === 'encode' ? 'Encoded output…' : 'Decoded output…'}
             value={pii.displayContent}
             readOnly
@@ -296,7 +296,7 @@ export default function Base64Encoder() {
             aria-live="polite"
           />
           {output && (
-            <div className="border-t border-gray-800 px-3 py-1.5 text-[10px] text-gray-700">
+            <div className="border-t border-edge px-3 py-1.5 text-[10px] text-fg-muted">
               {String(output.length)} chars
             </div>
           )}

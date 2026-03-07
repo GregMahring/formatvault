@@ -41,16 +41,16 @@ export function PaneActions({
         type="button"
         onClick={handleCopy}
         disabled={disabled || empty}
-        className="flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] transition-colors hover:bg-gray-800 disabled:opacity-30"
+        className="flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] transition-colors hover:bg-surface-elevated disabled:opacity-30"
         aria-label="Copy to clipboard"
         title="Copy to clipboard"
       >
         {copied ? (
           <Check className="h-3 w-3 text-green-400" aria-hidden="true" />
         ) : (
-          <Copy className="h-3 w-3 text-gray-400" aria-hidden="true" />
+          <Copy className="h-3 w-3 text-fg-secondary" aria-hidden="true" />
         )}
-        <span className={cn('text-gray-400', copied && 'text-green-400')}>
+        <span className={cn('text-fg-secondary', copied && 'text-green-400')}>
           {copied ? 'Copied!' : 'Copy'}
         </span>
       </button>
@@ -59,7 +59,7 @@ export function PaneActions({
         type="button"
         onClick={handleDownload}
         disabled={disabled || empty}
-        className="flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-300 disabled:opacity-30"
+        className="flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] text-fg-secondary transition-colors hover:bg-surface-elevated hover:text-fg disabled:opacity-30"
         aria-label={`Download as ${downloadFilename}`}
         title={`Download as ${downloadFilename}`}
       >

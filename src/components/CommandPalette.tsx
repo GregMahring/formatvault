@@ -120,15 +120,15 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/60 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
         <DialogPrimitive.Content
-          className="fixed left-[50%] top-[20%] z-50 w-full max-w-md translate-x-[-50%] overflow-hidden rounded-lg border border-gray-800 bg-gray-950 shadow-2xl"
+          className="fixed left-[50%] top-[20%] z-50 w-full max-w-md translate-x-[-50%] overflow-hidden rounded-lg border border-edge bg-surface shadow-2xl"
           onKeyDown={handleKeyDown}
           aria-label="Command palette"
         >
           <DialogPrimitive.Title className="sr-only">Command palette</DialogPrimitive.Title>
 
           {/* Search input */}
-          <div className="flex items-center gap-2 border-b border-gray-800 px-3">
-            <Search className="h-4 w-4 shrink-0 text-gray-500" aria-hidden="true" />
+          <div className="flex items-center gap-2 border-b border-edge px-3">
+            <Search className="h-4 w-4 shrink-0 text-fg-tertiary" aria-hidden="true" />
             <input
               ref={inputRef}
               type="text"
@@ -137,13 +137,13 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                 setQuery(e.target.value);
               }}
               placeholder="Type a command..."
-              className="h-11 w-full bg-transparent text-sm text-gray-100 placeholder:text-gray-600 focus:outline-none"
+              className="h-11 w-full bg-transparent text-sm text-fg placeholder:text-fg-muted focus:outline-none"
               // eslint-disable-next-line jsx-a11y/no-autofocus -- intentional: palette must grab focus on open
               autoFocus
               autoComplete="off"
               spellCheck={false}
             />
-            <kbd className="hidden shrink-0 rounded border border-gray-700 bg-gray-900 px-1.5 py-0.5 text-[10px] font-medium text-gray-400 sm:inline-block">
+            <kbd className="hidden shrink-0 rounded border border-edge-emphasis bg-surface-raised px-1.5 py-0.5 text-[10px] font-medium text-fg-secondary sm:inline-block">
               ESC
             </kbd>
           </div>
@@ -156,12 +156,12 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
             aria-label="Commands"
           >
             {flat.length === 0 && (
-              <div className="px-3 py-6 text-center text-sm text-gray-600">No commands found</div>
+              <div className="px-3 py-6 text-center text-sm text-fg-muted">No commands found</div>
             )}
 
             {grouped.map(({ group, commands: groupCmds }) => (
               <div key={group} role="group" aria-label={group}>
-                <div className="px-2 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-gray-500">
+                <div className="px-2 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-fg-tertiary">
                   {group}
                 </div>
                 {groupCmds.map((cmd) => {
@@ -179,8 +179,8 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                       className={cn(
                         'flex w-full items-center gap-3 rounded-md px-2 py-2 text-left text-sm transition-colors',
                         isSelected
-                          ? 'bg-gray-800 text-gray-100'
-                          : 'text-gray-400 hover:bg-gray-900 hover:text-gray-200'
+                          ? 'bg-surface-elevated text-fg'
+                          : 'text-fg-secondary hover:bg-surface-raised hover:text-gray-200'
                       )}
                       onClick={() => {
                         executeCommand(cmd);
@@ -193,13 +193,13 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                         <cmd.icon
                           className={cn(
                             'h-4 w-4 shrink-0',
-                            isSelected ? 'text-accent-400' : 'text-gray-600'
+                            isSelected ? 'text-accent-400' : 'text-fg-muted'
                           )}
                         />
                       )}
                       <span className="flex-1 truncate">{cmd.label}</span>
                       {cmd.shortcut && (
-                        <kbd className="shrink-0 rounded border border-gray-700 bg-gray-900 px-1.5 py-0.5 text-[10px] font-medium text-gray-600">
+                        <kbd className="shrink-0 rounded border border-edge-emphasis bg-surface-raised px-1.5 py-0.5 text-[10px] font-medium text-fg-muted">
                           {cmd.shortcut}
                         </kbd>
                       )}

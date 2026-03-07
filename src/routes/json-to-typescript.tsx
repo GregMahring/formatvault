@@ -35,7 +35,7 @@ export default function JsonToTypescriptConverter() {
       convert={convert}
       toolbarSlot={
         <>
-          <label htmlFor="ts-root-name" className="text-xs text-gray-400">
+          <label htmlFor="ts-root-name" className="text-xs text-fg-secondary">
             Root name
           </label>
           <input
@@ -45,11 +45,11 @@ export default function JsonToTypescriptConverter() {
             onChange={(e) => {
               setRootName(e.target.value || 'Root');
             }}
-            className="w-24 rounded border border-gray-700 bg-gray-900 px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
+            className="w-24 rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
             placeholder="Root"
           />
 
-          <label htmlFor="ts-style-select" className="text-xs text-gray-400">
+          <label htmlFor="ts-style-select" className="text-xs text-fg-secondary">
             Style
           </label>
           <select
@@ -58,13 +58,13 @@ export default function JsonToTypescriptConverter() {
             onChange={(e) => {
               setStyle(e.target.value as TypeGenOptions['style']);
             }}
-            className="rounded border border-gray-700 bg-gray-900 px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
+            className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
           >
             <option value="interface">interface</option>
             <option value="type">type</option>
           </select>
 
-          <label className="flex cursor-pointer items-center gap-1.5 text-xs text-gray-400">
+          <label className="flex cursor-pointer items-center gap-1.5 text-xs text-fg-secondary">
             <input
               type="checkbox"
               className="h-3 w-3 accent-accent-500"
