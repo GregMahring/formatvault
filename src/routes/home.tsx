@@ -338,7 +338,7 @@ export default function Home() {
       </div>
 
       {/* Tool grid */}
-      <h2 className="mb-4 text-xs font-semibold uppercase tracking-widest text-fg-muted">
+      <h2 className="mb-4 text-xs font-semibold uppercase tracking-widest text-fg-secondary">
         Available tools
       </h2>
       <ul
@@ -372,7 +372,7 @@ export default function Home() {
       <div className="mt-12 flex flex-col items-center gap-2 rounded-lg border border-edge bg-surface-raised/40 px-6 py-5 text-center">
         <ShieldCheck className="h-6 w-6 text-green-500" aria-hidden="true" />
         <p className="text-sm font-semibold text-fg-secondary">Your data stays on your device</p>
-        <p className="max-w-md text-xs leading-relaxed text-fg-muted">
+        <p className="max-w-md text-xs leading-relaxed text-fg-secondary">
           Every tool on formatvault runs entirely in your browser. No data is ever uploaded, stored,
           or logged. Paste sensitive credentials, tokens, and payloads with confidence.
         </p>

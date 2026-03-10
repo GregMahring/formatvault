@@ -77,7 +77,7 @@ function NavGroup({ label, items }: NavGroupProps) {
       <button
         type="button"
         aria-expanded={open}
-        aria-haspopup="true"
+        aria-haspopup="menu"
         className={cn(
           'flex items-center gap-1 rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
           isActive || open
@@ -93,11 +93,15 @@ function NavGroup({ label, items }: NavGroupProps) {
       </button>
 
       {open && (
-        <div className="absolute left-0 top-full z-50 mt-1 min-w-[200px] rounded-md border border-edge bg-surface-raised py-1 shadow-xl shadow-black/20">
+        <div
+          role="menu"
+          className="absolute left-0 top-full z-50 mt-1 min-w-[200px] rounded-md border border-edge bg-surface-raised py-1 shadow-xl shadow-black/20"
+        >
           {items.map(({ to, label: itemLabel }) => (
             <NavLink
               key={to}
               to={to}
+              role="menuitem"
               onClick={() => {
                 setOpen(false);
               }}
@@ -170,7 +174,6 @@ export function Header({ className, onOpenCommandPalette }: HeaderProps) {
               type="button"
               onClick={onOpenCommandPalette}
               className="flex items-center gap-1.5 rounded-md border border-edge bg-surface-raised px-2.5 py-1 text-xs text-fg-secondary transition-colors hover:border-edge-emphasis hover:text-fg"
-              aria-label="Search commands"
             >
               <span className="hidden sm:inline">Search commands</span>
               <kbd className="rounded border border-edge-emphasis bg-surface-elevated px-1 py-0.5 text-[10px] font-medium text-fg-secondary">
