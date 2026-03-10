@@ -211,29 +211,48 @@ export default function Home() {
   return (
     <div className="mx-auto w-full max-w-5xl px-6 py-16">
       {/* Hero */}
-      <div className="mb-16 text-center">
-        <div className="mb-4 flex justify-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-accent-500/30 bg-accent-500/10">
-            <Braces className="h-8 w-8 text-accent-400" aria-hidden="true" />
+      <div className="mb-16">
+        {/* Hero logo — $ {format:vault}█ at xl size, centered */}
+        <div className="mb-8 flex justify-center">
+          <div className="inline-flex items-center font-mono">
+            <span className="text-[38px] font-bold text-brand-indigo mr-[11px] leading-none">
+              $
+            </span>
+            <span className="text-[38px] font-normal text-logo-cyan leading-none">{'{'}</span>
+            <span className="text-[38px] font-bold text-logo-silver leading-none">format</span>
+            <span className="text-[38px] font-bold text-logo-colon leading-none">:</span>
+            <span className="text-[38px] font-bold text-logo-silver leading-none">vault</span>
+            <span className="text-[38px] font-normal text-logo-cyan leading-none">{'}'}</span>
+            <span className="fv-cursor ml-[3px] inline-block w-[2px] h-[34px] bg-brand-indigo" />
           </div>
         </div>
 
-        <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-edge-emphasis bg-surface-raised px-3 py-1 text-xs font-medium text-fg-secondary">
-          <span className="inline-block h-1.5 w-1.5 rounded-full bg-green-400" aria-hidden="true" />
-          Free · No account · No tracking
-        </div>
+        {/* Badge, headline, body, textarea, buttons — all left-aligned in shared container */}
+        <div className="mx-auto max-w-2xl">
+          <div className="mb-4 flex items-center gap-2 rounded border border-[#5555cc]/30 bg-[#5555cc]/10 px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[#aaaaff]">
+            <span
+              className="inline-block h-[5px] w-[5px] shrink-0 rounded-full bg-[#aaaaff]"
+              aria-hidden="true"
+            />
+            browser-local processing
+          </div>
 
-        <h1 className="mb-4 text-4xl font-bold tracking-tight text-fg sm:text-5xl">
-          Developer data format tools
-        </h1>
-        <p className="mx-auto max-w-xl text-lg text-fg-secondary">
-          Format, validate and convert JSON, CSV, YAML and more — completely free, with{' '}
-          <strong className="font-semibold text-gray-200">no data ever leaving your browser</strong>
-          .
-        </p>
+          <h1
+            className="mb-4 font-display text-4xl font-extrabold text-fg sm:text-5xl"
+            style={{ letterSpacing: '-0.02em', lineHeight: '1.05' }}
+          >
+            Format anything.
+            <br />
+            <span className="text-logo-cyan">Share nothing.</span>
+          </h1>
+          <p className="mb-8 text-[15px] leading-[1.65] text-fg-secondary">
+            Clean, convert, and generate data formats — JSON, CSV, TOML, SQL, and more. All
+            processing stays in your browser.
+            <br />
+            <strong className="font-semibold text-fg">Zero uploads. Zero exposure.</strong>
+          </p>
 
-        {/* Auto-detect paste area */}
-        <div className="mx-auto mt-8 max-w-lg">
+          {/* Auto-detect paste area */}
           <div className="relative">
             <textarea
               value={pasteValue}
@@ -243,19 +262,19 @@ export default function Home() {
               }}
               onPaste={handlePaste}
               placeholder="Paste any data here — we'll detect the format automatically…"
-              className="h-24 w-full resize-none rounded-lg border border-edge-emphasis bg-surface-raised px-4 py-3 font-mono text-sm text-gray-200 placeholder:text-fg-muted focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
+              className="h-24 w-full resize-none rounded-lg border border-edge-emphasis bg-surface-raised px-4 py-3 font-mono text-sm text-fg placeholder:text-fg-muted focus:border-[#5555cc] focus:outline-none focus:ring-1 focus:ring-[#5555cc]"
               spellCheck={false}
               aria-label="Paste data for auto-detection"
             />
             <div className="absolute right-3 top-3">
-              <Sparkles className="h-4 w-4 text-gray-700" aria-hidden="true" />
+              <Sparkles className="h-4 w-4 text-fg-muted" aria-hidden="true" />
             </div>
           </div>
 
           {/* Detection result */}
           {detected && detected !== 'unknown' && (
-            <div className="mt-2 flex items-center justify-center gap-2 text-sm">
-              <span className="rounded-full bg-accent-600/20 px-2.5 py-0.5 text-xs font-medium text-accent-300">
+            <div className="mt-2 flex items-center gap-2 text-sm">
+              <span className="rounded-full bg-[#5555cc]/15 px-2.5 py-0.5 text-xs font-medium text-[#7777dd]">
                 Detected: {FORMAT_LABELS[detected]}
               </span>
               <span className="text-xs text-fg-muted">Navigating...</span>
@@ -267,7 +286,7 @@ export default function Home() {
               <p className="mb-2 text-xs text-fg-muted">
                 Couldn't auto-detect the format. Pick a tool:
               </p>
-              <div className="flex flex-wrap justify-center gap-2">
+              <div className="flex flex-wrap gap-2">
                 {(['json', 'csv', 'yaml', 'jwt', 'base64', 'url-encoded'] as DetectedFormat[]).map(
                   (fmt) => (
                     <button
@@ -276,7 +295,7 @@ export default function Home() {
                       onClick={() => {
                         handleManualNav(fmt);
                       }}
-                      className="rounded-md border border-edge-emphasis bg-surface-raised px-3 py-1 text-xs text-fg-secondary transition-colors hover:border-gray-600 hover:text-gray-200"
+                      className="rounded-md border border-edge-emphasis bg-surface-raised px-3 py-1 text-xs text-fg-secondary transition-colors hover:border-edge hover:text-fg"
                     >
                       {FORMAT_LABELS[fmt]}
                     </button>
@@ -285,36 +304,35 @@ export default function Home() {
               </div>
             </div>
           )}
-        </div>
 
-        <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <Link
-            to="/json-formatter"
-            className="rounded-lg bg-accent-600 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-accent-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400"
-          >
-            Try JSON Formatter
-          </Link>
-          <Link
-            to="/converters"
-            className="rounded-lg border border-edge-emphasis bg-surface-raised px-5 py-2 text-sm font-semibold text-gray-300 transition-colors hover:border-gray-600 hover:bg-surface-elevated hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400"
-          >
-            See all converters
-          </Link>
+          <div className="mt-6 flex justify-center gap-3">
+            <Link
+              to="/json-formatter"
+              className="flex-1 rounded-lg bg-[#5555cc] px-5 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-[#6666dd] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5555cc]"
+            >
+              Start Formatting
+            </Link>
+            <Link
+              to="/converters"
+              className="flex-1 rounded-lg border border-edge-emphasis bg-surface-raised px-5 py-2 text-center text-sm font-semibold text-fg-secondary transition-colors hover:border-[#5555cc]/50 hover:bg-surface-elevated hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5555cc]"
+            >
+              See all converters
+            </Link>
+          </div>
         </div>
       </div>
 
       {/* Feature strip */}
-      <div className="mb-12 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="mb-12 grid grid-cols-1 divide-y divide-edge sm:grid-cols-3 sm:divide-x sm:divide-y-0">
         {FEATURES.map(({ icon: Icon, label, description }) => (
-          <div
-            key={label}
-            className="flex flex-col gap-2 rounded-lg border border-edge bg-surface-raised/50 p-4"
-          >
-            <div className="flex items-center gap-2">
-              <Icon className="h-4 w-4 text-accent-400" aria-hidden="true" />
-              <span className="text-sm font-semibold text-gray-200">{label}</span>
+          <div key={label} className="flex gap-3 px-0 py-5 sm:px-6 sm:first:pl-0 sm:last:pr-0">
+            <Icon className="mt-0.5 h-4 w-4 shrink-0 text-brand-cyan" aria-hidden="true" />
+            <div className="flex flex-col gap-1">
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-fg">
+                {label}
+              </span>
+              <p className="text-xs leading-relaxed text-fg-tertiary">{description}</p>
             </div>
-            <p className="text-xs leading-relaxed text-fg-tertiary">{description}</p>
           </div>
         ))}
       </div>
@@ -331,11 +349,11 @@ export default function Home() {
           <li key={to}>
             <Link
               to={to}
-              className="group flex flex-col gap-2 rounded-lg border border-edge bg-surface-raised p-5 transition-colors hover:border-edge-emphasis hover:bg-surface-elevated/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
+              className="group flex h-full flex-col gap-2 rounded-lg border border-edge bg-surface-raised p-5 transition-colors hover:border-[#5555cc]/40 hover:bg-surface-elevated/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5555cc]"
             >
               <div className="flex items-center gap-3">
                 <Icon className={`h-5 w-5 shrink-0 ${accent}`} aria-hidden="true" />
-                <span className="flex-1 font-semibold text-fg group-hover:text-white">{label}</span>
+                <span className="flex-1 font-semibold text-fg group-hover:text-fg">{label}</span>
                 {badge !== null && (
                   <span className="rounded-full border border-edge-emphasis bg-surface-elevated px-2 py-0.5 text-[10px] font-medium text-fg-secondary">
                     {badge}
@@ -353,7 +371,7 @@ export default function Home() {
       {/* Privacy callout */}
       <div className="mt-12 flex flex-col items-center gap-2 rounded-lg border border-edge bg-surface-raised/40 px-6 py-5 text-center">
         <ShieldCheck className="h-6 w-6 text-green-500" aria-hidden="true" />
-        <p className="text-sm font-semibold text-gray-300">Your data stays on your device</p>
+        <p className="text-sm font-semibold text-fg-secondary">Your data stays on your device</p>
         <p className="max-w-md text-xs leading-relaxed text-fg-muted">
           Every tool on formatvault runs entirely in your browser. No data is ever uploaded, stored,
           or logged. Paste sensitive credentials, tokens, and payloads with confidence.

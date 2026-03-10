@@ -16,8 +16,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         {/* Restore persisted theme before paint to avoid flash of wrong theme */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        {/* Brand fonts — JetBrains Mono, DM Sans, Geist */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Geist:wght@300;400;500;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap"
+        />
         {/* Plausible Analytics — privacy-respecting, no cookies, no PII */}
         <script defer data-domain="formatvault.dev" src="https://plausible.io/js/script.js" />
         <Meta />
