@@ -201,7 +201,7 @@ export default function YamlFormatter() {
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-gray-200">YAML Formatter</h1>
+        <h1 className="text-sm font-semibold text-fg">YAML Formatter</h1>
 
         <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
@@ -214,7 +214,7 @@ export default function YamlFormatter() {
           onChange={(e) => {
             fmt.setIndent(Number(e.target.value) as YamlIndent);
           }}
-          className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
+          className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-fg focus:border-accent-500 focus:outline-none"
         >
           <option value={2}>2 spaces</option>
           <option value={4}>4 spaces</option>
@@ -229,7 +229,7 @@ export default function YamlFormatter() {
           onChange={(e) => {
             fmt.setStyle(e.target.value as YamlStyle);
           }}
-          className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
+          className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-fg focus:border-accent-500 focus:outline-none"
         >
           <option value="block">Block</option>
           <option value="flow">Flow</option>
@@ -303,8 +303,8 @@ export default function YamlFormatter() {
         </button>
 
         {fmt.input.trim() && (
-          <Badge variant={isValid ? 'default' : 'destructive'} className="text-xs">
-            {isValid ? '✓ Valid' : '✗ Invalid'}
+          <Badge variant={isValid ? 'success' : 'destructive'} dot>
+            {isValid ? 'valid' : 'invalid'}
           </Badge>
         )}
 

@@ -38,7 +38,7 @@ export default function JsonToCsvConverter() {
             onChange={(e) => {
               setDelimiter(e.target.value as CsvOutputDelimiter);
             }}
-            className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
+            className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-fg focus:border-accent-500 focus:outline-none"
           >
             <option value=",">Comma (,)</option>
             <option value={'\t'}>Tab</option>

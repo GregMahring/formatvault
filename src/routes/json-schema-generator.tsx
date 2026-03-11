@@ -152,7 +152,7 @@ export default function JsonSchemaGenerator() {
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-gray-200">JSON Schema</h1>
+        <h1 className="text-sm font-semibold text-fg">JSON Schema</h1>
 
         <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
@@ -182,21 +182,18 @@ export default function JsonSchemaGenerator() {
           </Badge>
         )}
         {schema.validationResult && (
-          <Badge
-            variant={schema.validationResult.valid ? 'default' : 'destructive'}
-            className="text-xs"
-          >
-            {schema.validationResult.valid ? '✓ Valid' : '✗ Invalid'}
+          <Badge variant={schema.validationResult.valid ? 'success' : 'destructive'} dot>
+            {schema.validationResult.valid ? 'valid' : 'invalid'}
           </Badge>
         )}
         {schema.mode === 'generate' && schema.schemaOutput && !hasError && (
-          <Badge variant="default" className="text-xs">
-            ✓ Generated
+          <Badge variant="success" dot>
+            generated
           </Badge>
         )}
         {hasError && (
-          <Badge variant="destructive" className="text-xs">
-            ✗ Error
+          <Badge variant="destructive" dot>
+            error
           </Badge>
         )}
 

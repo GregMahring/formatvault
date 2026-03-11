@@ -53,7 +53,7 @@ export function KeyboardShortcutsModal({
         {/* Header */}
         <div className="flex items-center gap-2 border-b border-edge px-4 py-3">
           <Keyboard className="h-4 w-4 text-fg-secondary" aria-hidden="true" />
-          <h2 className="flex-1 text-sm font-semibold text-gray-200">Keyboard shortcuts</h2>
+          <h2 className="flex-1 text-sm font-semibold text-fg">Keyboard shortcuts</h2>
           <button
             type="button"
             className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
@@ -68,7 +68,7 @@ export function KeyboardShortcutsModal({
         <ul className="divide-y divide-edge">
           {shortcuts.map((s, i) => (
             <li key={i} className="flex items-center justify-between px-4 py-2.5">
-              <span className="text-sm text-gray-300">{s.label}</span>
+              <span className="text-sm text-fg-secondary">{s.label}</span>
               <kbd
                 className={cn(
                   'rounded border border-edge-emphasis bg-surface-elevated px-2 py-0.5 font-mono text-xs text-fg-secondary'

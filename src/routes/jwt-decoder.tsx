@@ -46,7 +46,7 @@ function ClaimRow({ name, value }: { name: string; value: unknown }) {
   return (
     <tr className="border-b border-edge last:border-0">
       <td className="w-32 py-2 pr-4 align-top font-mono text-xs text-fg-tertiary">{name}</td>
-      <td className="py-2 font-mono text-xs text-gray-200 break-all">{display}</td>
+      <td className="py-2 font-mono text-xs text-fg break-all">{display}</td>
     </tr>
   );
 }
@@ -61,11 +61,7 @@ function TimestampRow({
   highlight?: 'expired' | 'valid';
 }) {
   const color =
-    highlight === 'expired'
-      ? 'text-red-400'
-      : highlight === 'valid'
-        ? 'text-green-400'
-        : 'text-gray-200';
+    highlight === 'expired' ? 'text-red-400' : highlight === 'valid' ? 'text-green-400' : 'text-fg';
   return (
     <tr className="border-b border-edge last:border-0">
       <td className="w-32 py-2 pr-4 align-top font-mono text-xs text-fg-tertiary">{name}</td>
@@ -231,7 +227,7 @@ export default function JwtDecoder() {
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-gray-200">JWT Decoder</h1>
+        <h1 className="text-sm font-semibold text-fg">JWT Decoder</h1>
         <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
         <Badge variant="outline" className="text-[10px] text-fg-muted">
           Decode only · no verification
@@ -240,13 +236,13 @@ export default function JwtDecoder() {
         <div className="flex-1" />
 
         {decoded && (
-          <Badge variant={decoded.isExpired ? 'destructive' : 'default'} className="text-xs">
-            {decoded.isExpired ? '✗ Expired' : '✓ Valid structure'}
+          <Badge variant={decoded.isExpired ? 'destructive' : 'success'} dot>
+            {decoded.isExpired ? 'expired' : 'valid'}
           </Badge>
         )}
         {error && (
-          <Badge variant="destructive" className="text-xs">
-            ✗ Invalid
+          <Badge variant="destructive" dot>
+            invalid
           </Badge>
         )}
 
@@ -322,7 +318,7 @@ export default function JwtDecoder() {
             </div>
           </div>
           <textarea
-            className="flex-1 resize-none bg-surface p-4 font-mono text-xs text-gray-200 placeholder-gray-700 focus:outline-none"
+            className="flex-1 resize-none bg-surface p-4 font-mono text-xs text-fg placeholder-fg-muted focus:outline-none"
             placeholder="Paste a JWT token here…&#10;&#10;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U"
             value={input}
             onChange={(e) => {
@@ -343,7 +339,7 @@ export default function JwtDecoder() {
                     const labels = ['Header', 'Payload', 'Signature'];
                     return (
                       <span key={i} className={colors[i]}>
-                        <span className="text-gray-700">{labels[i]}: </span>
+                        <span className="text-fg-muted">{labels[i]}: </span>
                         {part.length > 20 ? `${part.slice(0, 20)}…` : part}
                       </span>
                     );
@@ -378,7 +374,7 @@ export default function JwtDecoder() {
                         Payload (masked)
                       </span>
                     </div>
-                    <pre className="overflow-x-auto px-4 py-3 font-mono text-xs text-gray-200 whitespace-pre-wrap">
+                    <pre className="overflow-x-auto px-4 py-3 font-mono text-xs text-fg whitespace-pre-wrap">
                       {pii.displayContent}
                     </pre>
                   </div>

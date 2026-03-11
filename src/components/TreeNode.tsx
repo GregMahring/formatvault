@@ -81,7 +81,7 @@ export const TreeNodeComponent = memo(function TreeNodeComponent({
   return (
     <div
       className={cn(
-        'group flex items-center gap-1 border-b border-gray-900/50 py-0.5 pr-2 text-xs hover:bg-surface-elevated/40',
+        'group flex items-center gap-1 border-b border-edge py-0.5 pr-2 text-xs hover:bg-surface-elevated/40',
         searchMatch && 'bg-accent-900/20'
       )}
       style={{ paddingLeft: `${String(depth * 16 + 8)}px` }}
@@ -104,12 +104,15 @@ export const TreeNodeComponent = memo(function TreeNodeComponent({
 
       {/* Key */}
       <span
-        className={cn('shrink-0 font-mono', isArrayIndex ? 'text-fg-tertiary' : 'text-gray-300')}
+        className={cn(
+          'shrink-0 font-mono',
+          isArrayIndex ? 'text-fg-tertiary' : 'text-fg-secondary'
+        )}
       >
         {isArrayIndex ? `[${nodeKey}]` : nodeKey}
       </span>
 
-      <span className="shrink-0 text-gray-700" aria-hidden="true">
+      <span className="shrink-0 text-fg-muted" aria-hidden="true">
         :
       </span>
 
@@ -137,7 +140,7 @@ export const TreeNodeComponent = memo(function TreeNodeComponent({
       {/* Copy path button */}
       <button
         type="button"
-        className="shrink-0 rounded p-0.5 text-gray-700 opacity-0 transition-opacity hover:bg-gray-700 hover:text-fg-secondary group-hover:opacity-100"
+        className="shrink-0 rounded p-0.5 text-fg-muted opacity-0 transition-opacity hover:bg-surface-elevated hover:text-fg-secondary group-hover:opacity-100"
         onClick={handleCopy}
         title={`Copy path: ${path}`}
         aria-label={`Copy path ${path}`}

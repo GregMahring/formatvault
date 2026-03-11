@@ -121,7 +121,7 @@ export default function RegexTester() {
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-gray-200">Regex Tester</h1>
+        <h1 className="text-sm font-semibold text-fg">Regex Tester</h1>
         <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
         {/* Pattern input with / decorations */}
@@ -140,7 +140,7 @@ export default function RegexTester() {
               'w-48 rounded-none border-b bg-transparent px-1 py-0.5 font-mono text-sm focus:outline-none',
               result.error
                 ? 'border-red-600 text-red-300 placeholder-red-900'
-                : 'border-edge-emphasis text-gray-200 placeholder-fg-muted focus:border-accent-500'
+                : 'border-edge-emphasis text-fg placeholder-fg-muted focus:border-accent-500'
             )}
           />
           <span className="select-none text-sm text-fg-tertiary">/</span>
@@ -173,9 +173,9 @@ export default function RegexTester() {
 
         {/* Match count badge */}
         {hasPattern && hasInput && !result.error && (
-          <Badge variant="default" className="text-xs">
+          <Badge variant={matchCount === 0 ? 'secondary' : 'success'} dot={matchCount > 0}>
             {matchCount === 0
-              ? 'No matches'
+              ? 'no matches'
               : `${String(matchCount)} match${matchCount !== 1 ? 'es' : ''}`}
           </Badge>
         )}
@@ -224,7 +224,7 @@ export default function RegexTester() {
             </span>
           </div>
           <textarea
-            className="flex-1 resize-none bg-surface p-4 font-mono text-sm text-gray-200 placeholder-gray-700 focus:outline-none"
+            className="flex-1 resize-none bg-surface p-4 font-mono text-sm text-fg placeholder-fg-muted focus:outline-none"
             placeholder="Paste or type text to test against…"
             value={input}
             onChange={(e) => {
@@ -248,7 +248,7 @@ export default function RegexTester() {
                 Match results
               </span>
               {hasPattern && hasInput && !result.error && matchCount > 0 && (
-                <Badge variant="default" className="text-[10px]">
+                <Badge variant="success" dot>
                   {String(matchCount)}
                 </Badge>
               )}
@@ -276,7 +276,7 @@ export default function RegexTester() {
               <div className="flex flex-col">
                 {/* Highlighted text */}
                 <div
-                  className="border-b border-edge bg-surface-raised p-4 font-mono text-sm leading-relaxed text-gray-300
+                  className="border-b border-edge bg-surface-raised p-4 font-mono text-sm leading-relaxed text-fg-secondary
                     [&_mark]:rounded-sm [&_mark]:bg-yellow-400/25 [&_mark]:text-yellow-200 [&_mark]:ring-1 [&_mark]:ring-yellow-400/40"
                   // DOMPurify-sanitized HTML — safe per ADR-0008
                   dangerouslySetInnerHTML={{ __html: safeHighlightHtml }}
@@ -290,9 +290,7 @@ export default function RegexTester() {
                         <span className="shrink-0 font-mono text-[10px] text-fg-muted">
                           #{i + 1}
                         </span>
-                        <span className="font-mono text-gray-200 break-all">
-                          {m.value || '(empty)'}
-                        </span>
+                        <span className="font-mono text-fg break-all">{m.value || '(empty)'}</span>
                         <span className="ml-auto shrink-0 text-[10px] text-fg-muted">
                           {String(m.index)}–{String(m.end)}
                         </span>

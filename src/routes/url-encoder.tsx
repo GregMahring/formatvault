@@ -141,7 +141,7 @@ export default function UrlEncoderPage() {
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-gray-200">URL Encoder / Decoder</h1>
+        <h1 className="text-sm font-semibold text-fg">URL Encoder / Decoder</h1>
         <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
         {/* Mode toggle */}
@@ -155,7 +155,7 @@ export default function UrlEncoderPage() {
               }}
               className={cn(
                 'rounded px-3 py-1 text-xs font-medium capitalize transition-colors',
-                mode === m ? 'bg-gray-700 text-gray-100' : 'text-fg-tertiary hover:text-fg'
+                mode === m ? 'bg-surface-elevated text-fg' : 'text-fg-tertiary hover:text-fg'
               )}
             >
               {m}
@@ -175,7 +175,7 @@ export default function UrlEncoderPage() {
                 }}
                 className={cn(
                   'rounded px-3 py-1 text-xs font-medium transition-colors',
-                  variant === v ? 'bg-gray-700 text-gray-100' : 'text-fg-tertiary hover:text-fg'
+                  variant === v ? 'bg-surface-elevated text-fg' : 'text-fg-tertiary hover:text-fg'
                 )}
                 title={
                   v === 'component'
@@ -192,13 +192,13 @@ export default function UrlEncoderPage() {
         <div className="flex-1" />
 
         {result && !isUrlError(result) && input.trim() && (
-          <Badge variant="default" className="text-xs">
-            ✓ {mode === 'encode' ? 'Encoded' : 'Decoded'}
+          <Badge variant="success" dot>
+            {mode === 'encode' ? 'encoded' : 'decoded'}
           </Badge>
         )}
         {error && (
-          <Badge variant="destructive" className="text-xs">
-            ✗ Error
+          <Badge variant="destructive" dot>
+            error
           </Badge>
         )}
 
@@ -274,7 +274,7 @@ export default function UrlEncoderPage() {
               </span>
             </div>
             <textarea
-              className="flex-1 resize-none bg-surface p-4 font-mono text-sm text-gray-200 placeholder-gray-700 focus:outline-none"
+              className="flex-1 resize-none bg-surface p-4 font-mono text-sm text-fg placeholder-fg-muted focus:outline-none"
               placeholder={
                 mode === 'encode'
                   ? 'Paste or type text to encode…\n\ne.g. hello world & more'
@@ -304,7 +304,7 @@ export default function UrlEncoderPage() {
               </div>
             </div>
             <textarea
-              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-gray-300 placeholder-gray-700 focus:outline-none"
+              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg-secondary placeholder-fg-muted focus:outline-none"
               placeholder={mode === 'encode' ? 'Encoded output…' : 'Decoded output…'}
               value={pii.displayContent}
               readOnly
@@ -336,7 +336,7 @@ export default function UrlEncoderPage() {
                     {inputParams.map(({ key, value }, i) => (
                       <tr key={i} className="border-b border-surface-raised">
                         <td className="py-1 pr-4 font-mono text-fg-secondary">{key}</td>
-                        <td className="py-1 font-mono text-gray-300">{value}</td>
+                        <td className="py-1 font-mono text-fg-secondary">{value}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -361,7 +361,7 @@ export default function UrlEncoderPage() {
                     {parsedParams.map(({ key, value }, i) => (
                       <tr key={i} className="border-b border-surface-raised">
                         <td className="py-1 pr-4 font-mono text-fg-secondary">{key}</td>
-                        <td className="py-1 font-mono text-gray-300">{value}</td>
+                        <td className="py-1 font-mono text-fg-secondary">{value}</td>
                       </tr>
                     ))}
                   </tbody>

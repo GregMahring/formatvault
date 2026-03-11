@@ -11,8 +11,8 @@ const buttonVariants = cva(
         default: 'bg-accent-600 text-white hover:bg-accent-500',
         destructive: 'bg-red-700 text-white hover:bg-red-600',
         outline:
-          'border border-gray-700 bg-transparent text-gray-200 hover:bg-surface-elevated hover:text-white',
-        secondary: 'bg-surface-elevated text-gray-200 hover:bg-gray-700',
+          'border border-edge-emphasis bg-transparent text-fg hover:bg-surface-elevated hover:text-fg',
+        secondary: 'bg-surface-elevated text-fg hover:bg-surface-elevated/80',
         ghost: 'text-fg-secondary hover:bg-surface-elevated hover:text-fg',
         link: 'text-accent-400 underline-offset-4 hover:underline',
       },

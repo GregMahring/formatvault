@@ -93,30 +93,32 @@ function NavGroup({ label, items }: NavGroupProps) {
       </button>
 
       {open && (
-        <div
-          role="menu"
-          className="absolute left-0 top-full z-50 mt-1 min-w-[200px] rounded-md border border-edge bg-surface-raised py-1 shadow-xl shadow-black/20"
-        >
-          {items.map(({ to, label: itemLabel }) => (
-            <NavLink
-              key={to}
-              to={to}
-              role="menuitem"
-              onClick={() => {
-                setOpen(false);
-              }}
-              className={({ isActive: linkActive }) =>
-                cn(
-                  'block px-3 py-1.5 font-mono text-xs transition-colors',
-                  linkActive
-                    ? 'text-brand-indigo'
-                    : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg'
-                )
-              }
-            >
-              {itemLabel}
-            </NavLink>
-          ))}
+        <div className="absolute left-0 top-full z-50 pt-1">
+          <div
+            role="menu"
+            className="min-w-[200px] rounded-md border border-edge bg-surface-raised py-1 shadow-xl shadow-black/20"
+          >
+            {items.map(({ to, label: itemLabel }) => (
+              <NavLink
+                key={to}
+                to={to}
+                role="menuitem"
+                onClick={() => {
+                  setOpen(false);
+                }}
+                className={({ isActive: linkActive }) =>
+                  cn(
+                    'block px-3 py-1.5 font-mono text-xs transition-colors',
+                    linkActive
+                      ? 'text-brand-indigo'
+                      : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg'
+                  )
+                }
+              >
+                {itemLabel}
+              </NavLink>
+            ))}
+          </div>
         </div>
       )}
     </div>

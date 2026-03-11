@@ -45,7 +45,7 @@ export default function JsonToTypescriptConverter() {
             onChange={(e) => {
               setRootName(e.target.value || 'Root');
             }}
-            className="w-24 rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
+            className="w-24 rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-fg focus:border-accent-500 focus:outline-none"
             placeholder="Root"
           />
 
@@ -58,7 +58,7 @@ export default function JsonToTypescriptConverter() {
             onChange={(e) => {
               setStyle(e.target.value as TypeGenOptions['style']);
             }}
-            className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
+            className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-fg focus:border-accent-500 focus:outline-none"
           >
             <option value="interface">interface</option>
             <option value="type">type</option>

@@ -49,7 +49,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
           className="flex h-full flex-col items-center justify-center gap-4 p-8 text-center"
         >
           <p className="text-4xl">⚠️</p>
-          <h2 className="text-xl font-semibold text-gray-200">Something went wrong</h2>
+          <h2 className="text-xl font-semibold text-fg">Something went wrong</h2>
           <p className="max-w-sm text-sm text-fg-tertiary">
             An unexpected error occurred in this tool. Your data has not been sent anywhere.
           </p>

@@ -131,7 +131,7 @@ export default function Base64Encoder() {
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-gray-200">Base64 Encoder / Decoder</h1>
+        <h1 className="text-sm font-semibold text-fg">Base64 Encoder / Decoder</h1>
         <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
         {/* Mode toggle */}
@@ -145,7 +145,7 @@ export default function Base64Encoder() {
               }}
               className={cn(
                 'rounded px-3 py-1 text-xs font-medium capitalize transition-colors',
-                mode === m ? 'bg-gray-700 text-gray-100' : 'text-fg-tertiary hover:text-fg'
+                mode === m ? 'bg-surface-elevated text-fg' : 'text-fg-tertiary hover:text-fg'
               )}
             >
               {m}
@@ -165,7 +165,7 @@ export default function Base64Encoder() {
                 }}
                 className={cn(
                   'rounded px-2 py-0.5 text-xs transition-colors',
-                  !urlSafe ? 'bg-gray-700 text-gray-100' : 'text-fg-tertiary hover:text-fg'
+                  !urlSafe ? 'bg-surface-elevated text-fg' : 'text-fg-tertiary hover:text-fg'
                 )}
               >
                 Standard
@@ -177,7 +177,7 @@ export default function Base64Encoder() {
                 }}
                 className={cn(
                   'rounded px-2 py-0.5 text-xs transition-colors',
-                  urlSafe ? 'bg-gray-700 text-gray-100' : 'text-fg-tertiary hover:text-fg'
+                  urlSafe ? 'bg-surface-elevated text-fg' : 'text-fg-tertiary hover:text-fg'
                 )}
               >
                 URL-safe
@@ -189,13 +189,13 @@ export default function Base64Encoder() {
         <div className="flex-1" />
 
         {result && !isBase64Error(result) && input.trim() && (
-          <Badge variant="default" className="text-xs">
-            ✓ {mode === 'encode' ? 'Encoded' : 'Decoded'}
+          <Badge variant="success" dot>
+            {mode === 'encode' ? 'encoded' : 'decoded'}
           </Badge>
         )}
         {error && (
-          <Badge variant="destructive" className="text-xs">
-            ✗ Error
+          <Badge variant="destructive" dot>
+            error
           </Badge>
         )}
 
@@ -254,7 +254,7 @@ export default function Base64Encoder() {
             </span>
           </div>
           <textarea
-            className="flex-1 resize-none bg-surface p-4 font-mono text-sm text-gray-200 placeholder-gray-700 focus:outline-none"
+            className="flex-1 resize-none bg-surface p-4 font-mono text-sm text-fg placeholder-fg-muted focus:outline-none"
             placeholder={
               mode === 'encode' ? 'Paste or type text to encode…' : 'Paste Base64 to decode…'
             }
@@ -288,7 +288,7 @@ export default function Base64Encoder() {
             </div>
           </div>
           <textarea
-            className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-gray-300 placeholder-gray-700 focus:outline-none"
+            className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg-secondary placeholder-fg-muted focus:outline-none"
             placeholder={mode === 'encode' ? 'Encoded output…' : 'Decoded output…'}
             value={pii.displayContent}
             readOnly

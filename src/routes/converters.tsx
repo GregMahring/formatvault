@@ -40,7 +40,7 @@ export default function Converters() {
               to={path}
               className="group flex items-center justify-between rounded-lg border border-edge bg-surface-raised px-5 py-4 transition-colors hover:border-edge-emphasis hover:bg-surface-elevated/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
             >
-              <span className="font-medium text-gray-200 group-hover:text-white">
+              <span className="font-medium text-fg group-hover:text-fg">
                 {from} <span className="text-fg-tertiary">→</span> {to}
               </span>
               <ArrowRight

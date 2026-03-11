@@ -160,7 +160,7 @@ export default function TomlFormatter() {
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-gray-200">TOML Formatter</h1>
+        <h1 className="text-sm font-semibold text-fg">TOML Formatter</h1>
 
         <div className="flex-1" />
 
@@ -183,8 +183,8 @@ export default function TomlFormatter() {
         </button>
 
         {fmt.input.trim() && (
-          <Badge variant={isValid ? 'default' : 'destructive'} className="text-xs">
-            {isValid ? '✓ Valid' : '✗ Invalid'}
+          <Badge variant={isValid ? 'success' : 'destructive'} dot>
+            {isValid ? 'valid' : 'invalid'}
           </Badge>
         )}
 

@@ -99,7 +99,7 @@ export default function HashGenerator() {
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-gray-200">Hash Generator</h1>
+        <h1 className="text-sm font-semibold text-fg">Hash Generator</h1>
         <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
         {/* Algorithm tabs */}
@@ -149,7 +149,7 @@ export default function HashGenerator() {
               className={cn(
                 'rounded px-2.5 py-1 text-xs font-medium capitalize transition-colors',
                 hash.inputMode === mode
-                  ? 'bg-gray-700 text-gray-200'
+                  ? 'bg-surface-elevated text-fg'
                   : 'text-fg-tertiary hover:bg-surface-elevated hover:text-fg'
               )}
             >
@@ -213,7 +213,7 @@ export default function HashGenerator() {
               placeholder="Type or paste text to hash…"
               spellCheck={false}
               aria-label="Text input to hash"
-              className="h-32 w-full resize-none rounded-md border border-edge bg-surface-raised p-3 font-mono text-sm text-gray-200 placeholder-gray-700 focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
+              className="h-32 w-full resize-none rounded-md border border-edge bg-surface-raised p-3 font-mono text-sm text-fg placeholder-fg-muted focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
             />
           ) : (
             /* Full-area drag-and-drop zone for file upload */
@@ -249,7 +249,7 @@ export default function HashGenerator() {
                 Hex
               </span>
               <span
-                className="flex-1 truncate font-mono text-xs text-gray-200 select-all"
+                className="flex-1 truncate font-mono text-xs text-fg select-all"
                 title={hash.result.hex}
               >
                 {hash.result.hex}
@@ -263,7 +263,7 @@ export default function HashGenerator() {
                 Base64
               </span>
               <span
-                className="flex-1 truncate font-mono text-xs text-gray-200 select-all"
+                className="flex-1 truncate font-mono text-xs text-fg select-all"
                 title={hash.result.base64}
               >
                 {hash.result.base64}

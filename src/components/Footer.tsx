@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router';
 import { cn } from '@/lib/utils';
 
 export interface FooterProps {
@@ -17,23 +18,22 @@ export function Footer({ className }: FooterProps) {
         <strong className="font-medium text-fg-secondary">No data leaves your browser.</strong> All
         processing is 100% client-side.
       </p>
-      <nav aria-label="Footer navigation">
-        <ul className="flex items-center gap-4">
-          <li>
-            <a
-              href="https://github.com/gregmahring/formatvault"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-fg transition-colors"
-            >
-              GitHub
-            </a>
-          </li>
-          <li>
-            <span>© {new Date().getFullYear()} formatvault</span>
-          </li>
-        </ul>
-      </nav>
+      <NavLink
+        to="/"
+        className="flex items-center font-mono text-sm leading-none"
+        aria-label="formatvault home"
+      >
+        <span className="mr-[5px] font-bold text-brand-indigo">$</span>
+        <span className="font-normal text-logo-cyan">{'{'}</span>
+        <span className="font-bold text-logo-silver">format</span>
+        <span className="font-bold text-logo-colon">:</span>
+        <span className="font-bold text-logo-silver">vault</span>
+        <span className="font-normal text-logo-cyan">{'}'}</span>
+        <span
+          className="fv-cursor ml-[3px] inline-block h-[13px] w-[2px] bg-brand-indigo align-middle"
+          aria-hidden="true"
+        />
+      </NavLink>
     </footer>
   );
 }

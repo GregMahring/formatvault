@@ -40,7 +40,7 @@ export function TreeView({ data, className }: TreeViewProps) {
               tree.setSearchQuery(e.target.value);
             }}
             placeholder="Search keys and values..."
-            className="w-full rounded border border-edge-emphasis bg-surface-raised py-1 pl-7 pr-2 text-xs text-gray-200 placeholder:text-fg-muted focus:border-accent-500 focus:outline-none"
+            className="w-full rounded border border-edge-emphasis bg-surface-raised py-1 pl-7 pr-2 text-xs text-fg placeholder:text-fg-muted focus:border-accent-500 focus:outline-none"
             aria-label="Search tree"
           />
         </div>

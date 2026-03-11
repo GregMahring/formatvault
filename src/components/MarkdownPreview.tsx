@@ -84,18 +84,18 @@ export function MarkdownPreview({ source, className }: MarkdownPreviewProps) {
           <div
             className="prose prose-sm max-w-none px-5 py-4
               dark:prose-invert
-              dark:prose-headings:text-gray-100
-              dark:prose-p:text-gray-300
+              dark:prose-headings:text-fg
+              dark:prose-p:text-fg-secondary
               prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline
-              prose-code:rounded dark:prose-code:bg-gray-800 prose-code:px-1 prose-code:py-0.5
+              prose-code:rounded dark:prose-code:bg-surface-raised prose-code:px-1 prose-code:py-0.5
               dark:prose-code:text-cyan-300 prose-code:text-xs prose-code:font-mono
-              dark:prose-pre:bg-gray-800 prose-pre:border dark:prose-pre:border-gray-700
-              dark:prose-blockquote:border-gray-700 dark:prose-blockquote:text-gray-400
-              dark:prose-hr:border-gray-800
-              dark:prose-strong:text-gray-100
+              dark:prose-pre:bg-surface-raised prose-pre:border dark:prose-pre:border-edge-emphasis
+              dark:prose-blockquote:border-edge-emphasis dark:prose-blockquote:text-fg-secondary
+              dark:prose-hr:border-edge
+              dark:prose-strong:text-fg
               prose-table:text-xs
-              dark:prose-th:text-gray-400 dark:prose-th:border-gray-700
-              dark:prose-td:border-gray-800"
+              dark:prose-th:text-fg-secondary dark:prose-th:border-edge-emphasis
+              dark:prose-td:border-edge"
             // DOMPurify already sanitized — safe to set as innerHTML (ADR-0008)
             dangerouslySetInnerHTML={{ __html: html }}
           />

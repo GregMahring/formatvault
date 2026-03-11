@@ -248,7 +248,7 @@ export default function JsonFormatter() {
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-gray-200">JSON Formatter</h1>
+        <h1 className="text-sm font-semibold text-fg">JSON Formatter</h1>
 
         <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
@@ -312,7 +312,7 @@ export default function JsonFormatter() {
             }}
             className={cn(
               'rounded px-2 py-0.5 text-xs transition-colors',
-              !indentWithTabs ? 'bg-gray-700 text-gray-100' : 'text-fg-secondary hover:text-fg'
+              !indentWithTabs ? 'bg-surface-elevated text-fg' : 'text-fg-secondary hover:text-fg'
             )}
           >
             Spaces
@@ -324,7 +324,7 @@ export default function JsonFormatter() {
             }}
             className={cn(
               'rounded px-2 py-0.5 text-xs transition-colors',
-              indentWithTabs ? 'bg-gray-700 text-gray-100' : 'text-fg-secondary hover:text-fg'
+              indentWithTabs ? 'bg-surface-elevated text-fg' : 'text-fg-secondary hover:text-fg'
             )}
           >
             Tabs
@@ -395,10 +395,10 @@ export default function JsonFormatter() {
         {/* Validation badge */}
         {fmt.input.trim() && (
           <Badge
-            variant={isValid ? 'default' : hasError ? 'destructive' : 'secondary'}
-            className="text-xs"
+            variant={isValid ? 'success' : hasError ? 'destructive' : 'secondary'}
+            dot={isValid || hasError}
           >
-            {isValid ? '✓ Valid' : hasError ? '✗ Invalid' : '—'}
+            {isValid ? 'valid' : hasError ? 'invalid' : '—'}
           </Badge>
         )}
 
@@ -513,7 +513,7 @@ export default function JsonFormatter() {
             onKeyDown={(e) => {
               if (e.key === 'Enter') fmt.runQuery();
             }}
-            className="flex-1 rounded border border-edge-emphasis bg-surface-raised px-2 py-1 font-mono text-xs text-gray-200 placeholder-fg-muted focus:border-accent-500 focus:outline-none"
+            className="flex-1 rounded border border-edge-emphasis bg-surface-raised px-2 py-1 font-mono text-xs text-fg placeholder-fg-muted focus:border-accent-500 focus:outline-none"
             placeholder="$.store.book[*].title"
           />
           <Button size="sm" variant="outline" className="h-7 px-3 text-xs" onClick={fmt.runQuery}>

@@ -194,7 +194,7 @@ export default function NumberBaseConverter() {
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <Binary className="h-4 w-4 text-fg-tertiary" aria-hidden="true" />
-        <h1 className="text-sm font-semibold text-gray-200">Number Base Converter</h1>
+        <h1 className="text-sm font-semibold text-fg">Number Base Converter</h1>
 
         <div className="flex-1" />
 

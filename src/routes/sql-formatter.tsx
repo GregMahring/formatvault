@@ -162,7 +162,7 @@ export default function SqlFormatter() {
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-gray-200">SQL Formatter</h1>
+        <h1 className="text-sm font-semibold text-fg">SQL Formatter</h1>
 
         <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
@@ -175,7 +175,7 @@ export default function SqlFormatter() {
           onChange={(e) => {
             fmt.setDialect(e.target.value as SqlDialect);
           }}
-          className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
+          className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-fg focus:border-accent-500 focus:outline-none"
         >
           {(Object.entries(DIALECT_LABELS) as [SqlDialect, string][]).map(([value, label]) => (
             <option key={value} value={value}>
@@ -193,7 +193,7 @@ export default function SqlFormatter() {
           onChange={(e) => {
             fmt.setKeywordCase(e.target.value as SqlKeywordCase);
           }}
-          className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
+          className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-fg focus:border-accent-500 focus:outline-none"
         >
           <option value="upper">UPPERCASE</option>
           <option value="lower">lowercase</option>
@@ -209,7 +209,7 @@ export default function SqlFormatter() {
           onChange={(e) => {
             fmt.setTabWidth(Number(e.target.value) as 2 | 4);
           }}
-          className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
+          className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-fg focus:border-accent-500 focus:outline-none"
         >
           <option value={2}>2 spaces</option>
           <option value={4}>4 spaces</option>
@@ -224,7 +224,7 @@ export default function SqlFormatter() {
           onChange={(e) => {
             fmt.setLinesBetweenQueries(Number(e.target.value) as 1 | 2);
           }}
-          className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
+          className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-fg focus:border-accent-500 focus:outline-none"
         >
           <option value={1}>1 line</option>
           <option value={2}>2 lines</option>
@@ -251,8 +251,8 @@ export default function SqlFormatter() {
         </button>
 
         {fmt.input.trim() && (
-          <Badge variant={isValid ? 'default' : 'destructive'} className="text-xs">
-            {isValid ? '✓ Valid' : '✗ Invalid'}
+          <Badge variant={isValid ? 'success' : 'destructive'} dot>
+            {isValid ? 'valid' : 'invalid'}
           </Badge>
         )}
 

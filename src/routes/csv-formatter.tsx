@@ -172,7 +172,7 @@ export default function CsvFormatter() {
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-gray-200">CSV Formatter</h1>
+        <h1 className="text-sm font-semibold text-fg">CSV Formatter</h1>
 
         <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
@@ -185,7 +185,7 @@ export default function CsvFormatter() {
           onChange={(e) => {
             fmt.setDelimiter(e.target.value as Delimiter);
           }}
-          className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-gray-200 focus:border-accent-500 focus:outline-none"
+          className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-fg focus:border-accent-500 focus:outline-none"
         >
           {DELIMITERS.map((d) => (
             <option key={d.value} value={d.value}>
@@ -257,13 +257,13 @@ export default function CsvFormatter() {
         </button>
 
         {fmt.input.trim() && !hasError && (
-          <Badge variant="default" className="text-xs">
-            ✓ Valid
+          <Badge variant="success" dot>
+            valid
           </Badge>
         )}
         {hasError && (
-          <Badge variant="destructive" className="text-xs">
-            ✗ Invalid
+          <Badge variant="destructive" dot>
+            invalid
           </Badge>
         )}
 

@@ -41,7 +41,7 @@ function ResultRow({ label, value }: { label: string; value: string }) {
       <td className="w-28 py-2.5 pr-4 align-top text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
         {label}
       </td>
-      <td className="py-2.5 pr-2 font-mono text-xs text-gray-200 break-all">{value}</td>
+      <td className="py-2.5 pr-2 font-mono text-xs text-fg break-all">{value}</td>
       <td className="w-8 py-2.5 align-top">
         <button
           type="button"
@@ -74,7 +74,7 @@ function TimestampCopyRow({ label, value }: { label: string; value: number }) {
       <span className="w-24 text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
         {label}
       </span>
-      <span className="flex-1 font-mono text-sm text-gray-200">{display}</span>
+      <span className="flex-1 font-mono text-sm text-fg">{display}</span>
       <button
         type="button"
         onClick={() => {
@@ -191,7 +191,7 @@ export default function UnixTimestampConverter() {
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <Clock className="h-4 w-4 text-fg-tertiary" aria-hidden="true" />
-        <h1 className="text-sm font-semibold text-gray-200">Unix Timestamp Converter</h1>
+        <h1 className="text-sm font-semibold text-fg">Unix Timestamp Converter</h1>
 
         <div className="flex-1" />
 
@@ -236,7 +236,7 @@ export default function UnixTimestampConverter() {
                 setForceUnit(undefined);
               }}
               placeholder="e.g. 1735689600"
-              className="w-52 rounded border border-edge-emphasis bg-surface-raised px-3 py-1.5 font-mono text-sm text-gray-200 placeholder-fg-muted focus:border-accent-500 focus:outline-none"
+              className="w-52 rounded border border-edge-emphasis bg-surface-raised px-3 py-1.5 font-mono text-sm text-fg placeholder-fg-muted focus:border-accent-500 focus:outline-none"
               aria-label="Unix timestamp"
               spellCheck={false}
             />
@@ -334,7 +334,7 @@ export default function UnixTimestampConverter() {
               onChange={(e) => {
                 setReverseInput(e.target.value);
               }}
-              className="rounded border border-edge-emphasis bg-surface-raised px-3 py-1.5 text-sm text-gray-200 focus:border-accent-500 focus:outline-none [color-scheme:dark]"
+              className="rounded border border-edge-emphasis bg-surface-raised px-3 py-1.5 text-sm text-fg focus:border-accent-500 focus:outline-none [color-scheme:dark]"
               aria-label="Date and time"
             />
           </div>
