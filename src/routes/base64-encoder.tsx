@@ -18,6 +18,7 @@ import {
   isBase64Error,
   type Base64Mode,
 } from '@/features/tools/base64Codec';
+import { ToolPageContent } from '@/components/ToolPageContent';
 import { Keyboard, ArrowLeftRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -128,188 +129,278 @@ export default function Base64Encoder() {
   useRegisterCommands(commands);
 
   return (
-    <div className="flex h-full flex-col">
-      {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-fg">Base64 Encoder / Decoder</h1>
-        <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
+    <>
+      <div className="flex h-full flex-col">
+        {/* Toolbar */}
+        <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
+          <h1 className="text-sm font-semibold text-fg">Base64 Encoder / Decoder</h1>
+          <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
-        {/* Mode toggle */}
-        <div className="flex items-center rounded-md border border-edge bg-surface-raised p-0.5">
-          {(['encode', 'decode'] as Base64Mode[]).map((m) => (
-            <button
-              key={m}
-              type="button"
-              onClick={() => {
-                setMode(m);
-              }}
-              className={cn(
-                'rounded px-3 py-1 text-xs font-medium capitalize transition-colors',
-                mode === m ? 'bg-surface-elevated text-fg' : 'text-fg-tertiary hover:text-fg'
-              )}
-            >
-              {m}
-            </button>
-          ))}
-        </div>
-
-        {/* URL-safe toggle (encode mode only) */}
-        {mode === 'encode' && (
-          <>
-            <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
-            <div className="flex items-center rounded-md border border-edge bg-surface-raised p-0.5">
+          {/* Mode toggle */}
+          <div className="flex items-center rounded-md border border-edge bg-surface-raised p-0.5">
+            {(['encode', 'decode'] as Base64Mode[]).map((m) => (
               <button
+                key={m}
                 type="button"
                 onClick={() => {
-                  setUrlSafe(false);
+                  setMode(m);
                 }}
                 className={cn(
-                  'rounded px-2 py-0.5 text-xs transition-colors',
-                  !urlSafe ? 'bg-surface-elevated text-fg' : 'text-fg-tertiary hover:text-fg'
+                  'rounded px-3 py-1 text-xs font-medium capitalize transition-colors',
+                  mode === m ? 'bg-surface-elevated text-fg' : 'text-fg-tertiary hover:text-fg'
                 )}
               >
-                Standard
+                {m}
               </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setUrlSafe(true);
-                }}
-                className={cn(
-                  'rounded px-2 py-0.5 text-xs transition-colors',
-                  urlSafe ? 'bg-surface-elevated text-fg' : 'text-fg-tertiary hover:text-fg'
-                )}
-              >
-                URL-safe
-              </button>
-            </div>
-          </>
-        )}
-
-        <div className="flex-1" />
-
-        {result && !isBase64Error(result) && input.trim() && (
-          <Badge variant="success" dot>
-            {mode === 'encode' ? 'encoded' : 'decoded'}
-          </Badge>
-        )}
-        {error && (
-          <Badge variant="destructive" dot>
-            error
-          </Badge>
-        )}
-
-        <Button
-          size="sm"
-          variant="ghost"
-          className="h-7 gap-1.5 px-3 text-xs text-fg-secondary"
-          onClick={swap}
-          disabled={!output}
-          title="Swap input and output (⌘⇧S)"
-        >
-          <ArrowLeftRight className="h-3 w-3" aria-hidden="true" />
-          Swap
-        </Button>
-        <Button
-          size="sm"
-          variant="ghost"
-          className="h-7 px-3 text-xs text-fg-secondary"
-          onClick={clear}
-          disabled={!input}
-        >
-          Clear
-        </Button>
-
-        <button
-          type="button"
-          className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
-          onClick={() => {
-            setShowShortcuts(true);
-          }}
-          aria-label="Keyboard shortcuts"
-          title="Keyboard shortcuts (?)"
-        >
-          <Keyboard className="h-3.5 w-3.5" aria-hidden="true" />
-        </button>
-      </div>
-
-      {/* Error bar */}
-      {error && (
-        <div
-          role="alert"
-          className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
-        >
-          <span className="shrink-0 font-mono font-semibold">Error</span>
-          <span className="flex-1">{error}</span>
-        </div>
-      )}
-
-      {/* Split layout */}
-      <div className="flex min-h-0 flex-1 flex-col md:flex-row">
-        {/* Input */}
-        <div className="flex w-full flex-col border-b border-r-0 border-edge md:w-1/2 md:border-b-0 md:border-r">
-          <div className="flex items-center border-b border-edge px-3 py-1.5">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
-              {mode === 'encode' ? 'Plain text' : 'Base64'}
-            </span>
+            ))}
           </div>
-          <textarea
-            className="flex-1 resize-none bg-surface p-4 font-mono text-sm text-fg placeholder-fg-muted focus:outline-none"
-            placeholder={
-              mode === 'encode' ? 'Paste or type text to encode…' : 'Paste Base64 to decode…'
-            }
-            value={input}
-            onChange={(e) => {
-              setInput(e.target.value);
+
+          {/* URL-safe toggle (encode mode only) */}
+          {mode === 'encode' && (
+            <>
+              <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
+              <div className="flex items-center rounded-md border border-edge bg-surface-raised p-0.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUrlSafe(false);
+                  }}
+                  className={cn(
+                    'rounded px-2 py-0.5 text-xs transition-colors',
+                    !urlSafe ? 'bg-surface-elevated text-fg' : 'text-fg-tertiary hover:text-fg'
+                  )}
+                >
+                  Standard
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUrlSafe(true);
+                  }}
+                  className={cn(
+                    'rounded px-2 py-0.5 text-xs transition-colors',
+                    urlSafe ? 'bg-surface-elevated text-fg' : 'text-fg-tertiary hover:text-fg'
+                  )}
+                >
+                  URL-safe
+                </button>
+              </div>
+            </>
+          )}
+
+          <div className="flex-1" />
+
+          {result && !isBase64Error(result) && input.trim() && (
+            <Badge variant="success" dot>
+              {mode === 'encode' ? 'encoded' : 'decoded'}
+            </Badge>
+          )}
+          {error && (
+            <Badge variant="destructive" dot>
+              error
+            </Badge>
+          )}
+
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-7 gap-1.5 px-3 text-xs text-fg-secondary"
+            onClick={swap}
+            disabled={!output}
+            title="Swap input and output (⌘⇧S)"
+          >
+            <ArrowLeftRight className="h-3 w-3" aria-hidden="true" />
+            Swap
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-7 px-3 text-xs text-fg-secondary"
+            onClick={clear}
+            disabled={!input}
+          >
+            Clear
+          </Button>
+
+          <button
+            type="button"
+            className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
+            onClick={() => {
+              setShowShortcuts(true);
             }}
-            spellCheck={false}
-            aria-label="Input"
-          />
-          {/* Character/byte stats */}
-          {input && (
-            <div className="border-t border-edge px-3 py-1.5 text-[10px] text-fg-muted">
-              {String(input.length)} chars · {String(new TextEncoder().encode(input).length)} bytes
-            </div>
-          )}
+            aria-label="Keyboard shortcuts"
+            title="Keyboard shortcuts (?)"
+          >
+            <Keyboard className="h-3.5 w-3.5" aria-hidden="true" />
+          </button>
         </div>
 
-        {/* Output */}
-        <div className="flex w-full flex-col md:w-1/2">
-          <div className="flex items-center justify-between border-b border-edge px-3 py-1.5">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
-              {mode === 'encode' ? 'Base64' : 'Plain text'}
-            </span>
-            <div className="flex items-center gap-1">
-              <PiiMaskToggle pii={pii} />
-              <PaneActions
-                content={pii.displayContent}
-                downloadFilename={mode === 'encode' ? 'encoded.txt' : 'decoded.txt'}
-              />
-            </div>
+        {/* Error bar */}
+        {error && (
+          <div
+            role="alert"
+            className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
+          >
+            <span className="shrink-0 font-mono font-semibold">Error</span>
+            <span className="flex-1">{error}</span>
           </div>
-          <textarea
-            className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg-secondary placeholder-fg-muted focus:outline-none"
-            placeholder={mode === 'encode' ? 'Encoded output…' : 'Decoded output…'}
-            value={pii.displayContent}
-            readOnly
-            aria-label="Output"
-            aria-live="polite"
-          />
-          {output && (
-            <div className="border-t border-edge px-3 py-1.5 text-[10px] text-fg-muted">
-              {String(output.length)} chars
-            </div>
-          )}
-        </div>
-      </div>
+        )}
 
-      <KeyboardShortcutsModal
-        shortcuts={shortcuts}
-        isOpen={showShortcuts}
-        onClose={() => {
-          setShowShortcuts(false);
-        }}
+        {/* Split layout */}
+        <div className="flex min-h-0 flex-1 flex-col md:flex-row">
+          {/* Input */}
+          <div className="flex w-full flex-col border-b border-r-0 border-edge md:w-1/2 md:border-b-0 md:border-r">
+            <div className="flex items-center border-b border-edge px-3 py-1.5">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+                {mode === 'encode' ? 'Plain text' : 'Base64'}
+              </span>
+            </div>
+            <textarea
+              className="flex-1 resize-none bg-surface p-4 font-mono text-sm text-fg placeholder-fg-muted focus:outline-none"
+              placeholder={
+                mode === 'encode' ? 'Paste or type text to encode…' : 'Paste Base64 to decode…'
+              }
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value);
+              }}
+              spellCheck={false}
+              aria-label="Input"
+            />
+            {/* Character/byte stats */}
+            {input && (
+              <div className="border-t border-edge px-3 py-1.5 text-[10px] text-fg-muted">
+                {String(input.length)} chars · {String(new TextEncoder().encode(input).length)}{' '}
+                bytes
+              </div>
+            )}
+          </div>
+
+          {/* Output */}
+          <div className="flex w-full flex-col md:w-1/2">
+            <div className="flex items-center justify-between border-b border-edge px-3 py-1.5">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+                {mode === 'encode' ? 'Base64' : 'Plain text'}
+              </span>
+              <div className="flex items-center gap-1">
+                <PiiMaskToggle pii={pii} />
+                <PaneActions
+                  content={pii.displayContent}
+                  downloadFilename={mode === 'encode' ? 'encoded.txt' : 'decoded.txt'}
+                />
+              </div>
+            </div>
+            <textarea
+              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg-secondary placeholder-fg-muted focus:outline-none"
+              placeholder={mode === 'encode' ? 'Encoded output…' : 'Decoded output…'}
+              value={pii.displayContent}
+              readOnly
+              aria-label="Output"
+              aria-live="polite"
+            />
+            {output && (
+              <div className="border-t border-edge px-3 py-1.5 text-[10px] text-fg-muted">
+                {String(output.length)} chars
+              </div>
+            )}
+          </div>
+        </div>
+
+        <KeyboardShortcutsModal
+          shortcuts={shortcuts}
+          isOpen={showShortcuts}
+          onClose={() => {
+            setShowShortcuts(false);
+          }}
+        />
+      </div>
+      <ToolPageContent
+        toolName="Base64 encoder"
+        why={
+          <div className="space-y-3 text-fg-secondary">
+            <p>
+              Base64 is commonly used to encode credentials, API keys, binary files, and
+              authentication headers. Online Base64 encoders that process your data server-side can
+              log the plaintext content — the exact thing you are trying to encode.
+            </p>
+            <p>
+              formatvault encodes and decodes Base64 using the browser's native APIs and the
+              unicode-safe{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+                js-base64
+              </code>{' '}
+              library. Nothing is transmitted. The output appears instantly as you type.
+            </p>
+          </div>
+        }
+        howItWorks={
+          <div className="space-y-3 text-fg-secondary">
+            <p>
+              Standard Base64 uses the characters{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+                A–Z a–z 0–9 + /
+              </code>{' '}
+              with{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+                =
+              </code>{' '}
+              padding. URL-safe Base64 replaces{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+                +
+              </code>{' '}
+              with{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+                -
+              </code>{' '}
+              and{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+                /
+              </code>{' '}
+              with{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+                _
+              </code>
+              , making it safe for use in URLs and filenames. The encoder auto-detects whether your
+              input looks like Base64 and switches to decode mode automatically.
+            </p>
+            <p>
+              Full Unicode support means emoji, accented characters, and non-Latin scripts are
+              encoded correctly — unlike{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+                btoa()
+              </code>
+              , which fails on multi-byte characters.
+            </p>
+          </div>
+        }
+        useCases={[
+          'Encoding HTTP Basic Auth credentials (username:password) for Authorization headers',
+          'Decoding base64-encoded JWT payloads or SAML assertions',
+          'Encoding binary file content (images, PDFs) for embedding in JSON or HTML',
+          'Decoding base64-encoded environment variables stored in CI/CD systems',
+          'Encoding API keys or secrets before storing them in config files',
+          'Converting base64-encoded email attachments for inspection',
+          'Verifying that a base64 string round-trips correctly before embedding in code',
+        ]}
+        faq={[
+          {
+            q: 'Is it safe to encode credentials or API keys here?',
+            a: 'Yes. All encoding and decoding happens in your browser using native APIs — nothing is transmitted to any server. This makes it safe for encoding sensitive strings that you would not normally share.',
+          },
+          {
+            q: 'What is the difference between standard and URL-safe Base64?',
+            a: 'Standard Base64 uses + and / which have special meaning in URLs. URL-safe Base64 replaces them with - and _ respectively, making the output safe to include in URLs, filenames, and HTTP headers without percent-encoding.',
+          },
+          {
+            q: 'Why does btoa() fail on my string but this tool works?',
+            a: "JavaScript's built-in btoa() only handles Latin-1 characters. formatvault uses js-base64 which correctly handles the full Unicode character set including emoji and multi-byte characters.",
+          },
+          {
+            q: 'How does auto-detect mode work?',
+            a: 'The tool inspects your input and checks whether it matches the Base64 character set and length rules. If it looks like Base64, it switches to decode mode. You can override this manually.',
+          },
+        ]}
       />
-    </div>
+    </>
   );
 }

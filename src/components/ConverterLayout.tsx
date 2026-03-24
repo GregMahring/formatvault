@@ -33,6 +33,8 @@ export interface ConverterLayoutProps {
   convert: (input: string) => ConversionResult;
   /** Extra toolbar controls (e.g. delimiter selector for CSV outputs) */
   toolbarSlot?: React.ReactNode;
+  /** Content rendered below the tool (SEO sections, FAQ, etc.) */
+  children?: React.ReactNode;
 }
 
 /**
@@ -48,6 +50,7 @@ export function ConverterLayout({
   toPlaceholder,
   convert,
   toolbarSlot,
+  children,
 }: ConverterLayoutProps) {
   const [input, setInputRaw] = useState('');
   const [output, setOutput] = useState('');
@@ -183,164 +186,169 @@ export function ConverterLayout({
   const hasError = error !== null;
 
   return (
-    <div className="flex h-full flex-col">
-      {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-gray-200">{title}</h1>
+    <>
+      <div className="flex h-full flex-col">
+        {/* Toolbar */}
+        <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
+          <h1 className="text-sm font-semibold text-gray-200">{title}</h1>
 
-        {toolbarSlot && (
-          <>
-            <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
-            {toolbarSlot}
-          </>
+          {toolbarSlot && (
+            <>
+              <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
+              {toolbarSlot}
+            </>
+          )}
+
+          <div className="flex-1" />
+
+          {input.trim() && !hasError && (
+            <Badge variant="default" className="text-xs">
+              ✓ Converted
+            </Badge>
+          )}
+          {hasError && (
+            <Badge variant="destructive" className="text-xs">
+              ✗ Error
+            </Badge>
+          )}
+
+          <Button
+            size="sm"
+            variant="outline"
+            className="h-7 px-3 text-xs"
+            onClick={() => {
+              runConvert(input);
+            }}
+            disabled={!input.trim()}
+          >
+            Convert
+            <kbd className="ml-1 rounded bg-surface-elevated px-1 text-[10px] text-fg-secondary">
+              ⌘↵
+            </kbd>
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-7 px-3 text-xs text-fg-tertiary"
+            onClick={clear}
+            disabled={!input.trim()}
+          >
+            Clear
+          </Button>
+
+          <button
+            type="button"
+            className="rounded p-1 text-fg-muted hover:bg-surface-elevated hover:text-fg-secondary"
+            onClick={() => {
+              setShowShortcuts(true);
+            }}
+            aria-label="Keyboard shortcuts"
+            title="Keyboard shortcuts (?)"
+          >
+            <Keyboard className="h-3.5 w-3.5" aria-hidden="true" />
+          </button>
+        </div>
+
+        {fileParser.showProgress && fileParser.isParsing && (
+          <ProgressBar percent={fileParser.progress} label="Parsing file…" />
         )}
 
-        <div className="flex-1" />
-
-        {input.trim() && !hasError && (
-          <Badge variant="default" className="text-xs">
-            ✓ Converted
-          </Badge>
-        )}
+        {/* Error bar */}
         {hasError && (
-          <Badge variant="destructive" className="text-xs">
-            ✗ Error
-          </Badge>
+          <div
+            role="alert"
+            className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
+          >
+            <span className="shrink-0 font-mono font-semibold">Error</span>
+            <span className="flex-1">{error}</span>
+          </div>
         )}
 
-        <Button
-          size="sm"
-          variant="outline"
-          className="h-7 px-3 text-xs"
-          onClick={() => {
-            runConvert(input);
-          }}
-          disabled={!input.trim()}
-        >
-          Convert
-          <kbd className="ml-1 rounded bg-surface-elevated px-1 text-[10px] text-fg-secondary">
-            ⌘↵
-          </kbd>
-        </Button>
-        <Button
-          size="sm"
-          variant="ghost"
-          className="h-7 px-3 text-xs text-fg-tertiary"
-          onClick={clear}
-          disabled={!input.trim()}
-        >
-          Clear
-        </Button>
-
-        <button
-          type="button"
-          className="rounded p-1 text-fg-muted hover:bg-surface-elevated hover:text-fg-secondary"
-          onClick={() => {
-            setShowShortcuts(true);
-          }}
-          aria-label="Keyboard shortcuts"
-          title="Keyboard shortcuts (?)"
-        >
-          <Keyboard className="h-3.5 w-3.5" aria-hidden="true" />
-        </button>
-      </div>
-
-      {fileParser.showProgress && fileParser.isParsing && (
-        <ProgressBar percent={fileParser.progress} label="Parsing file…" />
-      )}
-
-      {/* Error bar */}
-      {hasError && (
-        <div
-          role="alert"
-          className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
-        >
-          <span className="shrink-0 font-mono font-semibold">Error</span>
-          <span className="flex-1">{error}</span>
-        </div>
-      )}
-
-      {/* Warning bar (lossy conversion notice) */}
-      {warning && !hasError && (
-        <div
-          role="status"
-          className="flex items-start gap-2 border-b border-yellow-900/60 bg-yellow-950/30 px-4 py-2 text-xs text-yellow-400"
-        >
-          <span className="shrink-0 font-mono font-semibold">Note</span>
-          <span className="flex-1">{warning}</span>
-        </div>
-      )}
-
-      {/* Split pane */}
-      <div className="flex min-h-0 flex-1">
-        <SplitPane
-          leftLabel={`${fromLanguage.toUpperCase()} input editor`}
-          rightLabel={`${toLanguage.toUpperCase()} output`}
-          className="flex-1"
-        >
-          {/* Left: input */}
-          <div className="flex h-full flex-col">
-            <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
-                {fromLanguage.toUpperCase()} Input
-              </span>
-              <FileUploadZone
-                accept={
-                  fromLanguage === 'json'
-                    ? '.json,application/json'
-                    : fromLanguage === 'yaml'
-                      ? '.yaml,.yml,text/yaml'
-                      : '.csv,text/csv'
-                }
-                onFile={handleFileUpload}
-                disabled={fileParser.isParsing}
-              />
-            </div>
-            <CodeEditor
-              value={input}
-              onChange={setInput}
-              language={fromLanguage}
-              label={`${fromLanguage.toUpperCase()} input`}
-              placeholder={fromPlaceholder ?? `Paste or type ${fromLanguage.toUpperCase()} here…`}
-              className="flex-1 rounded-none border-0"
-              minHeight="100%"
-            />
+        {/* Warning bar (lossy conversion notice) */}
+        {warning && !hasError && (
+          <div
+            role="status"
+            className="flex items-start gap-2 border-b border-yellow-900/60 bg-yellow-950/30 px-4 py-2 text-xs text-yellow-400"
+          >
+            <span className="shrink-0 font-mono font-semibold">Note</span>
+            <span className="flex-1">{warning}</span>
           </div>
+        )}
 
-          {/* Right: output */}
-          <div className="flex h-full flex-col">
-            <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
-                {toLanguage.toUpperCase()} Output
-              </span>
-              <div className="flex items-center gap-1">
-                <PiiMaskToggle pii={pii} />
-                <PaneActions
-                  content={pii.displayContent}
-                  downloadFilename={`output.${toLanguage === 'json' ? 'json' : toLanguage === 'yaml' ? 'yaml' : toLanguage === 'typescript' ? 'ts' : 'csv'}`}
+        {/* Split pane */}
+        <div className="flex min-h-0 flex-1">
+          <SplitPane
+            leftLabel={`${fromLanguage.toUpperCase()} input editor`}
+            rightLabel={`${toLanguage.toUpperCase()} output`}
+            className="flex-1"
+          >
+            {/* Left: input */}
+            <div className="flex h-full flex-col">
+              <div className="flex items-center justify-between border-b border-edge px-3 py-1">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+                  {fromLanguage.toUpperCase()} Input
+                </span>
+                <FileUploadZone
+                  accept={
+                    fromLanguage === 'json'
+                      ? '.json,application/json'
+                      : fromLanguage === 'yaml'
+                        ? '.yaml,.yml,text/yaml'
+                        : '.csv,text/csv'
+                  }
+                  onFile={handleFileUpload}
+                  disabled={fileParser.isParsing}
                 />
               </div>
+              <CodeEditor
+                value={input}
+                onChange={setInput}
+                language={fromLanguage}
+                label={`${fromLanguage.toUpperCase()} input`}
+                placeholder={fromPlaceholder ?? `Paste or type ${fromLanguage.toUpperCase()} here…`}
+                className="flex-1 rounded-none border-0"
+                minHeight="100%"
+              />
             </div>
-            <CodeEditor
-              value={pii.displayContent}
-              language={toLanguage}
-              label={`${toLanguage.toUpperCase()} output`}
-              readOnly
-              placeholder={toPlaceholder ?? `${toLanguage.toUpperCase()} output will appear here…`}
-              className="flex-1 rounded-none border-0"
-              minHeight="100%"
-            />
-          </div>
-        </SplitPane>
-      </div>
 
-      <KeyboardShortcutsModal
-        shortcuts={shortcuts}
-        isOpen={showShortcuts}
-        onClose={() => {
-          setShowShortcuts(false);
-        }}
-      />
-    </div>
+            {/* Right: output */}
+            <div className="flex h-full flex-col">
+              <div className="flex items-center justify-between border-b border-edge px-3 py-1">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+                  {toLanguage.toUpperCase()} Output
+                </span>
+                <div className="flex items-center gap-1">
+                  <PiiMaskToggle pii={pii} />
+                  <PaneActions
+                    content={pii.displayContent}
+                    downloadFilename={`output.${toLanguage === 'json' ? 'json' : toLanguage === 'yaml' ? 'yaml' : toLanguage === 'typescript' ? 'ts' : 'csv'}`}
+                  />
+                </div>
+              </div>
+              <CodeEditor
+                value={pii.displayContent}
+                language={toLanguage}
+                label={`${toLanguage.toUpperCase()} output`}
+                readOnly
+                placeholder={
+                  toPlaceholder ?? `${toLanguage.toUpperCase()} output will appear here…`
+                }
+                className="flex-1 rounded-none border-0"
+                minHeight="100%"
+              />
+            </div>
+          </SplitPane>
+        </div>
+
+        <KeyboardShortcutsModal
+          shortcuts={shortcuts}
+          isOpen={showShortcuts}
+          onClose={() => {
+            setShowShortcuts(false);
+          }}
+        />
+      </div>
+      {children}
+    </>
   );
 }

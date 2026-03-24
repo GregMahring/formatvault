@@ -3,6 +3,7 @@ import type { Route } from './+types/json-to-typescript';
 import { buildMeta } from '@/lib/meta';
 import { ConverterLayout } from '@/components/ConverterLayout';
 import { jsonToTypescript, type TypeGenOptions } from '@/features/convert/jsonToTypescript';
+import { ToolPageContent } from '@/components/ToolPageContent';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
 
@@ -77,6 +78,50 @@ export default function JsonToTypescriptConverter() {
           </label>
         </>
       }
-    />
+    >
+      <ToolPageContent
+        toolName="JSON to TypeScript converter"
+        why={
+          <p className="text-fg-secondary">
+            Generating TypeScript interfaces from JSON payloads helps you type API responses without
+            writing types by hand. This converter runs entirely in your browser — no data is
+            uploaded or transmitted, making it safe for internal API schemas.
+          </p>
+        }
+        howItWorks={
+          <p className="text-fg-secondary">
+            The converter analyses the JSON structure recursively, infers the TypeScript type for
+            each field (string, number, boolean, null, array, or nested interface), and generates
+            named interfaces. Optional fields are detected when a key appears in some objects but
+            not all. Arrays of mixed types produce union types.
+          </p>
+        }
+        useCases={[
+          'Generating TypeScript types for REST API responses without writing them by hand',
+          'Typing GraphQL response payloads for use in React components',
+          'Converting JSON Schema definitions to TypeScript interfaces',
+          'Bootstrapping type definitions when integrating a new third-party API',
+          'Converting internal JSON configs to typed TypeScript objects',
+        ]}
+        faq={[
+          {
+            q: 'Is my data safe to convert here?',
+            a: 'Yes. All conversion happens in your browser. No data is transmitted to any server.',
+          },
+          {
+            q: 'How are optional fields detected?',
+            a: 'If a key appears in some objects in an array but not all, it is marked as optional (?) in the generated interface.',
+          },
+          {
+            q: 'Are nested objects supported?',
+            a: 'Yes. Nested objects generate nested named interfaces. The root interface is named Root by default but you can change it.',
+          },
+          {
+            q: 'What happens with arrays of mixed types?',
+            a: 'Mixed-type arrays generate union types, e.g. (string | number)[].',
+          },
+        ]}
+      />
+    </ConverterLayout>
   );
 }

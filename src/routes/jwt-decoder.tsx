@@ -17,6 +17,7 @@ import {
   formatUnixTimestamp,
   type JwtDecodeResult,
 } from '@/features/tools/jwtDecoder';
+import { ToolPageContent } from '@/components/ToolPageContent';
 import { Keyboard, Copy, CheckCheck, ClipboardPaste } from 'lucide-react';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
@@ -224,199 +225,267 @@ export default function JwtDecoder() {
     : null;
 
   return (
-    <div className="flex h-full flex-col">
-      {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-fg">JWT Decoder</h1>
-        <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
-        <Badge variant="outline" className="text-[10px] text-fg-muted">
-          Decode only · no verification
-        </Badge>
-
-        <div className="flex-1" />
-
-        {decoded && (
-          <Badge variant={decoded.isExpired ? 'destructive' : 'success'} dot>
-            {decoded.isExpired ? 'expired' : 'valid'}
+    <>
+      <div className="flex h-full flex-col">
+        {/* Toolbar */}
+        <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
+          <h1 className="text-sm font-semibold text-fg">JWT Decoder</h1>
+          <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
+          <Badge variant="outline" className="text-[10px] text-fg-muted">
+            Decode only · no verification
           </Badge>
-        )}
-        {error && (
-          <Badge variant="destructive" dot>
-            invalid
-          </Badge>
-        )}
 
-        <Button
-          size="sm"
-          variant="ghost"
-          className="h-7 px-3 text-xs text-fg-tertiary"
-          onClick={clear}
-          disabled={!input}
-        >
-          Clear
-        </Button>
+          <div className="flex-1" />
 
-        <button
-          type="button"
-          className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
-          onClick={() => {
-            setShowShortcuts(true);
-          }}
-          aria-label="Keyboard shortcuts"
-          title="Keyboard shortcuts (?)"
-        >
-          <Keyboard className="h-3.5 w-3.5" aria-hidden="true" />
-        </button>
-      </div>
-
-      {/* Error bar */}
-      {error && (
-        <div
-          role="alert"
-          className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
-        >
-          <span className="shrink-0 font-mono font-semibold">Error</span>
-          <span className="flex-1">{error}</span>
-        </div>
-      )}
-
-      <div className="flex min-h-0 flex-1 gap-0 overflow-hidden">
-        {/* Left: token input */}
-        <div className="flex w-2/5 flex-col border-r border-edge">
-          <div className="flex items-center justify-between border-b border-edge px-3 py-1.5">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
-              JWT Token
-            </span>
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={() => {
-                  void pasteFromClipboard();
-                }}
-                className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
-                title="Paste from clipboard"
-              >
-                <ClipboardPaste className="h-3 w-3" aria-hidden="true" />
-                Paste
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  void copyRaw(input);
-                }}
-                disabled={!input}
-                className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary disabled:opacity-40"
-                title="Copy token"
-              >
-                {copiedRaw ? (
-                  <CheckCheck className="h-3 w-3 text-green-400" aria-hidden="true" />
-                ) : (
-                  <Copy className="h-3 w-3" aria-hidden="true" />
-                )}
-                Copy
-              </button>
-            </div>
-          </div>
-          <textarea
-            className="flex-1 resize-none bg-surface p-4 font-mono text-xs text-fg placeholder-fg-muted focus:outline-none"
-            placeholder="Paste a JWT token here…&#10;&#10;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U"
-            value={input}
-            onChange={(e) => {
-              setInput(e.target.value);
-            }}
-            spellCheck={false}
-            aria-label="JWT token input"
-          />
-          {/* Token anatomy legend */}
-          {input.trim() && (
-            <div className="border-t border-edge px-3 py-2">
-              <div className="flex flex-wrap gap-1 font-mono text-[10px]">
-                {input
-                  .trim()
-                  .split('.')
-                  .map((part, i) => {
-                    const colors = ['text-red-400', 'text-purple-400', 'text-cyan-400'];
-                    const labels = ['Header', 'Payload', 'Signature'];
-                    return (
-                      <span key={i} className={colors[i]}>
-                        <span className="text-fg-muted">{labels[i]}: </span>
-                        {part.length > 20 ? `${part.slice(0, 20)}…` : part}
-                      </span>
-                    );
-                  })}
-              </div>
-            </div>
+          {decoded && (
+            <Badge variant={decoded.isExpired ? 'destructive' : 'success'} dot>
+              {decoded.isExpired ? 'expired' : 'valid'}
+            </Badge>
           )}
+          {error && (
+            <Badge variant="destructive" dot>
+              invalid
+            </Badge>
+          )}
+
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-7 px-3 text-xs text-fg-tertiary"
+            onClick={clear}
+            disabled={!input}
+          >
+            Clear
+          </Button>
+
+          <button
+            type="button"
+            className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
+            onClick={() => {
+              setShowShortcuts(true);
+            }}
+            aria-label="Keyboard shortcuts"
+            title="Keyboard shortcuts (?)"
+          >
+            <Keyboard className="h-3.5 w-3.5" aria-hidden="true" />
+          </button>
         </div>
 
-        {/* Right: decoded output */}
-        <div className="flex flex-1 flex-col overflow-y-auto">
-          <div className="flex items-center justify-between border-b border-edge px-4 py-1.5">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
-              Decoded
-            </span>
-            <PiiMaskToggle pii={pii} />
+        {/* Error bar */}
+        {error && (
+          <div
+            role="alert"
+            className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
+          >
+            <span className="shrink-0 font-mono font-semibold">Error</span>
+            <span className="flex-1">{error}</span>
           </div>
-          <div className="flex flex-1 flex-col gap-4 p-4">
-            {!decoded && !error && (
-              <div className="flex h-full items-center justify-center text-xs text-fg-muted">
-                Paste a JWT token on the left to decode it
+        )}
+
+        <div className="flex min-h-0 flex-1 gap-0 overflow-hidden">
+          {/* Left: token input */}
+          <div className="flex w-2/5 flex-col border-r border-edge">
+            <div className="flex items-center justify-between border-b border-edge px-3 py-1.5">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+                JWT Token
+              </span>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    void pasteFromClipboard();
+                  }}
+                  className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
+                  title="Paste from clipboard"
+                >
+                  <ClipboardPaste className="h-3 w-3" aria-hidden="true" />
+                  Paste
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    void copyRaw(input);
+                  }}
+                  disabled={!input}
+                  className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary disabled:opacity-40"
+                  title="Copy token"
+                >
+                  {copiedRaw ? (
+                    <CheckCheck className="h-3 w-3 text-green-400" aria-hidden="true" />
+                  ) : (
+                    <Copy className="h-3 w-3" aria-hidden="true" />
+                  )}
+                  Copy
+                </button>
+              </div>
+            </div>
+            <textarea
+              className="flex-1 resize-none bg-surface p-4 font-mono text-xs text-fg placeholder-fg-muted focus:outline-none"
+              placeholder="Paste a JWT token here…&#10;&#10;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U"
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value);
+              }}
+              spellCheck={false}
+              aria-label="JWT token input"
+            />
+            {/* Token anatomy legend */}
+            {input.trim() && (
+              <div className="border-t border-edge px-3 py-2">
+                <div className="flex flex-wrap gap-1 font-mono text-[10px]">
+                  {input
+                    .trim()
+                    .split('.')
+                    .map((part, i) => {
+                      const colors = ['text-red-400', 'text-purple-400', 'text-cyan-400'];
+                      const labels = ['Header', 'Payload', 'Signature'];
+                      return (
+                        <span key={i} className={colors[i]}>
+                          <span className="text-fg-muted">{labels[i]}: </span>
+                          {part.length > 20 ? `${part.slice(0, 20)}…` : part}
+                        </span>
+                      );
+                    })}
+                </div>
               </div>
             )}
+          </div>
 
-            {decoded && (
-              <>
-                <JsonBlock label="Header" value={decoded.header} />
-                {pii.enabled && pii.matchCount > 0 ? (
-                  <div className="rounded-lg border border-edge bg-surface-raised">
-                    <div className="border-b border-edge px-4 py-2">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
-                        Payload (masked)
-                      </span>
-                    </div>
-                    <pre className="overflow-x-auto px-4 py-3 font-mono text-xs text-fg whitespace-pre-wrap">
-                      {pii.displayContent}
-                    </pre>
-                  </div>
-                ) : (
-                  <>
-                    <JsonBlock
-                      label="Payload"
-                      value={
-                        payloadWithoutTiming && Object.keys(payloadWithoutTiming).length > 0
-                          ? payloadWithoutTiming
-                          : decoded.payload
-                      }
-                    />
-                    <TimingSection result={decoded} />
-                  </>
-                )}
-
-                {/* Signature notice */}
-                <div className="rounded-lg border border-edge bg-surface-raised px-4 py-3">
-                  <div className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
-                    Signature
-                  </div>
-                  <div className="break-all font-mono text-xs text-fg-muted">
-                    {decoded.signature}
-                  </div>
-                  <p className="mt-2 text-[10px] text-fg-muted">
-                    Signature is not verified. This tool only decodes the token structure.
-                  </p>
+          {/* Right: decoded output */}
+          <div className="flex flex-1 flex-col overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-edge px-4 py-1.5">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+                Decoded
+              </span>
+              <PiiMaskToggle pii={pii} />
+            </div>
+            <div className="flex flex-1 flex-col gap-4 p-4">
+              {!decoded && !error && (
+                <div className="flex h-full items-center justify-center text-xs text-fg-muted">
+                  Paste a JWT token on the left to decode it
                 </div>
-              </>
-            )}
+              )}
+
+              {decoded && (
+                <>
+                  <JsonBlock label="Header" value={decoded.header} />
+                  {pii.enabled && pii.matchCount > 0 ? (
+                    <div className="rounded-lg border border-edge bg-surface-raised">
+                      <div className="border-b border-edge px-4 py-2">
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
+                          Payload (masked)
+                        </span>
+                      </div>
+                      <pre className="overflow-x-auto px-4 py-3 font-mono text-xs text-fg whitespace-pre-wrap">
+                        {pii.displayContent}
+                      </pre>
+                    </div>
+                  ) : (
+                    <>
+                      <JsonBlock
+                        label="Payload"
+                        value={
+                          payloadWithoutTiming && Object.keys(payloadWithoutTiming).length > 0
+                            ? payloadWithoutTiming
+                            : decoded.payload
+                        }
+                      />
+                      <TimingSection result={decoded} />
+                    </>
+                  )}
+
+                  {/* Signature notice */}
+                  <div className="rounded-lg border border-edge bg-surface-raised px-4 py-3">
+                    <div className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
+                      Signature
+                    </div>
+                    <div className="break-all font-mono text-xs text-fg-muted">
+                      {decoded.signature}
+                    </div>
+                    <p className="mt-2 text-[10px] text-fg-muted">
+                      Signature is not verified. This tool only decodes the token structure.
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      <KeyboardShortcutsModal
-        shortcuts={shortcuts}
-        isOpen={showShortcuts}
-        onClose={() => {
-          setShowShortcuts(false);
-        }}
+        <KeyboardShortcutsModal
+          shortcuts={shortcuts}
+          isOpen={showShortcuts}
+          onClose={() => {
+            setShowShortcuts(false);
+          }}
+        />
+      </div>
+      <ToolPageContent
+        toolName="JWT decoder"
+        why={
+          <div className="space-y-3 text-fg-secondary">
+            <p>
+              A JWT (JSON Web Token) contains your user's identity, roles, and session claims.
+              Pasting it into an online decoder means transmitting a live bearer credential to a
+              third-party server. Even if the token is short-lived, that window is enough for it to
+              be logged, replayed, or harvested.
+            </p>
+            <p>
+              formatvault decodes the base64url-encoded header and payload sections directly in your
+              browser. Nothing is transmitted — not the token, not the claims, not the signature.
+              The decode happens in the same JavaScript context as your other browser tabs.
+            </p>
+          </div>
+        }
+        howItWorks={
+          <div className="space-y-3 text-fg-secondary">
+            <p>
+              A JWT is three base64url-encoded sections separated by dots:{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+                header.payload.signature
+              </code>
+              . The decoder splits on the dots, base64url-decodes each section, and parses the
+              resulting JSON.
+            </p>
+            <p>
+              The signature is displayed as-is but{' '}
+              <strong className="font-medium text-fg">never verified</strong> — signature
+              verification requires the secret key and is intentionally out of scope. This tool is
+              for inspecting and debugging tokens, not validating them in production.
+            </p>
+          </div>
+        }
+        useCases={[
+          'Inspecting the claims inside a token returned by your auth provider (Auth0, Cognito, Okta)',
+          'Debugging expiry issues — the exp and iat claims are displayed as human-readable timestamps',
+          'Checking which roles or scopes are encoded in the payload during development',
+          'Verifying that your backend is signing tokens with the correct algorithm (RS256, HS256)',
+          'Reading tokens in CI/CD pipelines or during incident response without using a web service',
+          'Teaching JWT structure to developers new to token-based authentication',
+        ]}
+        faq={[
+          {
+            q: 'Is it safe to paste my JWT here?',
+            a: 'Yes. The token is decoded entirely in your browser using the Web Crypto API — no part of the token is sent over the network. Open DevTools → Network to confirm zero outbound requests.',
+          },
+          {
+            q: 'Does this verify the signature?',
+            a: "No. Signature verification requires the secret or public key used to sign the token. This tool only decodes and displays the header and payload. Never trust a token's claims in production without verifying the signature server-side.",
+          },
+          {
+            q: 'Why does the expiry say my token is already expired?',
+            a: 'JWT timestamps are Unix epoch seconds (not milliseconds). The decoder converts exp and iat to human-readable local time automatically. If it shows expired, the token genuinely has a past expiry — check your token refresh logic.',
+          },
+          {
+            q: 'What algorithms does this support?',
+            a: 'The decoder works with any JWT regardless of the signing algorithm (HS256, RS256, ES256, etc.) because decoding the payload does not require the key. The alg field in the header tells you which algorithm was used to sign it.',
+          },
+          {
+            q: 'Can I decode tokens that contain sensitive user data?',
+            a: 'Yes — that is exactly the use case this tool is designed for. Because nothing leaves your browser, you can safely decode tokens containing PII, user IDs, or internal role assignments without exposing them to a third party.',
+          },
+        ]}
       />
-    </div>
+    </>
   );
 }

@@ -3,6 +3,7 @@ import type { Route } from './+types/yaml-to-csv-converter';
 import { buildMeta } from '@/lib/meta';
 import { ConverterLayout } from '@/components/ConverterLayout';
 import { yamlToCsv, type CsvOutputDelimiter } from '@/features/convert/converters';
+import { ToolPageContent } from '@/components/ToolPageContent';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
 
@@ -47,6 +48,39 @@ export default function YamlToCsvConverter() {
           </select>
         </>
       }
-    />
+    >
+      <ToolPageContent
+        toolName="YAML to CSV converter"
+        why={
+          <p className="text-fg-secondary">
+            Converting YAML data to tabular CSV format for spreadsheets or reporting is a common
+            need. This converter handles it entirely in your browser using js-yaml and PapaParse —
+            no data is uploaded or transmitted.
+          </p>
+        }
+        howItWorks={
+          <p className="text-fg-secondary">
+            js-yaml parses the YAML input. The converter expects a YAML sequence (array) of mappings
+            (objects). It extracts all unique keys as CSV column headers, then maps each object to a
+            CSV row, filling missing keys with empty cells.
+          </p>
+        }
+        useCases={[
+          'Converting YAML data files to CSV for import into Excel or Google Sheets',
+          'Exporting YAML configuration records to CSV for reporting',
+          'Transforming structured YAML lists to tabular data for analysis',
+        ]}
+        faq={[
+          {
+            q: 'Is my data safe to convert here?',
+            a: 'Yes. All conversion happens in your browser. No data is transmitted to any server.',
+          },
+          {
+            q: 'What YAML input format is required?',
+            a: 'The YAML must be a sequence (array) of mappings (objects). Each mapping becomes a CSV row.',
+          },
+        ]}
+      />
+    </ConverterLayout>
   );
 }
