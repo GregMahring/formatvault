@@ -23,9 +23,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'Color Picker & Converter — HEX, RGB, HSL, OKLCH',
+    title: 'Color Picker & Converter — HEX, RGB, HSL, No Upload',
     description:
-      'Pick a color and instantly convert between HEX, RGB, HSL, and OKLCH formats. Copy CSS-ready values. 100% client-side, no data sent to any server.',
+      'Pick and convert colors between HEX, RGB, HSL, and OKLCH formats privately in your browser — no data sent to any server. Copy CSS-ready values instantly.',
     path: '/color-picker',
   });
 }

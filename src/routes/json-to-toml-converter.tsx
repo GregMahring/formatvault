@@ -7,9 +7,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'JSON to TOML Converter',
+    title: 'JSON to TOML Converter — Free, No Upload, Private',
     description:
-      'Convert JSON to TOML online for free. JSON root must be an object. 100% client-side.',
+      'Convert JSON to TOML privately in your browser — no data uploaded. JSON root must be an object. Free, no account required, 100% client-side.',
     path: '/json-to-toml-converter',
   });
 }

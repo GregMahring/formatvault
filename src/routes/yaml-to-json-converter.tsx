@@ -7,9 +7,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'YAML to JSON Converter',
+    title: 'YAML to JSON Converter — Free, No Upload, Private',
     description:
-      'Convert YAML to JSON online for free. Supports multi-document YAML. 100% client-side.',
+      'Convert YAML to JSON privately in your browser — no data uploaded. Supports multi-document YAML. Free, no account required, 100% client-side.',
     path: '/yaml-to-json-converter',
   });
 }

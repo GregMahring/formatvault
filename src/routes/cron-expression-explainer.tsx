@@ -24,9 +24,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'Cron Expression Explainer & Generator',
+    title: 'Cron Expression Explainer — No Upload, 100% Private',
     description:
-      'Explain cron expressions in plain English, or build one visually. See next run times, field-by-field breakdown, and common presets. 100% client-side.',
+      'Explain cron expressions in plain English and see next run times privately in your browser — no data sent anywhere. Field breakdown, visual builder, and common presets. 100% client-side.',
     path: '/cron-expression-explainer',
   });
 }

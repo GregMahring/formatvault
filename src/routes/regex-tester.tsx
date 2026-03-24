@@ -23,9 +23,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'Regex Tester — Test Regular Expressions Online',
+    title: 'Regex Tester — Test Regular Expressions, No Upload',
     description:
-      'Test regular expressions with real-time match highlighting. Supports all JS regex flags (g, i, m, s, u, d), named capture groups, and multi-match display. 100% client-side.',
+      'Test regular expressions privately in your browser — no data sent anywhere. Real-time match highlighting, all JS flags (g, i, m, s, u, d), named capture groups, and multi-match display.',
     path: '/regex-tester',
   });
 }

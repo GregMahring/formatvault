@@ -17,9 +17,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'Hash Generator — MD5, SHA-256, SHA-512 Online',
+    title: 'Hash Generator — MD5, SHA-256, SHA-512, No Upload',
     description:
-      'Generate MD5, SHA-256, and SHA-512 hashes from text or files. Shows hex and Base64 output. 100% client-side — no data ever leaves your browser.',
+      'Generate MD5, SHA-256, and SHA-512 hashes from text or files privately in your browser — no data ever leaves your device. Hex and Base64 output. 100% client-side.',
     path: '/hash-generator',
   });
 }

@@ -26,9 +26,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'TOML Formatter & Validator',
+    title: 'TOML Formatter & Validator — No Upload, 100% Private',
     description:
-      'Free online TOML formatter and validator. Format and validate TOML config files with line-level error reporting. Supports Cargo.toml, pyproject.toml, and more. 100% client-side.',
+      'Format and validate TOML config files privately in your browser — no data uploaded. Line-level error reporting. Supports Cargo.toml, pyproject.toml, and all standard TOML.',
     path: '/toml-formatter',
   });
 }

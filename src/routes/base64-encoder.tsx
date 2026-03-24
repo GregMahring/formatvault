@@ -25,9 +25,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'Base64 Encoder & Decoder',
+    title: 'Base64 Encoder & Decoder — Private, No Upload',
     description:
-      'Encode and decode Base64 strings online for free. Unicode-safe. 100% client-side — no data leaves your browser.',
+      'Encode and decode Base64 privately in your browser — no data sent to any server. Unicode-safe, supports standard and URL-safe Base64. Auto-detects encode vs decode mode.',
     path: '/base64-encoder',
   });
 }

@@ -27,9 +27,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'CSV Formatter & Validator',
+    title: 'CSV Formatter & Validator — No Upload, 100% Private',
     description:
-      'Free online CSV formatter and validator. Format and validate CSV with automatic delimiter detection (comma, tab, pipe, semicolon). 100% client-side.',
+      'Format and validate CSV privately in your browser — no data uploaded. Auto-detects delimiters (comma, tab, pipe, semicolon). Streaming parser handles files up to 500MB.',
     path: '/csv-formatter',
   });
 }

@@ -29,9 +29,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'JSON Formatter & Validator',
+    title: 'JSON Formatter & Validator — No Upload, 100% Private',
     description:
-      'Free online JSON formatter, validator and minifier. Pretty-print, minify, sort keys, query with JSONPath. Supports relaxed JSON5. 100% client-side.',
+      'Format, validate and minify JSON privately in your browser — no data uploaded. Supports JSON5, JSONPath queries, diff view, sort keys, and files up to 500MB via streaming.',
     path: '/json-formatter',
   });
 }

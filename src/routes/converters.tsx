@@ -7,9 +7,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'Data Format Converters',
+    title: 'Data Format Converters — No Upload, 100% Private',
     description:
-      'Convert between JSON, CSV and YAML online for free. All six conversion pairs — JSON↔CSV, JSON↔YAML, CSV↔YAML. 100% client-side.',
+      'Convert between JSON, CSV, YAML and TOML privately in your browser — no data uploaded. All format pairs plus JSON→TypeScript. Free, no account required.',
     path: '/converters',
     schemaType: 'WebPage',
   });

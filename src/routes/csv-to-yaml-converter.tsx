@@ -7,9 +7,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'CSV to YAML Converter',
+    title: 'CSV to YAML Converter — Free, No Upload, Private',
     description:
-      'Convert CSV to YAML online for free. Auto-detects delimiter and maps rows to objects. 100% client-side.',
+      'Convert CSV to YAML privately in your browser — no data uploaded. Auto-detects delimiter and maps rows to objects. Free, no account required, 100% client-side.',
     path: '/csv-to-yaml-converter',
   });
 }

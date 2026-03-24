@@ -29,9 +29,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'YAML Formatter & Validator',
+    title: 'YAML Formatter & Validator — No Upload, 100% Private',
     description:
-      'Free online YAML formatter and validator. Format and validate YAML with line-level error reporting. Supports multi-document YAML. 100% client-side.',
+      'Format and validate YAML privately in your browser — no data uploaded. Line-level error reporting, multi-document support, diff view, and tree view. 100% client-side.',
     path: '/yaml-formatter',
   });
 }

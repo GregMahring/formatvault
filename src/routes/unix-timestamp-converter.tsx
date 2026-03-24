@@ -24,9 +24,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'Unix Timestamp Converter',
+    title: 'Unix Timestamp Converter — No Upload, 100% Private',
     description:
-      'Convert Unix timestamps to human-readable dates and back. Auto-detects seconds vs milliseconds. Shows UTC, local time, ISO 8601, and relative time. 100% client-side.',
+      'Convert Unix timestamps to human-readable dates and back privately in your browser — no data sent anywhere. Auto-detects seconds vs milliseconds. Shows UTC, ISO 8601, and relative time.',
     path: '/unix-timestamp-converter',
   });
 }

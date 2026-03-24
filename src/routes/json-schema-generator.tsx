@@ -23,9 +23,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'JSON Schema Generator & Validator',
+    title: 'JSON Schema Generator & Validator — No Upload, Private',
     description:
-      'Generate JSON Schema from JSON data and validate JSON against schemas online for free. Supports Draft-07. 100% client-side.',
+      'Generate JSON Schema from data and validate JSON against schemas privately in your browser — no data uploaded. Supports Draft-07. Instant results, 100% client-side.',
     path: '/json-schema-generator',
   });
 }

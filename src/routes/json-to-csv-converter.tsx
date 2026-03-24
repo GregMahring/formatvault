@@ -8,9 +8,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'JSON to CSV Converter',
+    title: 'JSON to CSV Converter — Free, No Upload, Private',
     description:
-      'Convert JSON to CSV online for free. Handles nested objects with flattening. 100% client-side.',
+      'Convert JSON to CSV privately in your browser — no data uploaded. Handles nested objects with automatic flattening. Free, no account required, 100% client-side.',
     path: '/json-to-csv-converter',
   });
 }

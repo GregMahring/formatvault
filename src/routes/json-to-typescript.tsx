@@ -8,9 +8,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'JSON to TypeScript Converter',
+    title: 'JSON to TypeScript Converter — Free, No Upload, Private',
     description:
-      'Convert JSON to TypeScript interfaces and types online for free. Handles nested objects, arrays, optional fields, and union types. 100% client-side.',
+      'Convert JSON to TypeScript interfaces privately in your browser — no data uploaded. Handles nested objects, arrays, optional fields, and union types. Free, no account required.',
     path: '/json-to-typescript',
   });
 }

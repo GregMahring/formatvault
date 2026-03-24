@@ -27,9 +27,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'formatvault — Free Developer Data Format Tools',
+    title: 'formatvault — Private Developer Tools, No Data Uploaded',
     description:
-      'Free, privacy-first tools for formatting, validating, and converting JSON, CSV, YAML, and more. 100% client-side — no data ever leaves your browser.',
+      'Format, validate and convert JSON, CSV, YAML, JWT and more — entirely in your browser. No data uploaded, no account required. The developer tool that keeps your data private.',
     path: '/',
     schemaType: 'WebPage',
   });

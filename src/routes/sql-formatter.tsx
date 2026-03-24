@@ -26,9 +26,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'SQL Formatter & Beautifier',
+    title: 'SQL Formatter & Beautifier — No Upload, 100% Private',
     description:
-      'Free online SQL formatter and beautifier. Format SQL queries with keyword casing, indentation, and dialect support for PostgreSQL, MySQL, T-SQL, SQLite, BigQuery, and Snowflake. 100% client-side.',
+      'Format SQL queries privately in your browser — no data uploaded. Supports PostgreSQL, MySQL, T-SQL, SQLite, BigQuery, and Snowflake. Keyword casing, indentation, and dialect-aware formatting.',
     path: '/sql-formatter',
   });
 }

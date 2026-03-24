@@ -23,9 +23,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'JWT Decoder',
+    title: 'JWT Decoder — Token Never Sent to a Server',
     description:
-      'Decode and inspect JWT tokens online for free. View header, payload and expiry. No verification — 100% client-side, token never sent to a server.',
+      'Decode JWT tokens privately in your browser — your token is never transmitted to any server. View header, payload and expiry claims. 100% client-side, decode only.',
     path: '/jwt-decoder',
   });
 }

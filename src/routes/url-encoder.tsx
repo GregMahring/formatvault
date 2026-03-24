@@ -27,9 +27,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'URL Encoder & Decoder',
+    title: 'URL Encoder & Decoder — Private, No Upload',
     description:
-      'URL-encode and decode strings online for free. Uses encodeURIComponent for accurate percent-encoding. 100% client-side.',
+      'URL-encode and decode strings privately in your browser — no data sent anywhere. Supports query parameter parsing, all special characters, and component vs full URL encoding.',
     path: '/url-encoder',
   });
 }

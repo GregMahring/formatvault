@@ -7,9 +7,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'TOML to YAML Converter',
+    title: 'TOML to YAML Converter — Free, No Upload, Private',
     description:
-      'Convert TOML to YAML online for free. Preserves structure and types. 100% client-side.',
+      'Convert TOML to YAML privately in your browser — no data uploaded. Preserves structure and types. Free, no account required, 100% client-side.',
     path: '/toml-to-yaml-converter',
   });
 }

@@ -22,9 +22,9 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'Number Base Converter — Binary, Octal, Decimal, Hex',
+    title: 'Number Base Converter — Binary, Octal, Hex, No Upload',
     description:
-      'Convert numbers between binary (base 2), octal (base 8), decimal (base 10), and hexadecimal (base 16). Supports negative integers and arbitrarily large values. 100% client-side.',
+      'Convert numbers between binary, octal, decimal, and hexadecimal privately in your browser — no data sent anywhere. Supports negative integers and large values. 100% client-side.',
     path: '/number-base-converter',
   });
 }
