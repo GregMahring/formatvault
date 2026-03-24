@@ -4,42 +4,60 @@
 
 ## About
 
-formatvault is a collection of browser-based tools for developers to format, validate, convert and inspect common data formats. All processing happens entirely in the browser using JavaScript — no data is sent to any server.
+formatvault is a collection of browser-based tools for developers to format, validate, convert and inspect common data formats. All processing happens entirely in the browser using JavaScript — no data is sent to any server. There are no accounts, no cookies, and no tracking beyond privacy-respecting aggregate analytics via Plausible.
 
-## Tools
+## Formatters
 
-- [JSON Formatter & Validator](https://formatvault.dev/json-formatter): Pretty-print, minify, validate, sort keys, query with JSONPath. Supports relaxed JSON (JSON5).
-- [CSV Formatter & Validator](https://formatvault.dev/csv-formatter): Format and validate CSV with automatic delimiter detection (comma, tab, pipe, semicolon).
+- [JSON Formatter & Validator](https://formatvault.dev/json-formatter): Pretty-print, minify, validate, sort keys, query with JSONPath. Supports relaxed JSON (JSON5). Large file support via streaming Web Worker.
+- [CSV Formatter & Validator](https://formatvault.dev/csv-formatter): Format and validate CSV with automatic delimiter detection (comma, tab, pipe, semicolon). Streams files up to 500MB.
 - [YAML Formatter & Validator](https://formatvault.dev/yaml-formatter): Format and validate YAML with line-level error reporting. Supports multi-document YAML.
-- [JWT Decoder](https://formatvault.dev/jwt-decoder): Decode and inspect JWT tokens. View header, payload and expiry claims. No signature verification — decode only.
-- [Base64 Encoder/Decoder](https://formatvault.dev/base64-encoder): Encode and decode Base64 strings. Unicode-safe (handles emoji, non-ASCII characters).
+- [TOML Formatter & Validator](https://formatvault.dev/toml-formatter): Format and validate TOML v1.0.
+- [SQL Formatter](https://formatvault.dev/sql-formatter): Format SQL queries across multiple dialects (MySQL, PostgreSQL, SQLite, etc.).
+
+## Utilities
+
+- [JWT Decoder](https://formatvault.dev/jwt-decoder): Decode and inspect JWT tokens. View header, payload and expiry claims. Decode only — no signature verification. Token never leaves the browser.
+- [Base64 Encoder/Decoder](https://formatvault.dev/base64-encoder): Encode and decode Base64 strings. Unicode-safe (handles emoji, non-ASCII characters). Supports standard and URL-safe Base64.
 - [URL Encoder/Decoder](https://formatvault.dev/url-encoder): URL-encode and decode strings using encodeURIComponent. Includes query parameter parser.
+- [Regex Tester](https://formatvault.dev/regex-tester): Test regular expressions against input strings with live match highlighting and group capture display.
+- [Hash Generator](https://formatvault.dev/hash-generator): Generate cryptographic hashes — MD5, SHA-1, SHA-256, SHA-512. Supports text input and file input.
+- [JSON Schema Generator](https://formatvault.dev/json-schema-generator): Generate a JSON Schema from a JSON sample, or validate JSON against an existing schema.
+- [Number Base Converter](https://formatvault.dev/number-base-converter): Convert numbers between binary (base 2), octal (base 8), decimal (base 10), and hexadecimal (base 16).
+- [Color Picker & Converter](https://formatvault.dev/color-picker): Convert colors between HEX, RGB, HSL, and HSB formats with a visual picker.
+- [Unix Timestamp Converter](https://formatvault.dev/unix-timestamp-converter): Convert Unix timestamps to human-readable datetime strings and vice versa. Supports seconds and milliseconds.
+- [CRON Expression Explainer](https://formatvault.dev/cron-expression-explainer): Parse and explain cron expressions in plain English. Shows next scheduled run times.
 
 ## Converters
 
-- [JSON → CSV](https://formatvault.dev/json-to-csv-converter)
-- [JSON → YAML](https://formatvault.dev/json-to-yaml-converter)
-- [CSV → JSON](https://formatvault.dev/csv-to-json-converter)
-- [CSV → YAML](https://formatvault.dev/csv-to-yaml-converter)
-- [YAML → JSON](https://formatvault.dev/yaml-to-json-converter)
-- [YAML → CSV](https://formatvault.dev/yaml-to-csv-converter)
+- [JSON → CSV](https://formatvault.dev/json-to-csv-converter): Convert JSON arrays to CSV. Handles nested objects with flattening options.
+- [JSON → YAML](https://formatvault.dev/json-to-yaml-converter): Convert JSON to YAML with configurable indent and style.
+- [CSV → JSON](https://formatvault.dev/csv-to-json-converter): Convert CSV to JSON arrays. Supports header row detection and delimiter options.
+- [CSV → YAML](https://formatvault.dev/csv-to-yaml-converter): Convert CSV to YAML.
+- [YAML → JSON](https://formatvault.dev/yaml-to-json-converter): Convert YAML to formatted JSON.
+- [YAML → CSV](https://formatvault.dev/yaml-to-csv-converter): Convert YAML to CSV.
+- [JSON → TypeScript](https://formatvault.dev/json-to-typescript): Generate TypeScript interfaces or type aliases from a JSON sample.
+- [JSON → TOML](https://formatvault.dev/json-to-toml-converter): Convert JSON to TOML v1.0.
+- [TOML → JSON](https://formatvault.dev/toml-to-json-converter): Convert TOML to formatted JSON.
+- [TOML → YAML](https://formatvault.dev/toml-to-yaml-converter): Convert TOML to YAML.
+- [YAML → TOML](https://formatvault.dev/yaml-to-toml-converter): Convert YAML to TOML.
 
 ## Privacy
 
 - No data is ever sent to a server
 - No cookies
-- No user tracking (privacy-respecting analytics via Plausible)
+- No user tracking (privacy-respecting aggregate analytics via Plausible — no personal data)
 - No account required
 - No login
-- All processing is 100% client-side
+- All processing is 100% client-side in the browser
+- Input and output content is never persisted to localStorage or any storage
 
 ## Technical Notes
 
 - Large files (>1MB) are processed in a Web Worker to keep the UI responsive
-- JSON files ≥5MB use streaming parsing
-- Markdown rendering always uses DOMPurify sanitization
-- JWT decoding never performs signature verification — for display/inspection only
-
-## Source
-
-formatvault is open source. See https://github.com/formatvault/formatvault for the repository.
+- JSON files ≥5MB use streaming parsing via @streamparser/json
+- CSV files up to 500MB supported via PapaParse streaming with worker: true
+- Markdown rendering always uses DOMPurify sanitization to prevent XSS
+- JWT decoding never performs signature verification — for inspection only
+- Security headers: HSTS, CSP, COEP, COOP, CORP enforced via Cloudflare Pages
+- Built with React 19, TypeScript strict mode, Vite, React Router v7 (SSR for meta tags)
+- Hosted on Cloudflare Pages (global CDN, no cold starts)
