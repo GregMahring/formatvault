@@ -13,11 +13,19 @@ export function Footer({ className }: FooterProps) {
         className
       )}
     >
-      <p>
-        <span className="text-fg-muted">🔒</span>{' '}
-        <strong className="font-medium text-fg-secondary">No data leaves your browser.</strong> All
-        processing is 100% client-side.
-      </p>
+      <div className="flex items-center gap-4">
+        <p>
+          <span className="text-fg-muted">🔒</span>{' '}
+          <strong className="font-medium text-fg-secondary">No data leaves your browser.</strong>{' '}
+          All processing is 100% client-side.
+        </p>
+        <NavLink
+          to="/privacy"
+          className="shrink-0 text-fg-muted transition-colors hover:text-fg-secondary"
+        >
+          Privacy
+        </NavLink>
+      </div>
       <NavLink
         to="/"
         className="flex items-center font-mono text-sm leading-none"

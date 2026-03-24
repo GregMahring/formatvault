@@ -37,6 +37,9 @@ export default [
   route('color-picker', 'routes/color-picker.tsx'),
   route('number-base-converter', 'routes/number-base-converter.tsx'),
 
+  // Static pages
+  route('privacy', 'routes/privacy.tsx'),
+
   // 404 catch-all
   route('*', 'routes/not-found.tsx'),
 ] satisfies RouteConfig;
