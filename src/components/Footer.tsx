@@ -20,6 +20,12 @@ export function Footer({ className }: FooterProps) {
           All processing is 100% client-side.
         </p>
         <NavLink
+          to="/about"
+          className="shrink-0 text-fg-muted transition-colors hover:text-fg-secondary"
+        >
+          About
+        </NavLink>
+        <NavLink
           to="/privacy"
           className="shrink-0 text-fg-muted transition-colors hover:text-fg-secondary"
         >

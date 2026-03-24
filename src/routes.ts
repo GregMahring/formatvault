@@ -38,6 +38,7 @@ export default [
   route('number-base-converter', 'routes/number-base-converter.tsx'),
 
   // Static pages
+  route('about', 'routes/about.tsx'),
   route('privacy', 'routes/privacy.tsx'),
 
   // 404 catch-all
