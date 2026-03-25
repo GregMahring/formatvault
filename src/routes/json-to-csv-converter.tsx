@@ -13,6 +13,20 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Convert JSON to CSV privately in your browser — no data uploaded. Handles nested objects with automatic flattening. Free, no account required, 100% client-side.',
     path: '/json-to-csv-converter',
+    faqItems: [
+      {
+        q: 'What JSON input format is required?',
+        a: 'The input must be a JSON array of objects. All objects should share the same keys, though missing keys in some rows are allowed and output as empty cells.',
+      },
+      {
+        q: 'How are nested objects handled?',
+        a: 'Nested objects are flattened using dot notation. For example, {"address": {"city": "London"}} becomes a column named address.city.',
+      },
+      {
+        q: 'Is my data safe to convert here?',
+        a: 'Yes. All conversion happens in your browser. No data is transmitted to any server.',
+      },
+    ],
   });
 }
 

@@ -11,7 +11,7 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'formatvault is a suite of developer tools that run entirely in your browser. No data uploaded, no accounts, no servers. Learn how it works and why we built it.',
     path: '/about',
-    schemaType: 'WebPage',
+    schemaType: 'AboutPage',
   });
 }
 

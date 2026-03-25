@@ -4,12 +4,21 @@
  *
  * Usage:
  *   export function meta() { return buildMeta({ title, description, path }); }
+ *
+ * With FAQPage rich results:
+ *   export function meta() { return buildMeta({ title, description, path, faqItems: [...] }); }
  */
 import type { MetaDescriptor } from 'react-router';
 
 const SITE_NAME = 'formatvault';
 const BASE_URL = 'https://formatvault.dev';
 const OG_IMAGE = `${BASE_URL}/og-image.png`;
+
+export interface FaqMetaItem {
+  q: string;
+  /** Plain text only — no HTML or JSX. Used in JSON-LD. */
+  a: string;
+}
 
 export interface MetaOptions {
   title: string;
@@ -18,30 +27,109 @@ export interface MetaOptions {
   path: string;
   /**
    * JSON-LD structured data type.
-   * Defaults to 'WebApplication' (used for interactive tools).
+   * - SoftwareApplication — default; interactive developer tools
+   * - WebPage — generic informational page
+   * - AboutPage — the /about page
+   * - WebSite — the home page
    */
-  schemaType?: 'WebApplication' | 'WebPage';
+  schemaType?: 'SoftwareApplication' | 'WebPage' | 'AboutPage' | 'WebSite';
+  /**
+   * Optional FAQ items for FAQPage rich results.
+   * When provided, JSON-LD uses @graph to emit both the page schema and a FAQPage schema.
+   * Answers must be plain text (no HTML).
+   */
+  faqItems?: FaqMetaItem[];
 }
 
-export function buildMeta({
-  title,
-  description,
-  path,
-  schemaType = 'WebApplication',
-}: MetaOptions): MetaDescriptor[] {
-  const url = `${BASE_URL}${path}`;
-  const fullTitle = title.includes(SITE_NAME) ? title : `${title} — ${SITE_NAME}`;
+// ---------------------------------------------------------------------------
+// Internal schema builders
+// ---------------------------------------------------------------------------
 
-  const jsonLd = JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': schemaType,
+function toolSchema(
+  type: 'SoftwareApplication',
+  fullTitle: string,
+  description: string,
+  url: string
+) {
+  return {
+    '@type': type,
     name: fullTitle,
     description,
     url,
     applicationCategory: 'DeveloperApplication',
     operatingSystem: 'Any',
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  });
+  };
+}
+
+function pageSchema(
+  type: 'WebPage' | 'AboutPage',
+  fullTitle: string,
+  description: string,
+  url: string
+) {
+  return {
+    '@type': type,
+    name: fullTitle,
+    description,
+    url,
+  };
+}
+
+function siteSchema(description: string) {
+  return {
+    '@type': 'WebSite',
+    name: SITE_NAME,
+    description,
+    url: BASE_URL,
+  };
+}
+
+function faqSchema(items: FaqMetaItem[]) {
+  return {
+    '@type': 'FAQPage',
+    mainEntity: items.map(({ q, a }) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: { '@type': 'Answer', text: a },
+    })),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Public builder
+// ---------------------------------------------------------------------------
+
+export function buildMeta({
+  title,
+  description,
+  path,
+  schemaType = 'SoftwareApplication',
+  faqItems,
+}: MetaOptions): MetaDescriptor[] {
+  const url = `${BASE_URL}${path}`;
+  const fullTitle = title.includes(SITE_NAME) ? title : `${title} — ${SITE_NAME}`;
+
+  // Build the primary schema node
+  let primary: object;
+  if (schemaType === 'SoftwareApplication') {
+    primary = toolSchema('SoftwareApplication', fullTitle, description, url);
+  } else if (schemaType === 'WebSite') {
+    primary = siteSchema(description);
+  } else {
+    primary = pageSchema(schemaType, fullTitle, description, url);
+  }
+
+  // Compose JSON-LD: use @graph when FAQs are present so we can attach FAQPage
+  let jsonLd: object;
+  if (faqItems && faqItems.length > 0) {
+    jsonLd = {
+      '@context': 'https://schema.org',
+      '@graph': [primary, faqSchema(faqItems)],
+    };
+  } else {
+    jsonLd = { '@context': 'https://schema.org', ...primary };
+  }
 
   return [
     { title: fullTitle },
@@ -66,7 +154,7 @@ export function buildMeta({
     { name: 'twitter:description', content: description },
     { name: 'twitter:image', content: OG_IMAGE },
 
-    // JSON-LD structured data (React Router v7 catch-all descriptor shape)
-    { tagName: 'script', type: 'application/ld+json', children: jsonLd },
+    // JSON-LD structured data
+    { tagName: 'script', type: 'application/ld+json', children: JSON.stringify(jsonLd) },
   ];
 }

@@ -12,6 +12,16 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Convert CSV to YAML privately in your browser — no data uploaded. Auto-detects delimiter and maps rows to objects. Free, no account required, 100% client-side.',
     path: '/csv-to-yaml-converter',
+    faqItems: [
+      {
+        q: 'Is my data safe to convert here?',
+        a: 'Yes. All conversion happens in your browser. No data is transmitted to any server.',
+      },
+      {
+        q: 'What input format is expected?',
+        a: 'A CSV with a header row is expected. Each row becomes a YAML mapping where the header values are the keys.',
+      },
+    ],
   });
 }
 

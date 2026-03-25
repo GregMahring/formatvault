@@ -12,6 +12,16 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Convert TOML to JSON privately in your browser — no data uploaded. Preserves structure and types. Free, no account required, 100% client-side.',
     path: '/toml-to-json-converter',
+    faqItems: [
+      {
+        q: 'Is my data safe to convert here?',
+        a: 'Yes. All conversion happens in your browser. No data is transmitted to any server.',
+      },
+      {
+        q: 'How are TOML dates handled?',
+        a: 'TOML datetime values are converted to ISO 8601 strings in the JSON output.',
+      },
+    ],
   });
 }
 

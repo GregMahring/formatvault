@@ -31,7 +31,7 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Format, validate and convert JSON, CSV, YAML, JWT and more — entirely in your browser. No data uploaded, no account required. The developer tool that keeps your data private.',
     path: '/',
-    schemaType: 'WebPage',
+    schemaType: 'WebSite',
   });
 }
 

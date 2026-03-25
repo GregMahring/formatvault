@@ -28,6 +28,28 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Decode JWT tokens privately in your browser — your token is never transmitted to any server. View header, payload and expiry claims. 100% client-side, decode only.',
     path: '/jwt-decoder',
+    faqItems: [
+      {
+        q: 'Is it safe to paste my JWT here?',
+        a: 'Yes. The token is decoded entirely in your browser — no part of the token is sent over the network. Open DevTools → Network to confirm zero outbound requests.',
+      },
+      {
+        q: 'Does this verify the signature?',
+        a: "No. Signature verification requires the secret or public key used to sign the token. This tool only decodes and displays the header and payload. Never trust a token's claims in production without verifying the signature server-side.",
+      },
+      {
+        q: 'Why does the expiry say my token is already expired?',
+        a: 'JWT timestamps are Unix epoch seconds (not milliseconds). The decoder converts exp and iat to human-readable local time automatically. If it shows expired, the token genuinely has a past expiry — check your token refresh logic.',
+      },
+      {
+        q: 'What algorithms does this support?',
+        a: 'The decoder works with any JWT regardless of the signing algorithm (HS256, RS256, ES256, etc.) because decoding the payload does not require the key. The alg field in the header tells you which algorithm was used to sign it.',
+      },
+      {
+        q: 'Can I decode tokens that contain sensitive user data?',
+        a: 'Yes — that is exactly the use case this tool is designed for. Because nothing leaves your browser, you can safely decode tokens containing PII, user IDs, or internal role assignments without exposing them to a third party.',
+      },
+    ],
   });
 }
 

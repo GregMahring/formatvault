@@ -13,6 +13,24 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Convert JSON to TypeScript interfaces privately in your browser — no data uploaded. Handles nested objects, arrays, optional fields, and union types. Free, no account required.',
     path: '/json-to-typescript',
+    faqItems: [
+      {
+        q: 'Is my data safe to convert here?',
+        a: 'Yes. All conversion happens in your browser. No data is transmitted to any server.',
+      },
+      {
+        q: 'How are optional fields detected?',
+        a: 'If a key appears in some objects in an array but not all, it is marked as optional (?) in the generated interface.',
+      },
+      {
+        q: 'Are nested objects supported?',
+        a: 'Yes. Nested objects generate nested named interfaces. The root interface is named Root by default.',
+      },
+      {
+        q: 'What happens with arrays of mixed types?',
+        a: 'Mixed-type arrays generate union types, e.g. (string | number)[].',
+      },
+    ],
   });
 }
 

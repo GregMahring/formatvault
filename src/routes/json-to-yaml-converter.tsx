@@ -12,6 +12,20 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Convert JSON to YAML privately in your browser — no data uploaded. Preserves all structure and types. Free, no account required, 100% client-side.',
     path: '/json-to-yaml-converter',
+    faqItems: [
+      {
+        q: 'Is my data safe to convert here?',
+        a: 'Yes. All conversion happens in your browser using js-yaml. No data is transmitted to any server.',
+      },
+      {
+        q: 'Are all JSON types preserved?',
+        a: 'Yes. Strings, numbers, booleans, null, arrays, and nested objects all convert correctly to their YAML equivalents.',
+      },
+      {
+        q: 'Does it handle JSON with deeply nested structures?',
+        a: 'Yes. js-yaml handles arbitrary nesting depth. The output uses YAML block style for readability.',
+      },
+    ],
   });
 }
 

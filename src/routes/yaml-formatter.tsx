@@ -34,6 +34,28 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Format and validate YAML privately in your browser — no data uploaded. Line-level error reporting, multi-document support, diff view, and tree view. 100% client-side.',
     path: '/yaml-formatter',
+    faqItems: [
+      {
+        q: 'Is it safe to format Kubernetes secrets or environment configs here?',
+        a: 'Yes. js-yaml runs entirely in your browser — your YAML content is never sent to any server. This is specifically designed for config files that contain sensitive references.',
+      },
+      {
+        q: 'Why does my YAML fail to parse even though it looks correct?',
+        a: 'YAML is whitespace-sensitive and has many subtle rules around tabs (not allowed for indentation), implicit types, and multi-line scalars. The error message will show the exact line number — common culprits are tab characters and unquoted strings that look like special types (yes, no, null, ~).',
+      },
+      {
+        q: 'Does it support multi-document YAML?',
+        a: 'Yes. Files with multiple documents separated by --- are supported. Each document is parsed and formatted independently.',
+      },
+      {
+        q: 'Can I choose the indentation level?',
+        a: 'Yes — 2 spaces, 4 spaces, or tabs. The output style (block vs flow for collections) is also configurable.',
+      },
+      {
+        q: 'Does it work offline?',
+        a: 'Yes, once the page has loaded. The js-yaml library is bundled with the app and requires no network access to parse or format YAML.',
+      },
+    ],
   });
 }
 

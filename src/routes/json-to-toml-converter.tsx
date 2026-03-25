@@ -12,6 +12,16 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Convert JSON to TOML privately in your browser — no data uploaded. JSON root must be an object. Free, no account required, 100% client-side.',
     path: '/json-to-toml-converter',
+    faqItems: [
+      {
+        q: 'Is my data safe to convert here?',
+        a: 'Yes. All conversion happens in your browser. No data is transmitted to any server.',
+      },
+      {
+        q: 'Why must the JSON root be an object?',
+        a: 'TOML requires a root table (object). JSON arrays at the root level have no direct TOML equivalent, so the input must be a JSON object.',
+      },
+    ],
   });
 }
 

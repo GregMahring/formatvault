@@ -13,6 +13,16 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Convert YAML to CSV privately in your browser — no data uploaded. Supports arrays of objects. Free, no account required, 100% client-side.',
     path: '/yaml-to-csv-converter',
+    faqItems: [
+      {
+        q: 'Is my data safe to convert here?',
+        a: 'Yes. All conversion happens in your browser. No data is transmitted to any server.',
+      },
+      {
+        q: 'What YAML input format is required?',
+        a: 'The YAML must be a sequence (array) of mappings (objects). Each mapping becomes a CSV row.',
+      },
+    ],
   });
 }
 

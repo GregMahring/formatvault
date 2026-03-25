@@ -12,6 +12,20 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Convert YAML to JSON privately in your browser — no data uploaded. Supports multi-document YAML. Free, no account required, 100% client-side.',
     path: '/yaml-to-json-converter',
+    faqItems: [
+      {
+        q: 'Is my data safe to convert here?',
+        a: 'Yes. js-yaml runs entirely in your browser. No data is transmitted to any server.',
+      },
+      {
+        q: 'Does it support multi-document YAML?',
+        a: 'Yes. Documents separated by --- are converted to a JSON array where each element is one document.',
+      },
+      {
+        q: 'Are YAML-specific types like timestamps handled?',
+        a: 'YAML timestamps are converted to ISO 8601 strings in the JSON output. YAML anchors and aliases are resolved before conversion.',
+      },
+    ],
   });
 }
 

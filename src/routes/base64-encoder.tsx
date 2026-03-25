@@ -30,6 +30,24 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Encode and decode Base64 privately in your browser — no data sent to any server. Unicode-safe, supports standard and URL-safe Base64. Auto-detects encode vs decode mode.',
     path: '/base64-encoder',
+    faqItems: [
+      {
+        q: 'Is it safe to encode credentials or API keys here?',
+        a: 'Yes. All encoding and decoding happens in your browser using native APIs — nothing is transmitted to any server. This makes it safe for encoding sensitive strings that you would not normally share.',
+      },
+      {
+        q: 'What is the difference between standard and URL-safe Base64?',
+        a: 'Standard Base64 uses + and / which have special meaning in URLs. URL-safe Base64 replaces them with - and _ respectively, making the output safe to include in URLs, filenames, and HTTP headers without percent-encoding.',
+      },
+      {
+        q: 'Why does btoa() fail on my string but this tool works?',
+        a: "JavaScript's built-in btoa() only handles Latin-1 characters. formatvault uses js-base64 which correctly handles the full Unicode character set including emoji and multi-byte characters.",
+      },
+      {
+        q: 'How does auto-detect mode work?',
+        a: 'The tool inspects your input and checks whether it matches the Base64 character set and length rules. If it looks like Base64, it switches to decode mode. You can override this manually.',
+      },
+    ],
   });
 }
 

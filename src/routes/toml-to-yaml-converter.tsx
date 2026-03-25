@@ -12,6 +12,12 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Convert TOML to YAML privately in your browser — no data uploaded. Preserves structure and types. Free, no account required, 100% client-side.',
     path: '/toml-to-yaml-converter',
+    faqItems: [
+      {
+        q: 'Is my data safe to convert here?',
+        a: 'Yes. All conversion happens in your browser. No data is transmitted to any server.',
+      },
+    ],
   });
 }
 

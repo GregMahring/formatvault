@@ -12,6 +12,16 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Convert YAML to TOML privately in your browser — no data uploaded. YAML root must be a mapping. Free, no account required, 100% client-side.',
     path: '/yaml-to-toml-converter',
+    faqItems: [
+      {
+        q: 'Is my data safe to convert here?',
+        a: 'Yes. All conversion happens in your browser. No data is transmitted to any server.',
+      },
+      {
+        q: 'Why must the YAML root be a mapping?',
+        a: 'TOML requires a root table (object). A YAML sequence at the root has no direct TOML equivalent.',
+      },
+    ],
   });
 }
 

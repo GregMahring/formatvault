@@ -12,6 +12,20 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Convert CSV to JSON privately in your browser — no data uploaded. Auto-detects headers and delimiter. Free, no account required, 100% client-side.',
     path: '/csv-to-json-converter',
+    faqItems: [
+      {
+        q: 'Is my data safe to convert here?',
+        a: 'Yes. PapaParse runs entirely in your browser. No data is transmitted to any server.',
+      },
+      {
+        q: 'What delimiters are supported?',
+        a: 'PapaParse auto-detects comma, tab, pipe, and semicolon delimiters.',
+      },
+      {
+        q: 'What happens if my CSV has inconsistent column counts?',
+        a: 'PapaParse reports rows with mismatched column counts. Missing values are output as empty strings or null depending on the row.',
+      },
+    ],
   });
 }
 

@@ -34,6 +34,32 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Format, validate and minify JSON privately in your browser — no data uploaded. Supports JSON5, JSONPath queries, diff view, sort keys, and files up to 500MB via streaming.',
     path: '/json-formatter',
+    faqItems: [
+      {
+        q: 'Is my JSON data safe?',
+        a: 'Yes. All processing happens in your browser tab. No data is sent to any server, logged, or stored anywhere. You can verify this by opening DevTools → Network and observing zero outbound requests when you format.',
+      },
+      {
+        q: 'What is the maximum file size?',
+        a: 'Files up to 500 MB are supported. Files above 5 MB are automatically processed in a Web Worker using a streaming parser, so the UI stays responsive throughout.',
+      },
+      {
+        q: 'Does the formatter work offline?',
+        a: 'Yes, once the page has loaded. All formatting logic is bundled with the app. No network access is required to format, validate, or minify JSON.',
+      },
+      {
+        q: 'What is JSON5 and when should I use it?',
+        a: 'JSON5 is a superset of JSON that allows trailing commas, single-quoted strings, and comments. It is commonly used in config files (like Babel or ESLint configs). Enable JSON5 mode when standard JSON.parse() rejects your input.',
+      },
+      {
+        q: 'How does JSONPath querying work?',
+        a: 'Enter a JSONPath expression (e.g. $.store.book[*].author) in the query field and the formatter extracts matching values in real time. Useful for exploring large nested payloads without writing code.',
+      },
+      {
+        q: 'Can I format minified JSON?',
+        a: 'Yes. Paste any minified JSON string and the formatter will pretty-print it instantly with your chosen indentation. The minify button does the reverse.',
+      },
+    ],
   });
 }
 

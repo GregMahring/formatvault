@@ -32,6 +32,28 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Format and validate CSV privately in your browser — no data uploaded. Auto-detects delimiters (comma, tab, pipe, semicolon). Streaming parser handles files up to 500MB.',
     path: '/csv-formatter',
+    faqItems: [
+      {
+        q: 'Is my CSV data safe to format here?',
+        a: 'Yes. PapaParse runs entirely in your browser — no row of your file is transmitted to any server. This is safe to use with PII, financial records, or any data you would not normally share with a third party.',
+      },
+      {
+        q: 'What delimiters are supported?',
+        a: 'Comma, tab (TSV), pipe (|), and semicolon. The formatter auto-detects the delimiter in your input and you can choose any of these for the output.',
+      },
+      {
+        q: 'What is the maximum file size?',
+        a: "Up to 500 MB. Files above 1 MB are parsed in a Web Worker using PapaParse's streaming mode, so the UI stays responsive throughout.",
+      },
+      {
+        q: 'Does it handle CSV files with quoted fields containing commas?',
+        a: 'Yes. PapaParse correctly handles RFC 4180 quoting — fields containing the delimiter character, newlines, or quotes are parsed and re-quoted correctly.',
+      },
+      {
+        q: 'Can I validate that my CSV has consistent column counts?',
+        a: 'Yes. The validator reports rows where the column count does not match the header, helping you catch truncation or extra-field issues before loading into a database.',
+      },
+    ],
   });
 }
 
