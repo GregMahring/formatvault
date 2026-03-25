@@ -186,8 +186,12 @@ Every push and pull request runs:
 
 **Security:** formatvault handles sensitive developer data. If you find a security issue, email [security@formatvault.dev](mailto:security@formatvault.dev) rather than opening a public issue.
 
+**License:** By submitting a pull request you agree that your contribution will be licensed under the [Elastic License 2.0](LICENSE), the same license that covers this project.
+
 ---
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+[Elastic License 2.0 (ELv2)](LICENSE) — source available, free for personal and internal use. You may not provide the software as a hosted or managed service to third parties.
+
+The source being public is intentional. formatvault's core claim is that your data never leaves the browser. Developers should be able to verify that — read the code, inspect the network tab, audit the bundle. The ELv2 restriction is narrow: it only prevents running a competing hosted service. Reading, auditing, and self-hosting for personal use are explicitly permitted.
