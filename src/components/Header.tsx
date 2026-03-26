@@ -26,6 +26,7 @@ const NAV_GROUPS = [
   {
     label: 'Converters',
     items: [
+      { to: '/xml-to-json-converter', label: 'XML → JSON' },
       { to: '/json-to-csv-converter', label: 'JSON → CSV' },
       { to: '/json-to-yaml-converter', label: 'JSON → YAML' },
       { to: '/json-to-toml-converter', label: 'JSON → TOML' },

@@ -7,6 +7,7 @@
  */
 
 import Papa from 'papaparse';
+import { XMLParser, XMLValidator } from 'fast-xml-parser';
 import { parseCsvToObjects } from '../csv/csvFormatter';
 import { parseYaml, serializeToYaml } from '../yaml/yamlFormatter';
 import type { YamlIndent } from '../yaml/yamlFormatter';
@@ -262,6 +263,46 @@ export function tomlToYaml(input: string, indent: YamlIndent = 2): ConversionRes
     return {
       output: null,
       error: `YAML serialization error: ${err instanceof Error ? err.message : String(err)}`,
+    };
+  }
+}
+
+// ─── XML → JSON ────────────────────────────────────────────────────────────
+
+/**
+ * Convert XML to a JSON representation.
+ * Attributes are prefixed with "@" to distinguish them from child elements.
+ * Text content of elements with attributes is stored under "#text".
+ */
+export function xmlToJson(input: string, indent = 2): ConversionResult {
+  const trimmed = input.trim();
+  if (!trimmed) return { output: null, error: 'Input is empty.' };
+
+  const validation = XMLValidator.validate(trimmed, { allowBooleanAttributes: true });
+  if (validation !== true) {
+    return {
+      output: null,
+      error: `Invalid XML: ${validation.err.msg} (line ${String(validation.err.line)})`,
+    };
+  }
+
+  try {
+    const parser = new XMLParser({
+      ignoreAttributes: false,
+      attributeNamePrefix: '@',
+      parseAttributeValue: true,
+      parseTagValue: true,
+      trimValues: true,
+      textNodeName: '#text',
+      cdataPropName: '#cdata',
+      allowBooleanAttributes: true,
+    });
+    const parsed: unknown = parser.parse(trimmed);
+    return { output: JSON.stringify(parsed, null, indent), error: null };
+  } catch (err) {
+    return {
+      output: null,
+      error: `Conversion error: ${err instanceof Error ? err.message : String(err)}`,
     };
   }
 }

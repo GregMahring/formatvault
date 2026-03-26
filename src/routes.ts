@@ -15,6 +15,7 @@ export default [
 
   // Converter routes — one route per conversion pair for SEO/GEO (ADR-0003)
   route('converters', 'routes/converters.tsx'),
+  route('xml-to-json-converter', 'routes/xml-to-json-converter.tsx'),
   route('json-to-csv-converter', 'routes/json-to-csv-converter.tsx'),
   route('json-to-yaml-converter', 'routes/json-to-yaml-converter.tsx'),
   route('csv-to-json-converter', 'routes/csv-to-json-converter.tsx'),

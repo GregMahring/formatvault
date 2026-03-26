@@ -110,7 +110,8 @@ export function ConverterLayout({
     (file: File) => {
       fileParser.parseFile(
         file,
-        fromLanguage === 'json' ? 'json' : fromLanguage === 'yaml' ? 'yaml' : 'csv'
+        fromLanguage === 'json' ? 'json' : fromLanguage === 'yaml' ? 'yaml' : 'yaml'
+        // xml and csv both use 'yaml' slot which returns raw text for the formatter hook to handle
       );
     },
     [fileParser, fromLanguage]
@@ -294,7 +295,9 @@ export function ConverterLayout({
                       ? '.json,application/json'
                       : fromLanguage === 'yaml'
                         ? '.yaml,.yml,text/yaml'
-                        : '.csv,text/csv'
+                        : fromLanguage === 'xml'
+                          ? '.xml,text/xml,application/xml'
+                          : '.csv,text/csv'
                   }
                   onFile={handleFileUpload}
                   disabled={fileParser.isParsing}
@@ -321,7 +324,7 @@ export function ConverterLayout({
                   <PiiMaskToggle pii={pii} />
                   <PaneActions
                     content={pii.displayContent}
-                    downloadFilename={`output.${toLanguage === 'json' ? 'json' : toLanguage === 'yaml' ? 'yaml' : toLanguage === 'typescript' ? 'ts' : 'csv'}`}
+                    downloadFilename={`output.${toLanguage === 'json' ? 'json' : toLanguage === 'yaml' ? 'yaml' : toLanguage === 'typescript' ? 'ts' : toLanguage === 'xml' ? 'xml' : 'csv'}`}
                   />
                 </div>
               </div>
