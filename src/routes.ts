@@ -5,6 +5,7 @@ export default [
   index('routes/home.tsx'),
 
   // Formatter routes — one route per format, keyword-rich URLs (ADR-0003)
+  route('xml-formatter', 'routes/xml-formatter.tsx'),
   route('json-formatter', 'routes/json-formatter.tsx'),
   route('csv-formatter', 'routes/csv-formatter.tsx'),
   route('yaml-formatter', 'routes/yaml-formatter.tsx'),

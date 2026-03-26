@@ -5,7 +5,15 @@ import { EditorView } from '@codemirror/view';
 import { cn } from '@/lib/utils';
 import { useSettingsStore } from '@/stores/settingsStore';
 
-export type EditorLanguage = 'json' | 'yaml' | 'csv' | 'toml' | 'sql' | 'text' | 'typescript';
+export type EditorLanguage =
+  | 'json'
+  | 'yaml'
+  | 'csv'
+  | 'toml'
+  | 'sql'
+  | 'xml'
+  | 'text'
+  | 'typescript';
 
 export interface CodeEditorProps {
   value: string;
@@ -44,6 +52,10 @@ async function loadLangExtension(language: EditorLanguage): Promise<Extension | 
   if (language === 'sql') {
     const { sql } = await import('@codemirror/lang-sql');
     return sql();
+  }
+  if (language === 'xml') {
+    const { xml } = await import('@codemirror/lang-xml');
+    return xml();
   }
   // csv / text — no language pack needed
   return null;

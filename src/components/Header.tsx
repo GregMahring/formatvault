@@ -16,6 +16,7 @@ const NAV_GROUPS = [
     label: 'Formatters',
     items: [
       { to: '/json-formatter', label: 'JSON Formatter' },
+      { to: '/xml-formatter', label: 'XML Formatter' },
       { to: '/csv-formatter', label: 'CSV Formatter' },
       { to: '/yaml-formatter', label: 'YAML Formatter' },
       { to: '/toml-formatter', label: 'TOML Formatter' },
