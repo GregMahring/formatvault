@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { CommandPalette } from '@/components/CommandPalette';
+import { AdSidebar } from '@/components/AdSidebar';
 import { useCommandStore, type Command } from '@/stores/commandStore';
 import { useSettingsStore, type IndentSize } from '@/stores/settingsStore';
 import {
@@ -36,9 +37,17 @@ export interface AppLayoutProps {
  * Top-level app shell — wraps every page.
  * Provides TooltipProvider, global command palette, and static command registration.
  */
+/**
+ * Pages that get the full-width layout (no sidebars).
+ * Everything else is a tool page and gets the two-sidebar layout.
+ */
+const FULL_WIDTH_PATHS = new Set(['/', '/about', '/privacy', '/converters']);
+
 export function AppLayout({ children }: AppLayoutProps) {
   const [paletteOpen, setPaletteOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const isToolPage = !FULL_WIDTH_PATHS.has(location.pathname);
   const {
     theme,
     setTheme,
@@ -310,8 +319,23 @@ export function AppLayout({ children }: AppLayoutProps) {
           }}
         />
 
-        <main id="main-content" className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-          {children}
+        <main
+          id="main-content"
+          className={
+            isToolPage
+              ? 'flex min-h-0 flex-1 flex-row'
+              : 'flex min-h-0 flex-1 flex-col overflow-y-auto'
+          }
+        >
+          {isToolPage ? (
+            <>
+              <AdSidebar side="left" />
+              <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">{children}</div>
+              <AdSidebar side="right" />
+            </>
+          ) : (
+            children
+          )}
         </main>
 
         <Footer />
