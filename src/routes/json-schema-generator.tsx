@@ -5,7 +5,7 @@ import { SplitPane } from '@/components/SplitPane';
 import { CodeEditor } from '@/components/CodeEditor';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PaneActions } from '@/components/PaneActions';
 import { PiiMaskToggle } from '@/components/PiiMaskToggle';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
@@ -171,6 +171,9 @@ export default function JsonSchemaGenerator() {
               Validate
             </TabsTrigger>
           </TabsList>
+          {/* Empty panels required for valid aria-controls references on each trigger */}
+          <TabsContent value="generate" />
+          <TabsContent value="validate" />
         </Tabs>
 
         <div className="flex-1" />

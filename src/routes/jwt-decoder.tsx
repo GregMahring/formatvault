@@ -68,7 +68,7 @@ function ClaimRow({ name, value }: { name: string; value: unknown }) {
             : JSON.stringify(value);
   return (
     <tr className="border-b border-edge last:border-0">
-      <td className="w-32 py-2 pr-4 align-top font-mono text-xs text-fg-tertiary">{name}</td>
+      <td className="w-32 py-2 pr-4 align-top font-mono text-xs text-fg-secondary">{name}</td>
       <td className="py-2 font-mono text-xs text-fg break-all">{display}</td>
     </tr>
   );
@@ -87,10 +87,10 @@ function TimestampRow({
     highlight === 'expired' ? 'text-red-400' : highlight === 'valid' ? 'text-green-400' : 'text-fg';
   return (
     <tr className="border-b border-edge last:border-0">
-      <td className="w-32 py-2 pr-4 align-top font-mono text-xs text-fg-tertiary">{name}</td>
+      <td className="w-32 py-2 pr-4 align-top font-mono text-xs text-fg-secondary">{name}</td>
       <td className={`py-2 font-mono text-xs break-all ${color}`}>
         {formatUnixTimestamp(unix)}
-        <span className="ml-2 text-fg-muted">({String(unix)})</span>
+        <span className="ml-2 text-fg-secondary">({String(unix)})</span>
       </td>
     </tr>
   );
@@ -110,7 +110,7 @@ function JsonBlock({ label, value }: { label: string; value: Record<string, unkn
           onClick={() => {
             void copy(json);
           }}
-          className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
+          className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-fg-secondary hover:bg-surface-elevated hover:text-fg"
           aria-label={`Copy ${label}`}
         >
           {copied ? (
@@ -253,7 +253,7 @@ export default function JwtDecoder() {
         <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
           <h1 className="text-sm font-semibold text-fg">JWT Decoder</h1>
           <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
-          <Badge variant="outline" className="text-[10px] text-fg-muted">
+          <Badge variant="outline" className="text-[10px] text-fg-secondary">
             Decode only · no verification
           </Badge>
 
@@ -273,7 +273,7 @@ export default function JwtDecoder() {
           <Button
             size="sm"
             variant="ghost"
-            className="h-7 px-3 text-xs text-fg-tertiary"
+            className="h-7 px-3 text-xs text-fg-secondary"
             onClick={clear}
             disabled={!input}
           >
@@ -282,7 +282,7 @@ export default function JwtDecoder() {
 
           <button
             type="button"
-            className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
+            className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
             onClick={() => {
               setShowShortcuts(true);
             }}
@@ -308,7 +308,7 @@ export default function JwtDecoder() {
           {/* Left: token input */}
           <div className="flex w-2/5 flex-col border-r border-edge">
             <div className="flex items-center justify-between border-b border-edge px-3 py-1.5">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-secondary">
                 JWT Token
               </span>
               <div className="flex items-center gap-1">
@@ -317,7 +317,7 @@ export default function JwtDecoder() {
                   onClick={() => {
                     void pasteFromClipboard();
                   }}
-                  className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
+                  className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-fg-secondary hover:bg-surface-elevated hover:text-fg"
                   title="Paste from clipboard"
                 >
                   <ClipboardPaste className="h-3 w-3" aria-hidden="true" />
@@ -329,7 +329,7 @@ export default function JwtDecoder() {
                     void copyRaw(input);
                   }}
                   disabled={!input}
-                  className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary disabled:opacity-40"
+                  className="flex items-center gap-1 rounded px-2 py-0.5 text-[10px] text-fg-secondary hover:bg-surface-elevated hover:text-fg disabled:opacity-40"
                   title="Copy token"
                 >
                   {copiedRaw ? (
@@ -363,7 +363,7 @@ export default function JwtDecoder() {
                       const labels = ['Header', 'Payload', 'Signature'];
                       return (
                         <span key={i} className={colors[i]}>
-                          <span className="text-fg-muted">{labels[i]}: </span>
+                          <span className="text-fg-secondary">{labels[i]}: </span>
                           {part.length > 20 ? `${part.slice(0, 20)}…` : part}
                         </span>
                       );
@@ -376,14 +376,14 @@ export default function JwtDecoder() {
           {/* Right: decoded output */}
           <div className="flex flex-1 flex-col overflow-y-auto">
             <div className="flex items-center justify-between border-b border-edge px-4 py-1.5">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-secondary">
                 Decoded
               </span>
               <PiiMaskToggle pii={pii} />
             </div>
             <div className="flex flex-1 flex-col gap-4 p-4">
               {!decoded && !error && (
-                <div className="flex h-full items-center justify-center text-xs text-fg-muted">
+                <div className="flex h-full items-center justify-center text-xs text-fg-secondary">
                   Paste a JWT token on the left to decode it
                 </div>
               )}
@@ -421,10 +421,10 @@ export default function JwtDecoder() {
                     <div className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
                       Signature
                     </div>
-                    <div className="break-all font-mono text-xs text-fg-muted">
+                    <div className="break-all font-mono text-xs text-fg-secondary">
                       {decoded.signature}
                     </div>
-                    <p className="mt-2 text-[10px] text-fg-muted">
+                    <p className="mt-2 text-[10px] text-fg-secondary">
                       Signature is not verified. This tool only decodes the token structure.
                     </p>
                   </div>

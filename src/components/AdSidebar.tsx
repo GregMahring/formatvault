@@ -35,9 +35,17 @@ interface AdSlotProps {
 }
 
 function AdSlot({ id }: AdSlotProps) {
+  // In production, render only the container div for the ad network to inject into.
+  // The placeholder label and dashed border are dev-only visual aids.
+  const isProd = (import.meta.env as Record<string, unknown>).PROD === true;
+
+  if (isProd) {
+    return <div id={id} data-ad-slot={id} className="h-[130px] w-full" aria-hidden="true" />;
+  }
+
   return (
     <div className="flex flex-col items-center gap-1.5">
-      <span className="text-[10px] uppercase tracking-widest text-fg-muted">Advertisement</span>
+      <span className="text-[10px] uppercase tracking-widest text-fg-secondary">Ad slot</span>
       <div
         id={id}
         data-ad-slot={id}

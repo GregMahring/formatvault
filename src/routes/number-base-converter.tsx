@@ -53,7 +53,7 @@ function BaseRow({ label, prefix, placeholder, value, base, hasError, onChange }
 
       <div className="flex min-w-0 flex-1 items-center">
         {prefix && (
-          <span className="select-none rounded-l border border-r-0 border-edge-emphasis bg-surface-raised px-2 py-1.5 font-mono text-sm text-fg-muted">
+          <span className="select-none rounded-l border border-r-0 border-edge-emphasis bg-surface-raised px-2 py-1.5 font-mono text-sm text-fg-secondary">
             {prefix}
           </span>
         )}
@@ -193,7 +193,7 @@ export default function NumberBaseConverter() {
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <Binary className="h-4 w-4 text-fg-tertiary" aria-hidden="true" />
+        <Binary className="h-4 w-4 text-fg-secondary" aria-hidden="true" />
         <h1 className="text-sm font-semibold text-fg">Number Base Converter</h1>
 
         <div className="flex-1" />
@@ -201,7 +201,7 @@ export default function NumberBaseConverter() {
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-3 text-xs text-fg-tertiary"
+          className="h-7 px-3 text-xs text-fg-secondary"
           onClick={clear}
           disabled={isEmpty}
         >
@@ -209,7 +209,7 @@ export default function NumberBaseConverter() {
         </Button>
         <button
           type="button"
-          className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
+          className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -266,7 +266,7 @@ export default function NumberBaseConverter() {
                   'rounded border px-2.5 py-1 text-xs transition-colors',
                   displayValues[10] === String(preset.value)
                     ? 'border-accent-700 bg-accent-600/20 text-accent-300'
-                    : 'border-edge-emphasis bg-surface-raised text-fg-tertiary hover:border-edge-emphasis hover:text-fg'
+                    : 'border-edge-emphasis bg-surface-raised text-fg-secondary hover:border-edge-emphasis hover:text-fg'
                 )}
               >
                 {preset.label}
@@ -276,7 +276,7 @@ export default function NumberBaseConverter() {
         </section>
 
         {isEmpty && !error && (
-          <p className="text-xs text-fg-muted">
+          <p className="text-xs text-fg-secondary">
             Type a number in any field — all bases update live. Supports negative integers and
             arbitrarily large values.
           </p>

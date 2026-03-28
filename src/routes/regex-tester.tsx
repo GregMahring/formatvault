@@ -126,7 +126,7 @@ export default function RegexTester() {
 
         {/* Pattern input with / decorations */}
         <div className="flex items-center gap-0 font-mono">
-          <span className="select-none text-sm text-fg-tertiary">/</span>
+          <span className="select-none text-sm text-fg-secondary">/</span>
           <input
             type="text"
             value={pattern}
@@ -143,7 +143,7 @@ export default function RegexTester() {
                 : 'border-edge-emphasis text-fg placeholder-fg-muted focus:border-accent-500'
             )}
           />
-          <span className="select-none text-sm text-fg-tertiary">/</span>
+          <span className="select-none text-sm text-fg-secondary">/</span>
         </div>
 
         {/* Flag toggles */}
@@ -161,7 +161,7 @@ export default function RegexTester() {
                 'rounded px-2 py-1 font-mono text-xs font-medium transition-colors',
                 flags[key]
                   ? 'bg-accent-600/30 text-accent-300 ring-1 ring-accent-500/50'
-                  : 'text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary'
+                  : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg'
               )}
             >
               {letter}
@@ -192,7 +192,7 @@ export default function RegexTester() {
 
         <button
           type="button"
-          className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
+          className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -219,7 +219,7 @@ export default function RegexTester() {
         {/* Left pane — test string */}
         <div className="flex w-full flex-col border-b border-r-0 border-edge md:w-1/2 md:border-b-0 md:border-r">
           <div className="flex items-center border-b border-edge px-3 py-1.5">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-fg-secondary">
               Test string
             </span>
           </div>
@@ -234,7 +234,7 @@ export default function RegexTester() {
             aria-label="Test string input"
           />
           {input && (
-            <div className="border-t border-edge px-3 py-1.5 text-[10px] text-fg-muted">
+            <div className="border-t border-edge px-3 py-1.5 text-[10px] text-fg-secondary">
               {String(input.length)} chars
             </div>
           )}
@@ -244,7 +244,7 @@ export default function RegexTester() {
         <div className="flex w-full flex-col md:w-1/2">
           <div className="flex items-center justify-between border-b border-edge px-3 py-1.5">
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-secondary">
                 Match results
               </span>
               {hasPattern && hasInput && !result.error && matchCount > 0 && (
@@ -259,14 +259,14 @@ export default function RegexTester() {
           <div className="flex-1 overflow-y-auto">
             {/* State 1: no pattern entered */}
             {!hasPattern && (
-              <div className="flex h-full items-center justify-center text-xs text-fg-muted">
+              <div className="flex h-full items-center justify-center text-xs text-fg-secondary">
                 Enter a pattern above…
               </div>
             )}
 
             {/* State 3: no matches (pattern entered, no error, zero matches) */}
             {hasPattern && !result.error && matchCount === 0 && (
-              <div className="flex h-full items-center justify-center text-xs text-fg-muted">
+              <div className="flex h-full items-center justify-center text-xs text-fg-secondary">
                 {hasInput ? 'No matches found' : 'Enter test text on the left…'}
               </div>
             )}
@@ -287,11 +287,11 @@ export default function RegexTester() {
                   {result.matches?.map((m, i) => (
                     <li key={i} className="px-4 py-2.5 text-xs">
                       <div className="flex items-baseline gap-2">
-                        <span className="shrink-0 font-mono text-[10px] text-fg-muted">
+                        <span className="shrink-0 font-mono text-[10px] text-fg-secondary">
                           #{i + 1}
                         </span>
                         <span className="font-mono text-fg break-all">{m.value || '(empty)'}</span>
-                        <span className="ml-auto shrink-0 text-[10px] text-fg-muted">
+                        <span className="ml-auto shrink-0 text-[10px] text-fg-secondary">
                           {String(m.index)}–{String(m.end)}
                         </span>
                       </div>
@@ -299,7 +299,7 @@ export default function RegexTester() {
                       {m.namedGroups && (
                         <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 pl-6">
                           {Object.entries(m.namedGroups).map(([name, val]) => (
-                            <span key={name} className="text-[10px] text-fg-muted">
+                            <span key={name} className="text-[10px] text-fg-secondary">
                               <span className="text-accent-400">{name}</span>:{' '}
                               <span className="font-mono text-fg-secondary">
                                 {val !== undefined ? `"${val}"` : 'undefined'}
@@ -311,7 +311,7 @@ export default function RegexTester() {
                       {!m.namedGroups && m.groups.length > 0 && (
                         <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 pl-6">
                           {m.groups.map((g, gi) => (
-                            <span key={gi} className="text-[10px] text-fg-muted">
+                            <span key={gi} className="text-[10px] text-fg-secondary">
                               <span className="text-accent-400">${String(gi + 1)}</span>:{' '}
                               <span className="font-mono text-fg-secondary">
                                 {g !== undefined ? `"${g}"` : 'undefined'}

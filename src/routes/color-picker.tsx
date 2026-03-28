@@ -148,7 +148,7 @@ export default function ColorPicker() {
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <Pipette className="h-4 w-4 text-fg-tertiary" aria-hidden="true" />
+        <Pipette className="h-4 w-4 text-fg-secondary" aria-hidden="true" />
         <h1 className="text-sm font-semibold text-fg">Color Picker</h1>
 
         <div className="flex-1" />
@@ -156,7 +156,7 @@ export default function ColorPicker() {
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-3 text-xs text-fg-tertiary"
+          className="h-7 px-3 text-xs text-fg-secondary"
           onClick={clear}
           disabled={!textInput && !color}
         >
@@ -164,7 +164,7 @@ export default function ColorPicker() {
         </Button>
         <button
           type="button"
-          className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
+          className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -228,7 +228,7 @@ export default function ColorPicker() {
                   {inputError}
                 </p>
               ) : (
-                <p className="text-xs text-fg-muted">
+                <p className="text-xs text-fg-secondary">
                   Accepts hex, rgb(), hsl(), or oklch(). Click the swatch to use the native picker.
                 </p>
               )}
@@ -251,7 +251,7 @@ export default function ColorPicker() {
           </section>
         ) : (
           !inputError && (
-            <p className="text-xs text-fg-muted">
+            <p className="text-xs text-fg-secondary">
               Enter a color above or click the swatch to get started.
             </p>
           )

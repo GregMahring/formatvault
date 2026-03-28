@@ -237,8 +237,10 @@ export default function XmlFormatter() {
                   onClick={() => {
                     fmt.setIndent(n);
                   }}
+                  aria-label={`${String(n)} spaces`}
+                  aria-pressed={fmt.indent === n}
                   className={cn(
-                    'rounded px-2 py-0.5 text-xs transition-colors',
+                    'min-h-6 min-w-[1.75rem] rounded px-2 py-1 text-xs transition-colors',
                     fmt.indent === n
                       ? 'bg-surface-elevated text-fg'
                       : 'text-fg-secondary hover:text-fg'
@@ -247,7 +249,9 @@ export default function XmlFormatter() {
                   {n}
                 </button>
               ))}
-              <span className="px-1 text-xs text-fg-tertiary">spaces</span>
+              <span className="px-1 text-xs text-fg-secondary" aria-hidden="true">
+                spaces
+              </span>
             </div>
           )}
 

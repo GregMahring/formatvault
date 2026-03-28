@@ -124,7 +124,7 @@ function buildTheme(p: typeof dark, isDark: boolean): Extension {
       },
       '.cm-activeLineGutter': { backgroundColor: p.bgLine, color: p.gutterActiveFg },
       '.cm-placeholder': {
-        color: p.fgMuted,
+        color: p.fgSecondary,
         fontStyle: 'italic',
       },
       '.cm-foldPlaceholder': {

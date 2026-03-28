@@ -40,9 +40,9 @@ function CopyButton({ text, label }: { text: string; label: string }) {
       {copied ? (
         <Check className="h-3 w-3 text-green-400" aria-hidden="true" />
       ) : (
-        <Copy className="h-3 w-3 text-fg-tertiary" aria-hidden="true" />
+        <Copy className="h-3 w-3 text-fg-secondary" aria-hidden="true" />
       )}
-      <span className={cn('text-fg-tertiary', copied && 'text-green-400')}>
+      <span className={cn('text-fg-secondary', copied && 'text-green-400')}>
         {copied ? 'Copied!' : 'Copy'}
       </span>
     </button>
@@ -121,7 +121,7 @@ export default function HashGenerator() {
                 'rounded px-2.5 py-1 text-xs font-medium transition-colors',
                 hash.algorithm === value
                   ? 'bg-accent-600/30 text-accent-300 ring-1 ring-accent-500/50'
-                  : 'text-fg-tertiary hover:bg-surface-elevated hover:text-fg'
+                  : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg'
               )}
             >
               {label}
@@ -150,7 +150,7 @@ export default function HashGenerator() {
                 'rounded px-2.5 py-1 text-xs font-medium capitalize transition-colors',
                 hash.inputMode === mode
                   ? 'bg-surface-elevated text-fg'
-                  : 'text-fg-tertiary hover:bg-surface-elevated hover:text-fg'
+                  : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg'
               )}
             >
               {mode}
@@ -163,7 +163,7 @@ export default function HashGenerator() {
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-3 text-xs text-fg-tertiary"
+          className="h-7 px-3 text-xs text-fg-secondary"
           onClick={hash.clear}
           disabled={!hash.input && !hash.result}
         >
@@ -172,7 +172,7 @@ export default function HashGenerator() {
 
         <button
           type="button"
-          className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
+          className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -199,7 +199,7 @@ export default function HashGenerator() {
         {/* Input section */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-fg-secondary">
               {hash.inputMode === 'text' ? 'Input text' : 'File'}
             </span>
           </div>
@@ -228,14 +228,14 @@ export default function HashGenerator() {
           {hash.inputMode === 'file' && hash.fileName && (
             <div className="flex items-center gap-2 text-xs">
               <span className="text-fg-secondary">{hash.fileName}</span>
-              {hash.isHashing && <span className="text-fg-muted">Hashing…</span>}
+              {hash.isHashing && <span className="text-fg-secondary">Hashing…</span>}
             </div>
           )}
         </div>
 
         {/* Output section */}
         {hash.isHashing && hash.result === null && (
-          <div className="flex items-center gap-2 text-xs text-fg-tertiary">
+          <div className="flex items-center gap-2 text-xs text-fg-secondary">
             <span className="inline-block h-3 w-3 animate-spin rounded-full border border-surface-elevated border-t-accent-500" />
             Hashing…
           </div>
@@ -245,7 +245,7 @@ export default function HashGenerator() {
           <div className="flex flex-col gap-0 overflow-hidden rounded-md border border-edge">
             {/* Hex row */}
             <div className="flex items-center gap-3 border-b border-edge bg-surface-raised/60 px-4 py-3">
-              <span className="w-14 shrink-0 text-[11px] font-semibold uppercase tracking-wide text-fg-tertiary">
+              <span className="w-14 shrink-0 text-[11px] font-semibold uppercase tracking-wide text-fg-secondary">
                 Hex
               </span>
               <span
@@ -259,7 +259,7 @@ export default function HashGenerator() {
 
             {/* Base64 row */}
             <div className="flex items-center gap-3 bg-surface-raised/40 px-4 py-3">
-              <span className="w-14 shrink-0 text-[11px] font-semibold uppercase tracking-wide text-fg-tertiary">
+              <span className="w-14 shrink-0 text-[11px] font-semibold uppercase tracking-wide text-fg-secondary">
                 Base64
               </span>
               <span
@@ -275,8 +275,8 @@ export default function HashGenerator() {
 
         {!hash.isHashing && !hash.result && hash.inputMode === 'text' && !hash.input && (
           <div className="flex flex-col items-center gap-1 py-8 text-center">
-            <p className="text-sm text-fg-muted">Type text above to generate a hash</p>
-            <p className="text-xs text-fg-muted">
+            <p className="text-sm text-fg-secondary">Type text above to generate a hash</p>
+            <p className="text-xs text-fg-secondary">
               Supports MD5, SHA-256, and SHA-512 — shows hex and Base64 output
             </p>
           </div>
