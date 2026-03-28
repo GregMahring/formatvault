@@ -19,12 +19,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         {/* Restore persisted theme before paint to avoid flash of wrong theme */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-        {/* Brand fonts — JetBrains Mono, DM Sans, Geist */}
+        {/* Brand fonts — JetBrains Mono, DM Sans, Geist
+            Loaded non-blocking: preload hints the download, media="print" prevents render-blocking,
+            onLoad swaps to media="all" once the CSS arrives. */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
+          rel="preload"
+          as="style"
+          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Geist:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+        />
+        <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Geist:wght@300;400;500;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap"
+          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Geist:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+          media="print"
+          onLoad={(e) => {
+            (e.currentTarget as HTMLLinkElement).media = 'all';
+          }}
         />
         {/* Plausible Analytics — privacy-respecting, no cookies, no PII */}
         <script defer data-domain="formatvault.dev" src="https://plausible.io/js/script.js" />
