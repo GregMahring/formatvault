@@ -154,7 +154,7 @@ export function buildMeta({
     { name: 'twitter:description', content: description },
     { name: 'twitter:image', content: OG_IMAGE },
 
-    // JSON-LD structured data
-    { tagName: 'script', type: 'application/ld+json', children: JSON.stringify(jsonLd) },
+    // JSON-LD structured data — React Router v7 renders this as <script type="application/ld+json">
+    { 'script:ld+json': jsonLd },
   ];
 }
