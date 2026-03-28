@@ -195,7 +195,7 @@ export default function XmlFormatter() {
 
   return (
     <>
-      <div className="flex h-full flex-col">
+      <div className="flex flex-col">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
           <h1 className="text-sm font-semibold text-fg">XML Formatter</h1>
@@ -359,14 +359,14 @@ export default function XmlFormatter() {
         )}
 
         {/* Main area */}
-        <div className="flex min-h-0 flex-1">
+        <div className="h-[calc(100vh-260px)] min-h-[480px]">
           {showDiff ? (
-            <DiffPanel original={fmt.input} modified={fmt.output} className="flex-1" />
+            <DiffPanel original={fmt.input} modified={fmt.output} className="h-full" />
           ) : (
             <SplitPane
               leftLabel="XML input editor"
               rightLabel="Formatted output"
-              className="flex-1"
+              className="h-full"
             >
               {/* Left: input */}
               <div className="flex h-full flex-col">
@@ -387,7 +387,7 @@ export default function XmlFormatter() {
                   label="XML input"
                   placeholder="Paste or type XML here…"
                   className="flex-1 rounded-none border-0"
-                  minHeight="100%"
+                  height="100%"
                 />
               </div>
 
@@ -409,7 +409,7 @@ export default function XmlFormatter() {
                   readOnly
                   placeholder="Formatted output will appear here…"
                   className="flex-1 rounded-none border-0"
-                  minHeight="100%"
+                  height="100%"
                 />
               </div>
             </SplitPane>

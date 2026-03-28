@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import ReactCodeMirror, { type Extension } from '@uiw/react-codemirror';
-import { oneDark } from '@codemirror/theme-one-dark';
 import { EditorView } from '@codemirror/view';
 import { cn } from '@/lib/utils';
 import { useSettingsStore } from '@/stores/settingsStore';
+import { formatvaultDark, formatvaultLight } from '@/lib/editorTheme';
 
 export type EditorLanguage =
   | 'json'
@@ -24,6 +24,7 @@ export interface CodeEditorProps {
   className?: string;
   /** aria-label for the editor region */
   label: string;
+  height?: string;
   minHeight?: string;
   maxHeight?: string;
 }
@@ -76,7 +77,8 @@ export function CodeEditor({
   placeholder,
   className,
   label,
-  minHeight = '200px',
+  height,
+  minHeight,
   maxHeight,
 }: CodeEditorProps) {
   const { editorFontSize, theme } = useSettingsStore();
@@ -100,8 +102,6 @@ export function CodeEditor({
           fontFamily: 'var(--font-mono)',
           fontSize: `${String(editorFontSize)}px`,
         },
-        '.cm-content': { padding: '8px 0' },
-        '.cm-focused': { outline: 'none' },
       }),
       EditorView.contentAttributes.of({ 'aria-label': label }),
     ];
@@ -119,17 +119,23 @@ export function CodeEditor({
 
   return (
     <div
-      className={cn('relative overflow-hidden rounded-md border border-edge bg-surface', className)}
+      className={cn(
+        'relative overflow-hidden rounded-md border border-edge bg-surface-raised',
+        className
+      )}
       role="group"
       aria-label={label}
     >
       <ReactCodeMirror
         value={value}
         onChange={readOnly ? undefined : handleChange}
-        theme={theme === 'dark' ? oneDark : 'light'}
+        theme={theme === 'dark' ? formatvaultDark : formatvaultLight}
         extensions={extensions}
         placeholder={placeholder}
         readOnly={readOnly}
+        height={height}
+        minHeight={minHeight}
+        maxHeight={maxHeight}
         basicSetup={{
           lineNumbers: true,
           foldGutter: true,
@@ -138,10 +144,6 @@ export function CodeEditor({
           bracketMatching: true,
           closeBrackets: !readOnly,
           indentOnInput: !readOnly,
-        }}
-        style={{
-          minHeight,
-          ...(maxHeight ? { maxHeight, overflow: 'auto' } : {}),
         }}
       />
     </div>

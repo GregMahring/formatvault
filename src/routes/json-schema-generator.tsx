@@ -149,7 +149,7 @@ export default function JsonSchemaGenerator() {
   const hasError = schema.error !== null;
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <h1 className="text-sm font-semibold text-fg">JSON Schema</h1>
@@ -259,11 +259,11 @@ export default function JsonSchemaGenerator() {
       )}
 
       {/* Main area */}
-      <div className="flex min-h-0 flex-1">
+      <div className="h-[calc(100vh-260px)] min-h-[480px]">
         <SplitPane
           leftLabel="JSON input editor"
           rightLabel={schema.mode === 'generate' ? 'Generated JSON Schema' : 'JSON Schema editor'}
-          className="flex-1"
+          className="h-full"
         >
           {/* Left: JSON input */}
           <div className="flex h-full flex-col">
@@ -279,7 +279,7 @@ export default function JsonSchemaGenerator() {
               label="JSON input"
               placeholder="Paste JSON here to generate a schema..."
               className="flex-1 rounded-none border-0"
-              minHeight="100%"
+              height="100%"
             />
           </div>
 
@@ -306,7 +306,7 @@ export default function JsonSchemaGenerator() {
                 readOnly
                 placeholder="JSON Schema will appear here..."
                 className="flex-1 rounded-none border-0"
-                minHeight="100%"
+                height="100%"
               />
             ) : (
               /* Validate mode: editable schema + results */

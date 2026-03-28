@@ -188,7 +188,7 @@ export function ConverterLayout({
 
   return (
     <>
-      <div className="flex h-full flex-col">
+      <div className="flex flex-col">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
           <h1 className="text-sm font-semibold text-gray-200">{title}</h1>
@@ -277,11 +277,11 @@ export function ConverterLayout({
         )}
 
         {/* Split pane */}
-        <div className="flex min-h-0 flex-1">
+        <div className="h-[calc(100vh-260px)] min-h-[480px]">
           <SplitPane
             leftLabel={`${fromLanguage.toUpperCase()} input editor`}
             rightLabel={`${toLanguage.toUpperCase()} output`}
-            className="flex-1"
+            className="h-full"
           >
             {/* Left: input */}
             <div className="flex h-full flex-col">
@@ -310,7 +310,7 @@ export function ConverterLayout({
                 label={`${fromLanguage.toUpperCase()} input`}
                 placeholder={fromPlaceholder ?? `Paste or type ${fromLanguage.toUpperCase()} here…`}
                 className="flex-1 rounded-none border-0"
-                minHeight="100%"
+                height="100%"
               />
             </div>
 
@@ -337,7 +337,7 @@ export function ConverterLayout({
                   toPlaceholder ?? `${toLanguage.toUpperCase()} output will appear here…`
                 }
                 className="flex-1 rounded-none border-0"
-                minHeight="100%"
+                height="100%"
               />
             </div>
           </SplitPane>

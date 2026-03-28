@@ -157,7 +157,7 @@ export default function TomlFormatter() {
   const isValid = !hasError && fmt.input.trim().length > 0;
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <h1 className="text-sm font-semibold text-fg">TOML Formatter</h1>
@@ -240,11 +240,11 @@ export default function TomlFormatter() {
         </div>
       )}
 
-      <div className="flex min-h-0 flex-1">
+      <div className="h-[calc(100vh-260px)] min-h-[480px]">
         <SplitPane
           leftLabel="TOML input editor"
           rightLabel={showTree ? 'Tree view' : 'Formatted output'}
-          className="flex-1"
+          className="h-full"
         >
           <div className="flex h-full flex-col">
             <div className="flex items-center justify-between border-b border-edge px-3 py-1">
@@ -264,7 +264,7 @@ export default function TomlFormatter() {
               label="TOML input"
               placeholder="Paste or type TOML here…"
               className="flex-1 rounded-none border-0"
-              minHeight="100%"
+              height="100%"
             />
           </div>
 
@@ -288,7 +288,7 @@ export default function TomlFormatter() {
                 readOnly
                 placeholder="Formatted output will appear here…"
                 className="flex-1 rounded-none border-0"
-                minHeight="100%"
+                height="100%"
               />
             </div>
           )}

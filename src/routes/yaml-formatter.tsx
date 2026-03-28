@@ -222,7 +222,7 @@ export default function YamlFormatter() {
 
   return (
     <>
-      <div className="flex h-full flex-col">
+      <div className="flex flex-col">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
           <h1 className="text-sm font-semibold text-fg">YAML Formatter</h1>
@@ -386,16 +386,16 @@ export default function YamlFormatter() {
           </div>
         )}
 
-        <div className="flex min-h-0 flex-1">
+        <div className="h-[calc(100vh-260px)] min-h-[480px]">
           {showDiff ? (
-            <DiffPanel original={fmt.input} modified={fmt.output} className="flex-1" />
+            <DiffPanel original={fmt.input} modified={fmt.output} className="h-full" />
           ) : (
             <SplitPane
               leftLabel="YAML input editor"
               rightLabel={
                 showTree ? 'Tree view' : showMarkdown ? 'Markdown preview' : 'Formatted output'
               }
-              className="flex-1"
+              className="h-full"
             >
               <div className="flex h-full flex-col">
                 <div className="flex items-center justify-between border-b border-edge px-3 py-1">
@@ -415,7 +415,7 @@ export default function YamlFormatter() {
                   label="YAML input"
                   placeholder="Paste or type YAML here…"
                   className="flex-1 rounded-none border-0"
-                  minHeight="100%"
+                  height="100%"
                 />
               </div>
 
@@ -441,7 +441,7 @@ export default function YamlFormatter() {
                     readOnly
                     placeholder="Formatted output will appear here…"
                     className="flex-1 rounded-none border-0"
-                    minHeight="100%"
+                    height="100%"
                   />
                 </div>
               )}

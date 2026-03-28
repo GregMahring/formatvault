@@ -42,7 +42,7 @@ export function ToolPageContent({
   toolName,
 }: ToolPageContentProps) {
   return (
-    <div className="border-t border-edge bg-surface-raised">
+    <div className="border-t border-edge bg-surface">
       <div className="mx-auto max-w-4xl space-y-10 px-4 py-12 sm:px-6">
         <Section title={`Why use a private ${toolName}?`}>{why}</Section>
 
