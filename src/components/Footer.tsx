@@ -9,26 +9,20 @@ export function Footer({ className }: FooterProps) {
   return (
     <footer
       className={cn(
-        'flex h-10 items-center justify-between border-t border-edge bg-surface px-4 text-xs text-fg-tertiary',
+        'flex h-10 items-center justify-between border-t border-edge bg-surface px-4 text-xs text-fg-secondary',
         className
       )}
     >
       <div className="flex items-center gap-4">
         <p>
-          <span className="text-fg-muted">🔒</span>{' '}
-          <strong className="font-medium text-fg-secondary">No data leaves your browser.</strong>{' '}
-          All processing is 100% client-side.
+          <span aria-hidden="true">🔒</span>{' '}
+          <strong className="font-medium text-fg">No data leaves your browser.</strong> All
+          processing is 100% client-side.
         </p>
-        <NavLink
-          to="/about"
-          className="shrink-0 text-fg-muted transition-colors hover:text-fg-secondary"
-        >
+        <NavLink to="/about" className="shrink-0 transition-colors hover:text-fg">
           About
         </NavLink>
-        <NavLink
-          to="/privacy"
-          className="shrink-0 text-fg-muted transition-colors hover:text-fg-secondary"
-        >
+        <NavLink to="/privacy" className="shrink-0 transition-colors hover:text-fg">
           Privacy
         </NavLink>
       </div>
