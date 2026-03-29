@@ -56,7 +56,7 @@ export function KeyboardShortcutsModal({
           <h2 className="flex-1 text-sm font-semibold text-fg">Keyboard shortcuts</h2>
           <button
             type="button"
-            className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
+            className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500"
             onClick={onClose}
             aria-label="Close shortcuts"
           >

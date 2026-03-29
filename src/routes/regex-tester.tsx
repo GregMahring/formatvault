@@ -121,7 +121,7 @@ export default function RegexTester() {
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-fg">Regex Tester</h1>
+        <h1 className="text-sm font-semibold text-brand-indigo">Regex Tester</h1>
         <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
         {/* Pattern input with / decorations */}
@@ -140,7 +140,7 @@ export default function RegexTester() {
               'w-48 rounded-none border-b bg-transparent px-1 py-0.5 font-mono text-sm focus:outline-none',
               result.error
                 ? 'border-red-600 text-red-300 placeholder-red-900'
-                : 'border-edge-emphasis text-fg placeholder-fg-muted focus:border-accent-500'
+                : 'border-edge-emphasis text-fg placeholder:text-fg-secondary focus:border-accent-500'
             )}
           />
           <span className="select-none text-sm text-fg-secondary">/</span>
@@ -218,13 +218,13 @@ export default function RegexTester() {
       <div className="flex min-h-0 flex-1 flex-col md:flex-row">
         {/* Left pane — test string */}
         <div className="flex w-full flex-col border-b border-r-0 border-edge md:w-1/2 md:border-b-0 md:border-r">
-          <div className="flex items-center border-b border-edge px-3 py-1.5">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-fg-secondary">
+          <div className="flex h-8 shrink-0 items-center border-b border-edge px-3">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
               Test string
             </span>
           </div>
           <textarea
-            className="flex-1 resize-none bg-surface p-4 font-mono text-sm text-fg placeholder-fg-muted focus:outline-none"
+            className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg placeholder:text-fg-secondary focus:outline-none"
             placeholder="Paste or type text to test against…"
             value={input}
             onChange={(e) => {
@@ -242,9 +242,9 @@ export default function RegexTester() {
 
         {/* Right pane — match results */}
         <div className="flex w-full flex-col md:w-1/2">
-          <div className="flex items-center justify-between border-b border-edge px-3 py-1.5">
+          <div className="flex h-8 shrink-0 items-center justify-between border-b border-edge px-3">
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-secondary">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
                 Match results
               </span>
               {hasPattern && hasInput && !result.error && matchCount > 0 && (
@@ -256,7 +256,7 @@ export default function RegexTester() {
             <PaneActions content={copyContent} downloadFilename="regex-matches.txt" />
           </div>
 
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto bg-surface-raised">
             {/* State 1: no pattern entered */}
             {!hasPattern && (
               <div className="flex h-full items-center justify-center text-xs text-fg-secondary">

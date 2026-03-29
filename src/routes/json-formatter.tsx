@@ -276,7 +276,7 @@ export default function JsonFormatter() {
       <div className="flex flex-col">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-          <h1 className="text-sm font-semibold text-fg">JSON Formatter</h1>
+          <h1 className="text-sm font-semibold text-brand-indigo">JSON Formatter</h1>
 
           <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
@@ -459,7 +459,7 @@ export default function JsonFormatter() {
           {/* Shortcuts help */}
           <button
             type="button"
-            className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
+            className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
             onClick={() => {
               setShowShortcuts(true);
             }}
@@ -541,7 +541,7 @@ export default function JsonFormatter() {
               onKeyDown={(e) => {
                 if (e.key === 'Enter') fmt.runQuery();
               }}
-              className="flex-1 rounded border border-edge-emphasis bg-surface-raised px-2 py-1 font-mono text-xs text-fg placeholder-fg-muted focus:border-accent-500 focus:outline-none"
+              className="flex-1 rounded border border-edge-emphasis bg-surface-raised px-2 py-1 font-mono text-xs text-fg placeholder:text-fg-secondary focus:border-accent-500 focus:outline-none"
               placeholder="$.store.book[*].title"
             />
             <Button size="sm" variant="outline" className="h-7 px-3 text-xs" onClick={fmt.runQuery}>
@@ -565,7 +565,7 @@ export default function JsonFormatter() {
               {/* Left: input */}
               <div className="flex h-full flex-col">
                 <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                  <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+                  <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
                     Input
                   </span>
                   <div className="flex items-center gap-1">
@@ -607,7 +607,7 @@ export default function JsonFormatter() {
               ) : (
                 <div className="flex h-full flex-col">
                   <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                    <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+                    <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
                       Output
                     </span>
                     <div className="flex items-center gap-1">

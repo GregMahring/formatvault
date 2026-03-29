@@ -262,7 +262,7 @@ export default function Home() {
               }}
               onPaste={handlePaste}
               placeholder="Paste any data here — we'll detect the format automatically…"
-              className="h-24 w-full resize-none rounded-lg border border-edge-emphasis bg-surface-raised px-4 py-3 font-mono text-sm text-fg placeholder:text-fg-muted focus:border-[#5555cc] focus:outline-none focus:ring-1 focus:ring-[#5555cc]"
+              className="h-24 w-full resize-none rounded-lg border border-edge-emphasis bg-surface-raised px-4 py-3 font-mono text-sm text-fg placeholder:text-fg-secondary focus:border-[#5555cc] focus:outline-none focus:ring-1 focus:ring-[#5555cc]"
               spellCheck={false}
               aria-label="Paste data for auto-detection"
             />

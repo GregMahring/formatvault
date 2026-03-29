@@ -137,7 +137,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                 setQuery(e.target.value);
               }}
               placeholder="Type a command..."
-              className="h-11 w-full bg-transparent text-sm text-fg placeholder:text-fg-muted focus:outline-none"
+              className="h-11 w-full bg-transparent text-sm text-fg placeholder:text-fg-secondary focus:outline-none"
               // eslint-disable-next-line jsx-a11y/no-autofocus -- intentional: palette must grab focus on open
               autoFocus
               autoComplete="off"

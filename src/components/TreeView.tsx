@@ -40,7 +40,7 @@ export function TreeView({ data, className }: TreeViewProps) {
               tree.setSearchQuery(e.target.value);
             }}
             placeholder="Search keys and values..."
-            className="w-full rounded border border-edge-emphasis bg-surface-raised py-1 pl-7 pr-2 text-xs text-fg placeholder:text-fg-muted focus:border-accent-500 focus:outline-none"
+            className="w-full rounded border border-edge-emphasis bg-surface-raised py-1 pl-7 pr-2 text-xs text-fg placeholder:text-fg-secondary focus:border-accent-500 focus:outline-none"
             aria-label="Search tree"
           />
         </div>
@@ -48,7 +48,7 @@ export function TreeView({ data, className }: TreeViewProps) {
         <button
           type="button"
           onClick={tree.expandAll}
-          className="rounded p-1 text-fg-muted hover:bg-surface-elevated hover:text-fg-secondary"
+          className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
           title="Expand all"
           aria-label="Expand all nodes"
         >
@@ -58,7 +58,7 @@ export function TreeView({ data, className }: TreeViewProps) {
         <button
           type="button"
           onClick={tree.collapseAll}
-          className="rounded p-1 text-fg-muted hover:bg-surface-elevated hover:text-fg-secondary"
+          className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
           title="Collapse all"
           aria-label="Collapse all nodes"
         >

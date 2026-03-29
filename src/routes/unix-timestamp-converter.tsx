@@ -191,7 +191,7 @@ export default function UnixTimestampConverter() {
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <Clock className="h-4 w-4 text-fg-secondary" aria-hidden="true" />
-        <h1 className="text-sm font-semibold text-fg">Unix Timestamp Converter</h1>
+        <h1 className="text-sm font-semibold text-brand-indigo">Unix Timestamp Converter</h1>
 
         <div className="flex-1" />
 
@@ -221,7 +221,7 @@ export default function UnixTimestampConverter() {
       <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-6">
         {/* ── Timestamp → Date ─────────────────────────────────── */}
         <section>
-          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
+          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-brand-cyan">
             Timestamp → Date
           </h2>
 
@@ -236,7 +236,7 @@ export default function UnixTimestampConverter() {
                 setForceUnit(undefined);
               }}
               placeholder="e.g. 1735689600"
-              className="w-52 rounded border border-edge-emphasis bg-surface-raised px-3 py-1.5 font-mono text-sm text-fg placeholder-fg-muted focus:border-accent-500 focus:outline-none"
+              className="w-52 rounded border border-edge-emphasis bg-surface-raised px-3 py-1.5 font-mono text-sm text-fg placeholder:text-fg-secondary focus:border-accent-500 focus:outline-none"
               aria-label="Unix timestamp"
               spellCheck={false}
             />
@@ -323,7 +323,7 @@ export default function UnixTimestampConverter() {
 
         {/* ── Date → Timestamp ─────────────────────────────────── */}
         <section>
-          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
+          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-brand-cyan">
             Date → Timestamp
           </h2>
 

@@ -33,18 +33,19 @@ function CopyButton({ text, label }: { text: string; label: string }) {
         void copy(text);
       }}
       disabled={!text}
-      className="flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] transition-colors hover:bg-surface-elevated disabled:opacity-30"
+      className={cn(
+        'flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] transition-colors hover:bg-surface-elevated disabled:opacity-30',
+        copied ? 'text-green-400' : 'text-fg-secondary hover:text-fg'
+      )}
       aria-label={`Copy ${label}`}
       title={`Copy ${label}`}
     >
       {copied ? (
-        <Check className="h-3 w-3 text-green-400" aria-hidden="true" />
+        <Check className="h-3 w-3" aria-hidden="true" />
       ) : (
-        <Copy className="h-3 w-3 text-fg-secondary" aria-hidden="true" />
+        <Copy className="h-3 w-3" aria-hidden="true" />
       )}
-      <span className={cn('text-fg-secondary', copied && 'text-green-400')}>
-        {copied ? 'Copied!' : 'Copy'}
-      </span>
+      {copied ? 'Copied!' : 'Copy'}
     </button>
   );
 }
@@ -99,7 +100,7 @@ export default function HashGenerator() {
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-fg">Hash Generator</h1>
+        <h1 className="text-sm font-semibold text-brand-indigo">Hash Generator</h1>
         <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
         {/* Algorithm tabs */}
@@ -199,7 +200,7 @@ export default function HashGenerator() {
         {/* Input section */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-fg-secondary">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
               {hash.inputMode === 'text' ? 'Input text' : 'File'}
             </span>
           </div>
@@ -213,7 +214,7 @@ export default function HashGenerator() {
               placeholder="Type or paste text to hash…"
               spellCheck={false}
               aria-label="Text input to hash"
-              className="h-32 w-full resize-none rounded-md border border-edge bg-surface-raised p-3 font-mono text-sm text-fg placeholder-fg-muted focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
+              className="h-32 w-full resize-none rounded-md border border-edge bg-surface-raised p-3 font-mono text-sm text-fg placeholder:text-fg-secondary focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
             />
           ) : (
             /* Full-area drag-and-drop zone for file upload */

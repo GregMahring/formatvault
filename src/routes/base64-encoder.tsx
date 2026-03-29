@@ -151,7 +151,7 @@ export default function Base64Encoder() {
       <div className="flex h-full flex-col">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-          <h1 className="text-sm font-semibold text-fg">Base64 Encoder / Decoder</h1>
+          <h1 className="text-sm font-semibold text-brand-indigo">Base64 Encoder / Decoder</h1>
           <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
           {/* Mode toggle */}
@@ -165,7 +165,7 @@ export default function Base64Encoder() {
                 }}
                 className={cn(
                   'rounded px-3 py-1 text-xs font-medium capitalize transition-colors',
-                  mode === m ? 'bg-surface-elevated text-fg' : 'text-fg-tertiary hover:text-fg'
+                  mode === m ? 'bg-surface-elevated text-fg' : 'text-fg-secondary hover:text-fg'
                 )}
               >
                 {m}
@@ -185,7 +185,7 @@ export default function Base64Encoder() {
                   }}
                   className={cn(
                     'rounded px-2 py-0.5 text-xs transition-colors',
-                    !urlSafe ? 'bg-surface-elevated text-fg' : 'text-fg-tertiary hover:text-fg'
+                    !urlSafe ? 'bg-surface-elevated text-fg' : 'text-fg-secondary hover:text-fg'
                   )}
                 >
                   Standard
@@ -197,7 +197,7 @@ export default function Base64Encoder() {
                   }}
                   className={cn(
                     'rounded px-2 py-0.5 text-xs transition-colors',
-                    urlSafe ? 'bg-surface-elevated text-fg' : 'text-fg-tertiary hover:text-fg'
+                    urlSafe ? 'bg-surface-elevated text-fg' : 'text-fg-secondary hover:text-fg'
                   )}
                 >
                   URL-safe
@@ -242,7 +242,7 @@ export default function Base64Encoder() {
 
           <button
             type="button"
-            className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
+            className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
             onClick={() => {
               setShowShortcuts(true);
             }}
@@ -268,13 +268,13 @@ export default function Base64Encoder() {
         <div className="flex min-h-0 flex-1 flex-col md:flex-row">
           {/* Input */}
           <div className="flex w-full flex-col border-b border-r-0 border-edge md:w-1/2 md:border-b-0 md:border-r">
-            <div className="flex items-center border-b border-edge px-3 py-1.5">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+            <div className="flex h-8 shrink-0 items-center border-b border-edge px-3">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
                 {mode === 'encode' ? 'Plain text' : 'Base64'}
               </span>
             </div>
             <textarea
-              className="flex-1 resize-none bg-surface p-4 font-mono text-sm text-fg placeholder-fg-muted focus:outline-none"
+              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg placeholder:text-fg-secondary focus:outline-none"
               placeholder={
                 mode === 'encode' ? 'Paste or type text to encode…' : 'Paste Base64 to decode…'
               }
@@ -296,8 +296,8 @@ export default function Base64Encoder() {
 
           {/* Output */}
           <div className="flex w-full flex-col md:w-1/2">
-            <div className="flex items-center justify-between border-b border-edge px-3 py-1.5">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+            <div className="flex h-8 shrink-0 items-center justify-between border-b border-edge px-3">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
                 {mode === 'encode' ? 'Base64' : 'Plain text'}
               </span>
               <div className="flex items-center gap-1">
@@ -309,7 +309,7 @@ export default function Base64Encoder() {
               </div>
             </div>
             <textarea
-              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg-secondary placeholder-fg-muted focus:outline-none"
+              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg placeholder:text-fg-secondary focus:outline-none"
               placeholder={mode === 'encode' ? 'Encoded output…' : 'Decoded output…'}
               value={pii.displayContent}
               readOnly

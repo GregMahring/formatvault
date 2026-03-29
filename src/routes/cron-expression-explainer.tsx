@@ -380,7 +380,7 @@ function CronBuilder({
                     set({ [key]: e.target.value });
                   }}
                   placeholder={placeholder}
-                  className="w-full rounded border border-edge-emphasis bg-surface-elevated px-2 py-1 font-mono text-sm text-fg placeholder-fg-muted focus:border-accent-500 focus:outline-none"
+                  className="w-full rounded border border-edge-emphasis bg-surface-elevated px-2 py-1 font-mono text-sm text-fg placeholder:text-fg-secondary focus:border-accent-500 focus:outline-none"
                   spellCheck={false}
                 />
               </div>
@@ -463,7 +463,7 @@ export default function CronExpressionExplainer() {
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <CalendarClock className="h-4 w-4 text-fg-secondary" aria-hidden="true" />
-        <h1 className="text-sm font-semibold text-fg">Cron Expression Explainer</h1>
+        <h1 className="text-sm font-semibold text-brand-indigo">Cron Expression Explainer</h1>
 
         {/* Tab toggle */}
         <div className="ml-3 flex rounded border border-edge bg-surface-raised p-0.5">
@@ -515,7 +515,7 @@ export default function CronExpressionExplainer() {
         {/* ── Explain tab ───────────────────────────────────────────── */}
         {activeTab === 'explain' && (
           <section>
-            <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
+            <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-brand-cyan">
               Expression
             </h2>
 
@@ -531,7 +531,7 @@ export default function CronExpressionExplainer() {
                     setExplainInput(e.target.value);
                   }}
                   placeholder="* * * * *"
-                  className="w-64 rounded-none rounded-r border border-edge-emphasis bg-surface-raised px-3 py-1.5 font-mono text-sm text-fg placeholder-fg-muted focus:border-accent-500 focus:outline-none"
+                  className="w-64 rounded-none rounded-r border border-edge-emphasis bg-surface-raised px-3 py-1.5 font-mono text-sm text-fg placeholder:text-fg-secondary focus:border-accent-500 focus:outline-none"
                   aria-label="Cron expression"
                   spellCheck={false}
                   autoComplete="off"

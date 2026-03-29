@@ -191,7 +191,7 @@ export function ConverterLayout({
       <div className="flex flex-col">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-          <h1 className="text-sm font-semibold text-gray-200">{title}</h1>
+          <h1 className="text-sm font-semibold text-brand-indigo">{title}</h1>
 
           {toolbarSlot && (
             <>
@@ -230,7 +230,7 @@ export function ConverterLayout({
           <Button
             size="sm"
             variant="ghost"
-            className="h-7 px-3 text-xs text-fg-tertiary"
+            className="h-7 px-3 text-xs text-fg-secondary"
             onClick={clear}
             disabled={!input.trim()}
           >
@@ -239,7 +239,7 @@ export function ConverterLayout({
 
           <button
             type="button"
-            className="rounded p-1 text-fg-muted hover:bg-surface-elevated hover:text-fg-secondary"
+            className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
             onClick={() => {
               setShowShortcuts(true);
             }}
@@ -286,7 +286,7 @@ export function ConverterLayout({
             {/* Left: input */}
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
                   {fromLanguage.toUpperCase()} Input
                 </span>
                 <FileUploadZone
@@ -317,7 +317,7 @@ export function ConverterLayout({
             {/* Right: output */}
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
                   {toLanguage.toUpperCase()} Output
                 </span>
                 <div className="flex items-center gap-1">

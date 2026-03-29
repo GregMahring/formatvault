@@ -248,10 +248,10 @@ export default function JwtDecoder() {
 
   return (
     <>
-      <div className="flex h-full flex-col">
+      <div className="flex min-h-full flex-col">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-          <h1 className="text-sm font-semibold text-fg">JWT Decoder</h1>
+          <h1 className="text-sm font-semibold text-brand-indigo">JWT Decoder</h1>
           <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
           <Badge variant="outline" className="text-[10px] text-fg-secondary">
             Decode only · no verification
@@ -306,9 +306,9 @@ export default function JwtDecoder() {
 
         <div className="flex min-h-0 flex-1 gap-0 overflow-hidden">
           {/* Left: token input */}
-          <div className="flex w-2/5 flex-col border-r border-edge">
-            <div className="flex items-center justify-between border-b border-edge px-3 py-1.5">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-secondary">
+          <div className="flex w-2/5 flex-col overflow-hidden border-r border-edge">
+            <div className="flex h-8 shrink-0 items-center justify-between border-b border-edge px-3">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
                 JWT Token
               </span>
               <div className="flex items-center gap-1">
@@ -342,7 +342,7 @@ export default function JwtDecoder() {
               </div>
             </div>
             <textarea
-              className="flex-1 resize-none bg-surface p-4 font-mono text-xs text-fg placeholder-fg-muted focus:outline-none"
+              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-xs text-fg placeholder:text-fg-secondary focus:outline-none"
               placeholder="Paste a JWT token here…&#10;&#10;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U"
               value={input}
               onChange={(e) => {
@@ -375,13 +375,13 @@ export default function JwtDecoder() {
 
           {/* Right: decoded output */}
           <div className="flex flex-1 flex-col overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-edge px-4 py-1.5">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-secondary">
+            <div className="flex h-8 shrink-0 items-center justify-between border-b border-edge px-4">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
                 Decoded
               </span>
               <PiiMaskToggle pii={pii} />
             </div>
-            <div className="flex flex-1 flex-col gap-4 p-4">
+            <div className="flex flex-1 flex-col gap-4 p-4 bg-surface-raised">
               {!decoded && !error && (
                 <div className="flex h-full items-center justify-center text-xs text-fg-secondary">
                   Paste a JWT token on the left to decode it

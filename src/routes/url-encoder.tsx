@@ -141,7 +141,7 @@ export default function UrlEncoderPage() {
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-fg">URL Encoder / Decoder</h1>
+        <h1 className="text-sm font-semibold text-brand-indigo">URL Encoder / Decoder</h1>
         <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
         {/* Mode toggle */}
@@ -155,7 +155,7 @@ export default function UrlEncoderPage() {
               }}
               className={cn(
                 'rounded px-3 py-1 text-xs font-medium capitalize transition-colors',
-                mode === m ? 'bg-surface-elevated text-fg' : 'text-fg-tertiary hover:text-fg'
+                mode === m ? 'bg-surface-elevated text-fg' : 'text-fg-secondary hover:text-fg'
               )}
             >
               {m}
@@ -175,7 +175,7 @@ export default function UrlEncoderPage() {
                 }}
                 className={cn(
                   'rounded px-3 py-1 text-xs font-medium transition-colors',
-                  variant === v ? 'bg-surface-elevated text-fg' : 'text-fg-tertiary hover:text-fg'
+                  variant === v ? 'bg-surface-elevated text-fg' : 'text-fg-secondary hover:text-fg'
                 )}
                 title={
                   v === 'component'
@@ -241,7 +241,7 @@ export default function UrlEncoderPage() {
 
         <button
           type="button"
-          className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
+          className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
           onClick={() => {
             setShowShortcuts(true);
           }}
@@ -268,13 +268,13 @@ export default function UrlEncoderPage() {
         <div className="flex min-h-0 flex-1 flex-col md:flex-row">
           {/* Input */}
           <div className="flex w-full flex-col border-b border-r-0 border-edge md:w-1/2 md:border-b-0 md:border-r">
-            <div className="flex items-center border-b border-edge px-3 py-1.5">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+            <div className="flex h-8 shrink-0 items-center border-b border-edge px-3">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
                 {mode === 'encode' ? 'Decoded / plain text' : 'Encoded URL'}
               </span>
             </div>
             <textarea
-              className="flex-1 resize-none bg-surface p-4 font-mono text-sm text-fg placeholder-fg-muted focus:outline-none"
+              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg placeholder:text-fg-secondary focus:outline-none"
               placeholder={
                 mode === 'encode'
                   ? 'Paste or type text to encode…\n\ne.g. hello world & more'
@@ -291,8 +291,8 @@ export default function UrlEncoderPage() {
 
           {/* Output */}
           <div className="flex w-full flex-col md:w-1/2">
-            <div className="flex items-center justify-between border-b border-edge px-3 py-1.5">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+            <div className="flex h-8 shrink-0 items-center justify-between border-b border-edge px-3">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
                 {mode === 'encode' ? 'Encoded URL' : 'Decoded / plain text'}
               </span>
               <div className="flex items-center gap-1">
@@ -304,7 +304,7 @@ export default function UrlEncoderPage() {
               </div>
             </div>
             <textarea
-              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg-secondary placeholder-fg-muted focus:outline-none"
+              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg placeholder:text-fg-secondary focus:outline-none"
               placeholder={mode === 'encode' ? 'Encoded output…' : 'Decoded output…'}
               value={pii.displayContent}
               readOnly

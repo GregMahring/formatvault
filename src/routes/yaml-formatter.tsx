@@ -225,7 +225,7 @@ export default function YamlFormatter() {
       <div className="flex flex-col">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-          <h1 className="text-sm font-semibold text-fg">YAML Formatter</h1>
+          <h1 className="text-sm font-semibold text-brand-indigo">YAML Formatter</h1>
 
           <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
@@ -274,7 +274,7 @@ export default function YamlFormatter() {
               'rounded px-2 py-1 text-xs transition-colors',
               showDiff
                 ? 'bg-accent-700/40 text-accent-300'
-                : 'text-fg-tertiary hover:bg-surface-elevated hover:text-fg'
+                : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg'
             )}
             onClick={() => {
               setShowDiff((v) => !v);
@@ -293,7 +293,7 @@ export default function YamlFormatter() {
               'rounded px-2 py-1 text-xs transition-colors',
               showMarkdown
                 ? 'bg-accent-700/40 text-accent-300'
-                : 'text-fg-tertiary hover:bg-surface-elevated hover:text-fg'
+                : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg'
             )}
             onClick={() => {
               setShowMarkdown((v) => !v);
@@ -313,7 +313,7 @@ export default function YamlFormatter() {
               'rounded px-2 py-1 text-xs transition-colors',
               showTree
                 ? 'bg-accent-700/40 text-accent-300'
-                : 'text-fg-tertiary hover:bg-surface-elevated hover:text-fg'
+                : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg'
             )}
             onClick={() => {
               setShowTree((v) => !v);
@@ -356,7 +356,7 @@ export default function YamlFormatter() {
 
           <button
             type="button"
-            className="rounded p-1 text-fg-tertiary hover:bg-surface-elevated hover:text-fg-secondary"
+            className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
             onClick={() => {
               setShowShortcuts(true);
             }}
@@ -399,7 +399,7 @@ export default function YamlFormatter() {
             >
               <div className="flex h-full flex-col">
                 <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                  <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+                  <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
                     Input
                   </span>
                   <FileUploadZone
@@ -426,7 +426,7 @@ export default function YamlFormatter() {
               ) : (
                 <div className="flex h-full flex-col">
                   <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                    <span className="text-[11px] font-medium uppercase tracking-wide text-fg-tertiary">
+                    <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
                       Output
                     </span>
                     <div className="flex items-center gap-1">
