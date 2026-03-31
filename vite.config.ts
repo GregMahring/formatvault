@@ -26,9 +26,8 @@ export default defineConfig({
   },
 
   build: {
-    // Source maps only for client bundle — SSR bundle uses externals so manualChunks
-    // must be client-only (applied via the reactRouter plugin's client build pass)
-    sourcemap: true,
+    // Source maps in dev/CI only — never expose server code in production
+    sourcemap: process.env['NODE_ENV'] !== 'production',
     rollupOptions: {
       output: {
         // manualChunks applies to the client bundle only.
