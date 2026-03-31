@@ -141,7 +141,7 @@ export default function UrlEncoderPage() {
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-brand-indigo">URL Encoder / Decoder</h1>
+        <h1 className="text-sm font-semibold text-label-indigo">URL Encoder / Decoder</h1>
         <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
         {/* Mode toggle */}
@@ -269,7 +269,7 @@ export default function UrlEncoderPage() {
           {/* Input */}
           <div className="flex w-full flex-col border-b border-r-0 border-edge md:w-1/2 md:border-b-0 md:border-r">
             <div className="flex h-8 shrink-0 items-center border-b border-edge px-3">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
                 {mode === 'encode' ? 'Decoded / plain text' : 'Encoded URL'}
               </span>
             </div>
@@ -292,7 +292,7 @@ export default function UrlEncoderPage() {
           {/* Output */}
           <div className="flex w-full flex-col md:w-1/2">
             <div className="flex h-8 shrink-0 items-center justify-between border-b border-edge px-3">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
                 {mode === 'encode' ? 'Encoded URL' : 'Decoded / plain text'}
               </span>
               <div className="flex items-center gap-1">

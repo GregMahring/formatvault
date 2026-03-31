@@ -76,7 +76,7 @@ export default function JsonToCsvConverter() {
           <p className="text-fg-secondary">
             The converter flattens the JSON array of objects into tabular form. Nested objects are
             dot-notation flattened (e.g.{' '}
-            <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+            <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
               address.city
             </code>
             ) so every value fits a CSV column. You can choose the output delimiter: comma, tab,

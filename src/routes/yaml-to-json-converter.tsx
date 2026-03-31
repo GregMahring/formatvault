@@ -50,11 +50,11 @@ export default function YamlToJsonConverter() {
         howItWorks={
           <p className="text-fg-secondary">
             js-yaml parses the YAML input into a JavaScript object, then{' '}
-            <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+            <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
               JSON.stringify()
             </code>{' '}
             serializes it to formatted JSON. Multi-document YAML (separated by{' '}
-            <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+            <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
               ---
             </code>
             ) is converted to a JSON array of documents.

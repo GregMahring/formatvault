@@ -160,7 +160,7 @@ export default function TomlFormatter() {
     <div className="flex flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-brand-indigo">TOML Formatter</h1>
+        <h1 className="text-sm font-semibold text-label-indigo">TOML Formatter</h1>
 
         <div className="flex-1" />
 
@@ -248,7 +248,7 @@ export default function TomlFormatter() {
         >
           <div className="flex h-full flex-col">
             <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
                 Input
               </span>
               <FileUploadZone
@@ -273,7 +273,7 @@ export default function TomlFormatter() {
           ) : (
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
                   Output
                 </span>
                 <div className="flex items-center gap-1">

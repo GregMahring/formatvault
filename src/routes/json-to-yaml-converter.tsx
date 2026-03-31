@@ -50,7 +50,7 @@ export default function JsonToYamlConverter() {
         howItWorks={
           <p className="text-fg-secondary">
             The converter parses your JSON with{' '}
-            <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+            <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
               JSON.parse()
             </code>{' '}
             then serializes the resulting object to YAML using js-yaml. All types — strings,

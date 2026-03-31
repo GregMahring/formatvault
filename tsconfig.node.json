@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2022"],
-    "types": ["node"],
+    "types": ["node", "@cloudflare/workers-types"],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
@@ -16,6 +16,7 @@
     "playwright.config.ts",
     "eslint.config.ts",
     "react-router.config.ts",
+    "functions/**/*.ts",
     "e2e/**/*.ts"
   ]
 }

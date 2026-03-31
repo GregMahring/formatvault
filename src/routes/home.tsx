@@ -229,9 +229,9 @@ export default function Home() {
 
         {/* Badge, headline, body, textarea, buttons — all left-aligned in shared container */}
         <div className="mx-auto max-w-2xl">
-          <div className="mb-4 flex items-center gap-2 rounded border border-[#5555cc]/30 bg-[#5555cc]/10 px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[#aaaaff]">
+          <div className="mb-4 flex items-center gap-2 rounded border border-[#5555cc]/30 bg-[#5555cc]/10 px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-label-indigo">
             <span
-              className="inline-block h-[5px] w-[5px] shrink-0 rounded-full bg-[#aaaaff]"
+              className="inline-block h-[5px] w-[5px] shrink-0 rounded-full bg-label-indigo"
               aria-hidden="true"
             />
             browser-local processing
@@ -243,7 +243,7 @@ export default function Home() {
           >
             Format anything.
             <br />
-            <span className="text-logo-cyan">Share nothing.</span>
+            <span className="text-label-cyan">Share nothing.</span>
           </h1>
           <p className="mb-8 text-[15px] leading-[1.65] text-fg-secondary">
             Clean, convert, and generate data formats — JSON, CSV, TOML, SQL, and more. All
@@ -274,7 +274,7 @@ export default function Home() {
           {/* Detection result */}
           {detected && detected !== 'unknown' && (
             <div className="mt-2 flex items-center gap-2 text-sm">
-              <span className="rounded-full bg-[#5555cc]/15 px-2.5 py-0.5 text-xs font-medium text-[#7777dd]">
+              <span className="rounded-full bg-[#5555cc]/15 px-2.5 py-0.5 text-xs font-medium text-label-indigo">
                 Detected: {FORMAT_LABELS[detected]}
               </span>
               <span className="text-xs text-fg-muted">Navigating...</span>
@@ -326,7 +326,7 @@ export default function Home() {
       <div className="mb-12 grid grid-cols-1 divide-y divide-edge sm:grid-cols-3 sm:divide-x sm:divide-y-0">
         {FEATURES.map(({ icon: Icon, label, description }) => (
           <div key={label} className="flex gap-3 px-0 py-5 sm:px-6 sm:first:pl-0 sm:last:pr-0">
-            <Icon className="mt-0.5 h-4 w-4 shrink-0 text-brand-cyan" aria-hidden="true" />
+            <Icon className="mt-0.5 h-4 w-4 shrink-0 text-label-cyan" aria-hidden="true" />
             <div className="flex flex-col gap-1">
               <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-fg">
                 {label}

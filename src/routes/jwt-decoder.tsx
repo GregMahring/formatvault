@@ -251,7 +251,7 @@ export default function JwtDecoder() {
       <div className="flex min-h-full flex-col">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-          <h1 className="text-sm font-semibold text-brand-indigo">JWT Decoder</h1>
+          <h1 className="text-sm font-semibold text-label-indigo">JWT Decoder</h1>
           <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
           <Badge variant="outline" className="text-[10px] text-fg-secondary">
             Decode only · no verification
@@ -308,7 +308,7 @@ export default function JwtDecoder() {
           {/* Left: token input */}
           <div className="flex w-2/5 flex-col overflow-hidden border-r border-edge">
             <div className="flex h-8 shrink-0 items-center justify-between border-b border-edge px-3">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
                 JWT Token
               </span>
               <div className="flex items-center gap-1">
@@ -359,7 +359,7 @@ export default function JwtDecoder() {
                     .trim()
                     .split('.')
                     .map((part, i) => {
-                      const colors = ['text-red-400', 'text-purple-400', 'text-cyan-400'];
+                      const colors = ['text-jwt-header', 'text-jwt-payload', 'text-jwt-sig'];
                       const labels = ['Header', 'Payload', 'Signature'];
                       return (
                         <span key={i} className={colors[i]}>
@@ -376,7 +376,7 @@ export default function JwtDecoder() {
           {/* Right: decoded output */}
           <div className="flex flex-1 flex-col overflow-y-auto">
             <div className="flex h-8 shrink-0 items-center justify-between border-b border-edge px-4">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
                 Decoded
               </span>
               <PiiMaskToggle pii={pii} />
@@ -463,7 +463,7 @@ export default function JwtDecoder() {
           <div className="space-y-3 text-fg-secondary">
             <p>
               A JWT is three base64url-encoded sections separated by dots:{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 header.payload.signature
               </code>
               . The decoder splits on the dots, base64url-decodes each section, and parses the

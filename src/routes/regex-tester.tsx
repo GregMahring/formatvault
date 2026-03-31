@@ -121,7 +121,7 @@ export default function RegexTester() {
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-brand-indigo">Regex Tester</h1>
+        <h1 className="text-sm font-semibold text-label-indigo">Regex Tester</h1>
         <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
         {/* Pattern input with / decorations */}
@@ -219,7 +219,7 @@ export default function RegexTester() {
         {/* Left pane — test string */}
         <div className="flex w-full flex-col border-b border-r-0 border-edge md:w-1/2 md:border-b-0 md:border-r">
           <div className="flex h-8 shrink-0 items-center border-b border-edge px-3">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
               Test string
             </span>
           </div>
@@ -244,7 +244,7 @@ export default function RegexTester() {
         <div className="flex w-full flex-col md:w-1/2">
           <div className="flex h-8 shrink-0 items-center justify-between border-b border-edge px-3">
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
                 Match results
               </span>
               {hasPattern && hasInput && !result.error && matchCount > 0 && (

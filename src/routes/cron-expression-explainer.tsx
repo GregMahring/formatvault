@@ -463,7 +463,7 @@ export default function CronExpressionExplainer() {
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <CalendarClock className="h-4 w-4 text-fg-secondary" aria-hidden="true" />
-        <h1 className="text-sm font-semibold text-brand-indigo">Cron Expression Explainer</h1>
+        <h1 className="text-sm font-semibold text-label-indigo">Cron Expression Explainer</h1>
 
         {/* Tab toggle */}
         <div className="ml-3 flex rounded border border-edge bg-surface-raised p-0.5">
@@ -515,7 +515,7 @@ export default function CronExpressionExplainer() {
         {/* ── Explain tab ───────────────────────────────────────────── */}
         {activeTab === 'explain' && (
           <section>
-            <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-brand-cyan">
+            <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-label-cyan">
               Expression
             </h2>
 

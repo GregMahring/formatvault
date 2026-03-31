@@ -191,7 +191,7 @@ export default function UnixTimestampConverter() {
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <Clock className="h-4 w-4 text-fg-secondary" aria-hidden="true" />
-        <h1 className="text-sm font-semibold text-brand-indigo">Unix Timestamp Converter</h1>
+        <h1 className="text-sm font-semibold text-label-indigo">Unix Timestamp Converter</h1>
 
         <div className="flex-1" />
 
@@ -221,7 +221,7 @@ export default function UnixTimestampConverter() {
       <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-6">
         {/* ── Timestamp → Date ─────────────────────────────────── */}
         <section>
-          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-brand-cyan">
+          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-label-cyan">
             Timestamp → Date
           </h2>
 
@@ -323,7 +323,7 @@ export default function UnixTimestampConverter() {
 
         {/* ── Date → Timestamp ─────────────────────────────────── */}
         <section>
-          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-brand-cyan">
+          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-label-cyan">
             Date → Timestamp
           </h2>
 

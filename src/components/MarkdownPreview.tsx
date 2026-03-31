@@ -43,7 +43,7 @@ export function MarkdownPreview({ source, className }: MarkdownPreviewProps) {
     <div className={`flex h-full flex-col ${className ?? ''}`}>
       {/* Panel header */}
       <div className="flex items-center justify-between border-b border-edge px-3 py-1.5">
-        <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
+        <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
           Markdown Preview
         </span>
         <div className="flex items-center gap-1">

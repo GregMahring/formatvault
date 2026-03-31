@@ -37,9 +37,14 @@ export default tseslint.config(
     },
   },
 
-  // Root config files and e2e specs — use the node tsconfig (not in src/)
+  // Root config files, Pages Functions, and e2e specs — use the node tsconfig (not in src/)
   {
-    files: ['*.config.{ts,mts}', 'react-router.config.ts', 'e2e/**/*.{ts,tsx}'],
+    files: [
+      '*.config.{ts,mts}',
+      'react-router.config.ts',
+      'functions/**/*.ts',
+      'e2e/**/*.{ts,tsx}',
+    ],
     extends: [...tseslint.configs.recommendedTypeChecked],
     languageOptions: {
       parserOptions: {

@@ -51,7 +51,7 @@ export default function XmlToJsonConverter() {
             XML documents often contain credentials, internal hostnames, or proprietary data
             structures — especially SOAP responses, enterprise config files, and Android manifests.
             This converter processes your XML entirely in your browser using{' '}
-            <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+            <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
               fast-xml-parser
             </code>
             . Nothing is uploaded or transmitted.
@@ -62,15 +62,15 @@ export default function XmlToJsonConverter() {
             <p>
               The XML is first validated for well-formedness, then parsed into a JavaScript object
               tree. Attributes are mapped to{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 @prefixed
               </code>{' '}
               keys and element text content to{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 #text
               </code>
               . The resulting object is serialized with{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 JSON.stringify()
               </code>
               .
@@ -78,7 +78,7 @@ export default function XmlToJsonConverter() {
             <p>
               Numeric and boolean attribute/element values are automatically parsed to their native
               JSON types. CDATA sections are preserved under{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 #cdata
               </code>
               .

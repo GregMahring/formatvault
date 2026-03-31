@@ -198,7 +198,7 @@ export default function XmlFormatter() {
       <div className="flex flex-col">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-          <h1 className="text-sm font-semibold text-brand-indigo">XML Formatter</h1>
+          <h1 className="text-sm font-semibold text-label-indigo">XML Formatter</h1>
 
           <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
@@ -375,7 +375,7 @@ export default function XmlFormatter() {
               {/* Left: input */}
               <div className="flex h-full flex-col">
                 <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                  <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
+                  <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
                     Input
                   </span>
                   <FileUploadZone
@@ -398,7 +398,7 @@ export default function XmlFormatter() {
               {/* Right: output */}
               <div className="flex h-full flex-col">
                 <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                  <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
+                  <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
                     Output
                   </span>
                   <div className="flex items-center gap-1">
@@ -442,7 +442,7 @@ export default function XmlFormatter() {
             </p>
             <p>
               formatvault formats and validates XML entirely inside your browser using{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 fast-xml-parser
               </code>
               . Nothing is transmitted. The network tab will show zero outbound requests while you
@@ -454,12 +454,12 @@ export default function XmlFormatter() {
           <div className="space-y-3 text-fg-secondary">
             <p>
               Your XML is parsed into an in-memory tree using{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 fast-xml-parser
               </code>
               , then re-serialized with consistent indentation. Attributes, CDATA sections, and
               comments are preserved through the round-trip. The{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 XMLValidator
               </code>{' '}
               checks well-formedness before formatting so you get a precise error with line and

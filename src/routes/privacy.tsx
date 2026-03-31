@@ -28,7 +28,7 @@ function SectionHeading({ children }: { children: ReactNode }) {
 
 function Code({ children }: { children: ReactNode }) {
   return (
-    <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+    <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
       {children}
     </code>
   );
@@ -61,10 +61,10 @@ export default function Privacy() {
       <div className="mb-10 rounded-lg border border-[#5555cc]/30 bg-[#5555cc]/8 px-5 py-4">
         <div className="mb-3 flex items-center gap-2">
           <span
-            className="inline-block h-[5px] w-[5px] shrink-0 rounded-full bg-[#aaaaff]"
+            className="inline-block h-[5px] w-[5px] shrink-0 rounded-full bg-label-indigo"
             aria-hidden="true"
           />
-          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[#aaaaff]">
+          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-label-indigo">
             the short version
           </span>
         </div>

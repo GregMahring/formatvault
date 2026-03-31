@@ -276,7 +276,7 @@ export default function JsonFormatter() {
       <div className="flex flex-col">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-          <h1 className="text-sm font-semibold text-brand-indigo">JSON Formatter</h1>
+          <h1 className="text-sm font-semibold text-label-indigo">JSON Formatter</h1>
 
           <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
@@ -565,7 +565,7 @@ export default function JsonFormatter() {
               {/* Left: input */}
               <div className="flex h-full flex-col">
                 <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                  <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
+                  <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
                     Input
                   </span>
                   <div className="flex items-center gap-1">
@@ -607,7 +607,7 @@ export default function JsonFormatter() {
               ) : (
                 <div className="flex h-full flex-col">
                   <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                    <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
+                    <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
                       Output
                     </span>
                     <div className="flex items-center gap-1">
@@ -659,12 +659,12 @@ export default function JsonFormatter() {
           <div className="space-y-3 text-fg-secondary">
             <p>
               When you paste or upload JSON, the formatter runs{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 JSON.parse()
               </code>{' '}
               directly in the browser tab — the same engine your application uses. For relaxed
               syntax (trailing commas, comments), it switches to the{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 json5
               </code>{' '}
               library. Files larger than 5 MB are streamed through a Web Worker so the UI stays
@@ -672,7 +672,7 @@ export default function JsonFormatter() {
             </p>
             <p>
               Output is re-serialized with{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 JSON.stringify()
               </code>{' '}
               using your chosen indentation (2 spaces, 4 spaces, or tabs). All processing happens

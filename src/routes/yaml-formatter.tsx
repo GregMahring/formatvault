@@ -225,7 +225,7 @@ export default function YamlFormatter() {
       <div className="flex flex-col">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-          <h1 className="text-sm font-semibold text-brand-indigo">YAML Formatter</h1>
+          <h1 className="text-sm font-semibold text-label-indigo">YAML Formatter</h1>
 
           <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
@@ -399,7 +399,7 @@ export default function YamlFormatter() {
             >
               <div className="flex h-full flex-col">
                 <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                  <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
+                  <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
                     Input
                   </span>
                   <FileUploadZone
@@ -426,7 +426,7 @@ export default function YamlFormatter() {
               ) : (
                 <div className="flex h-full flex-col">
                   <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                    <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
+                    <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
                       Output
                     </span>
                     <div className="flex items-center gap-1">
@@ -469,7 +469,7 @@ export default function YamlFormatter() {
             </p>
             <p>
               formatvault validates and reformats YAML using{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 js-yaml
               </code>
               , entirely in your browser. Your config files never touch an external server.
@@ -483,7 +483,7 @@ export default function YamlFormatter() {
             <p>
               js-yaml parses your input into a JavaScript object tree, then re-serializes it with
               consistent indentation and block scalar style. Multi-document YAML (files with{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 ---
               </code>{' '}
               separators) is handled as separate documents, each formatted independently.

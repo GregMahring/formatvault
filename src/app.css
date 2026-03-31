@@ -34,10 +34,19 @@
   --color-brand-cyan: #00d4e8;
   --color-brand-cyan-dark: #00a8b8;
 
+  /* Theme-adaptive label colors — WCAG AA compliant on both surface backgrounds */
+  --color-label-indigo: var(--label-indigo); /* tool name labels */
+  --color-label-cyan: var(--label-cyan); /* pane section labels */
+
   /* Logo color tokens — theme-adaptive via CSS variables set on .dark/.light */
   --color-logo-cyan: var(--logo-cyan);
   --color-logo-silver: var(--logo-silver);
   --color-logo-colon: var(--logo-colon);
+
+  /* JWT anatomy colors — theme-adaptive so the three parts pass WCAG AA in both modes */
+  --color-jwt-header: var(--jwt-header);
+  --color-jwt-payload: var(--jwt-payload);
+  --color-jwt-sig: var(--jwt-sig);
 
   /* Semantic surface/foreground/edge colors — resolve via CSS variables set on .dark/.light */
   --color-surface: var(--surface);
@@ -76,6 +85,13 @@
     --logo-cyan: #00d4e8;
     --logo-silver: #bab7b6;
     --logo-colon: #7a7775;
+    /* Label tokens — lightened for AA on dark surfaces */
+    --label-indigo: #7777dd; /* accent-400, 5.3:1 on #04040e */
+    --label-cyan: #00d4e8; /* full brand-cyan, 11:1 on #04040e */
+    /* JWT anatomy — bright variants for dark bg */
+    --jwt-header: #f87171; /* red-400 */
+    --jwt-payload: #c084fc; /* purple-400 */
+    --jwt-sig: #22d3ee; /* cyan-400 */
   }
 
   /* Light theme — warm off-white backgrounds */
@@ -91,9 +107,16 @@
     --fg-tertiary: #6a6878;
     --fg-muted: #8a8698;
     /* Logo tokens */
-    --logo-cyan: #00a8b8;
+    --logo-cyan: #007a8a; /* darkened for AA contrast on light bg (~4.6:1) */
     --logo-silver: #3a3836;
     --logo-colon: #5a5856;
+    /* Label tokens — darkened for AA on light surfaces */
+    --label-indigo: #5555cc; /* original brand-indigo, 5.4:1 on #f5f4f0 */
+    --label-cyan: #007a8a; /* darkened cyan, 4.6:1 on #f5f4f0 */
+    /* JWT anatomy — darkened variants for light bg (all ≥4.5:1 on #f5f4f0) */
+    --jwt-header: #b91c1c; /* red-700, ~7:1 */
+    --jwt-payload: #7c3aed; /* violet-600, ~6.5:1 */
+    --jwt-sig: #0e7490; /* cyan-700, ~6.3:1 */
   }
 
   html {

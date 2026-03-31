@@ -100,7 +100,7 @@ export default function HashGenerator() {
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-brand-indigo">Hash Generator</h1>
+        <h1 className="text-sm font-semibold text-label-indigo">Hash Generator</h1>
         <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
         {/* Algorithm tabs */}
@@ -200,7 +200,7 @@ export default function HashGenerator() {
         {/* Input section */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
               {hash.inputMode === 'text' ? 'Input text' : 'File'}
             </span>
           </div>

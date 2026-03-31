@@ -151,7 +151,7 @@ export default function Base64Encoder() {
       <div className="flex h-full flex-col">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-          <h1 className="text-sm font-semibold text-brand-indigo">Base64 Encoder / Decoder</h1>
+          <h1 className="text-sm font-semibold text-label-indigo">Base64 Encoder / Decoder</h1>
           <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
           {/* Mode toggle */}
@@ -269,7 +269,7 @@ export default function Base64Encoder() {
           {/* Input */}
           <div className="flex w-full flex-col border-b border-r-0 border-edge md:w-1/2 md:border-b-0 md:border-r">
             <div className="flex h-8 shrink-0 items-center border-b border-edge px-3">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
                 {mode === 'encode' ? 'Plain text' : 'Base64'}
               </span>
             </div>
@@ -297,7 +297,7 @@ export default function Base64Encoder() {
           {/* Output */}
           <div className="flex w-full flex-col md:w-1/2">
             <div className="flex h-8 shrink-0 items-center justify-between border-b border-edge px-3">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-brand-cyan">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
                 {mode === 'encode' ? 'Base64' : 'Plain text'}
               </span>
               <div className="flex items-center gap-1">
@@ -344,7 +344,7 @@ export default function Base64Encoder() {
             <p>
               formatvault encodes and decodes Base64 using the browser's native APIs and the
               unicode-safe{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 js-base64
               </code>{' '}
               library. Nothing is transmitted. The output appears instantly as you type.
@@ -355,27 +355,27 @@ export default function Base64Encoder() {
           <div className="space-y-3 text-fg-secondary">
             <p>
               Standard Base64 uses the characters{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 A–Z a–z 0–9 + /
               </code>{' '}
               with{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 =
               </code>{' '}
               padding. URL-safe Base64 replaces{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 +
               </code>{' '}
               with{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 -
               </code>{' '}
               and{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 /
               </code>{' '}
               with{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 _
               </code>
               , making it safe for use in URLs and filenames. The encoder auto-detects whether your
@@ -384,7 +384,7 @@ export default function Base64Encoder() {
             <p>
               Full Unicode support means emoji, accented characters, and non-Latin scripts are
               encoded correctly — unlike{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 btoa()
               </code>
               , which fails on multi-byte characters.

@@ -50,7 +50,7 @@ export default function JsonToXmlConverter() {
           <p className="text-fg-secondary">
             Many enterprise systems, legacy APIs, and config formats still require XML as input.
             This converter transforms your JSON to well-formed XML entirely in your browser using{' '}
-            <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+            <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
               fast-xml-parser
             </code>
             . Your data never leaves the tab.
@@ -60,15 +60,15 @@ export default function JsonToXmlConverter() {
           <div className="space-y-3 text-fg-secondary">
             <p>
               The JSON is parsed and passed to{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 XMLBuilder
               </code>
               , which maps JSON keys to XML elements. Keys starting with{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 @
               </code>{' '}
               become element attributes, and{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 #text
               </code>{' '}
               becomes the text content of a mixed element. The output includes an XML declaration
@@ -77,7 +77,7 @@ export default function JsonToXmlConverter() {
             <p>
               XML requires a single root element. If your JSON object has multiple top-level keys,
               they are automatically wrapped in a{' '}
-              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-brand-cyan bg-[#00d4e8]/8">
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
                 {'<root>'}
               </code>{' '}
               element. JSON arrays of objects produce repeated sibling elements with the same tag

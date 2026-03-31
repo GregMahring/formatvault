@@ -194,7 +194,7 @@ export default function NumberBaseConverter() {
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <Binary className="h-4 w-4 text-fg-secondary" aria-hidden="true" />
-        <h1 className="text-sm font-semibold text-brand-indigo">Number Base Converter</h1>
+        <h1 className="text-sm font-semibold text-label-indigo">Number Base Converter</h1>
 
         <div className="flex-1" />
 
@@ -224,7 +224,7 @@ export default function NumberBaseConverter() {
       <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-6">
         {/* ── Inputs ────────────────────────────────────────────────── */}
         <section>
-          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-brand-cyan">
+          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-label-cyan">
             Number
           </h2>
           <div className="overflow-hidden rounded-lg border border-edge bg-surface-raised px-4">
@@ -251,7 +251,7 @@ export default function NumberBaseConverter() {
 
         {/* ── Presets ───────────────────────────────────────────────── */}
         <section>
-          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-brand-cyan">
+          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-label-cyan">
             Common values
           </h2>
           <div className="flex flex-wrap gap-1.5">
