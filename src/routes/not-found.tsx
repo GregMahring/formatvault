@@ -1,7 +1,13 @@
 import { Link } from 'react-router';
+import { buildMeta } from '@/lib/meta';
 
 export function meta() {
-  return [{ title: '404 — Page Not Found — formatvault' }];
+  return buildMeta({
+    title: '404 — Page Not Found',
+    description:
+      "The page you're looking for doesn't exist. Browse formatvault's free developer tools for JSON, CSV, YAML, SQL formatting, conversion, and more — all private, no upload required.",
+    path: '/404',
+  });
 }
 
 export default function NotFound() {

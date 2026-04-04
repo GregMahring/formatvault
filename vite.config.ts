@@ -50,6 +50,13 @@ export default defineConfig({
           ) {
             return 'vendor-codemirror';
           }
+          // Consolidate all Radix UI primitives into one shared chunk.
+          // Without this, Rollup scatters them across route chunks (e.g. the
+          // "button" chunk ends up 30KB because it absorbs @radix-ui/react-dialog,
+          // @radix-ui/react-tooltip, etc. from shared importers).
+          if (id.includes('node_modules/@radix-ui')) {
+            return 'vendor-radix';
+          }
         },
       },
     },

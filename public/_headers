@@ -12,13 +12,14 @@
   # unsafe-inline styles: required for Tailwind CSS v4 (runtime injection) + CodeMirror
   # data: required for CodeMirror gutter icons (SVG data URIs)
   # worker-src blob:: required for Web Workers created via new Worker(new URL(...))
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://plausible.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://plausible.io; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://plausible.io; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
   # HSTS — 1 year, include subdomains
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   # Cross-Origin policies
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Embedder-Policy: require-corp
   Cross-Origin-Resource-Policy: same-origin
+  Cache-Control: no-cache
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable

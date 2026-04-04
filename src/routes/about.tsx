@@ -245,10 +245,10 @@ export default function About() {
       <p className="leading-relaxed text-fg-secondary">
         Questions, bug reports, or tool requests — email{' '}
         <a
-          href="mailto:hello@formatvault.dev"
+          href="mailto:feedback@formatvault.dev"
           className="text-brand-indigo underline-offset-2 hover:underline"
         >
-          hello@formatvault.dev
+          feedback@formatvault.dev
         </a>
         .
       </p>

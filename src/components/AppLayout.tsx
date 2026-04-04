@@ -1,10 +1,15 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { CommandPalette } from '@/components/CommandPalette';
 import { AdSidebar } from '@/components/AdSidebar';
+
+// Lazy-loaded: only fetched when user first opens the palette (Cmd+K or header button).
+// Keeps @radix-ui/react-dialog out of the root bundle.
+const CommandPalette = lazy(() =>
+  import('@/components/CommandPalette').then((m) => ({ default: m.CommandPalette }))
+);
 import { useCommandStore, type Command } from '@/stores/commandStore';
 import { useSettingsStore, type IndentSize } from '@/stores/settingsStore';
 import {
@@ -45,6 +50,9 @@ const FULL_WIDTH_PATHS = new Set(['/', '/about', '/privacy', '/converters']);
 
 export function AppLayout({ children }: AppLayoutProps) {
   const [paletteOpen, setPaletteOpen] = useState(false);
+  // Gate that defers mounting CommandPalette until first user intent — avoids
+  // loading @radix-ui/react-dialog on initial page render.
+  const [paletteEverOpened, setPaletteEverOpened] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const isToolPage = !FULL_WIDTH_PATHS.has(location.pathname);
@@ -65,6 +73,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k' && !e.shiftKey) {
         e.preventDefault();
         e.stopPropagation();
+        setPaletteEverOpened(true);
         setPaletteOpen(true);
       }
     };
@@ -315,6 +324,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
         <Header
           onOpenCommandPalette={() => {
+            setPaletteEverOpened(true);
             setPaletteOpen(true);
           }}
         />
@@ -340,7 +350,11 @@ export function AppLayout({ children }: AppLayoutProps) {
 
         <Footer />
 
-        <CommandPalette open={paletteOpen} onOpenChange={handlePaletteOpen} />
+        {paletteEverOpened && (
+          <Suspense fallback={null}>
+            <CommandPalette open={paletteOpen} onOpenChange={handlePaletteOpen} />
+          </Suspense>
+        )}
       </div>
     </TooltipProvider>
   );

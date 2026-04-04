@@ -1,6 +1,10 @@
 # Claude worktrees (existing)
 .claude/worktrees/
 
+#Claude files
+.claude/
+CLAUDE.md
+
 # Dependencies
 node_modules/
 
@@ -19,6 +23,7 @@ blob-report/
 .env
 .env.local
 .env.*.local
+.env.example
 
 # Editor
 .DS_Store
