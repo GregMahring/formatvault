@@ -1,5 +1,6 @@
-import { useState, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { useState, useCallback, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import {
   Braces,
   FileText,
@@ -17,7 +18,10 @@ import {
   Slash,
   Timer,
   CalendarClock,
+  ChevronDown,
+  ArrowRight,
 } from 'lucide-react';
+import { Link } from 'react-router';
 import type { Route } from './+types/home';
 import { buildMeta } from '@/lib/meta';
 import { detectFormat, getRouteForFormat, type DetectedFormat } from '@/lib/detectFormat';
@@ -166,47 +170,96 @@ const FORMAT_LABELS: Record<DetectedFormat, string> = {
   unknown: 'Unknown',
 };
 
+/** Conversion options available per detected format */
+const CONVERSIONS: Partial<Record<DetectedFormat, { label: string; route: string }[]>> = {
+  json: [
+    { label: 'CSV', route: '/json-to-csv-converter' },
+    { label: 'YAML', route: '/json-to-yaml-converter' },
+    { label: 'TOML', route: '/json-to-toml-converter' },
+    { label: 'XML', route: '/json-to-xml-converter' },
+  ],
+  json5: [
+    { label: 'CSV', route: '/json-to-csv-converter' },
+    { label: 'YAML', route: '/json-to-yaml-converter' },
+    { label: 'TOML', route: '/json-to-toml-converter' },
+    { label: 'XML', route: '/json-to-xml-converter' },
+  ],
+  csv: [
+    { label: 'JSON', route: '/csv-to-json-converter' },
+    { label: 'YAML', route: '/csv-to-yaml-converter' },
+  ],
+  yaml: [
+    { label: 'JSON', route: '/yaml-to-json-converter' },
+    { label: 'CSV', route: '/yaml-to-csv-converter' },
+    { label: 'TOML', route: '/yaml-to-toml-converter' },
+  ],
+  toml: [
+    { label: 'JSON', route: '/toml-to-json-converter' },
+    { label: 'YAML', route: '/toml-to-yaml-converter' },
+  ],
+  xml: [{ label: 'JSON', route: '/xml-to-json-converter' }],
+};
+
 export default function Home() {
   const navigate = useNavigate();
   const [detected, setDetected] = useState<DetectedFormat | null>(null);
   const [pasteValue, setPasteValue] = useState('');
+  const [convertOpen, setConvertOpen] = useState(false);
+  // Track textarea ref so we can re-detect on direct typing
+  const detectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handlePaste = useCallback(
-    (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
-      const pasted = e.clipboardData.getData('text');
-      if (!pasted.trim()) return;
+  const handlePaste = useCallback((e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    const pasted = e.clipboardData.getData('text');
+    if (!pasted.trim()) return;
+    setPasteValue(pasted);
+    const result = detectFormat(pasted);
+    setDetected(result.primary !== 'unknown' ? result.primary : 'unknown');
+  }, []);
 
-      setPasteValue(pasted);
-      const result = detectFormat(pasted);
+  // Re-detect as user types (debounced)
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const val = e.target.value;
+    setPasteValue(val);
+    if (detectTimeoutRef.current) clearTimeout(detectTimeoutRef.current);
+    if (!val.trim()) {
+      setDetected(null);
+      return;
+    }
+    detectTimeoutRef.current = setTimeout(() => {
+      const result = detectFormat(val);
+      setDetected(result.primary !== 'unknown' ? result.primary : 'unknown');
+    }, 400);
+  }, []);
 
-      if (result.primary !== 'unknown') {
-        setDetected(result.primary);
-
-        // Store input in editorStore for the target route to pick up
-        useEditorStore.getState().setInput(pasted);
-
-        const route = getRouteForFormat(result.primary);
-        if (route) {
-          // Short delay so the user sees the detected badge before navigating
-          setTimeout(() => {
-            void navigate(route);
-          }, 400);
-        }
-      } else {
-        setDetected('unknown');
-      }
+  useEffect(
+    () => () => {
+      if (detectTimeoutRef.current) clearTimeout(detectTimeoutRef.current);
     },
-    [navigate]
+    []
+  );
+
+  const navigateTo = useCallback(
+    (route: string) => {
+      if (pasteValue.trim()) useEditorStore.getState().setInput(pasteValue);
+      void navigate(route);
+    },
+    [navigate, pasteValue]
   );
 
   const handleManualNav = useCallback(
     (format: DetectedFormat) => {
-      useEditorStore.getState().setInput(pasteValue);
       const route = getRouteForFormat(format);
-      if (route) void navigate(route);
+      if (route) navigateTo(route);
     },
-    [navigate, pasteValue]
+    [navigateTo]
   );
+
+  const formatterRoute =
+    detected && detected !== 'unknown'
+      ? (getRouteForFormat(detected) ?? '/json-formatter')
+      : '/json-formatter';
+
+  const conversions = detected && detected !== 'unknown' ? (CONVERSIONS[detected] ?? []) : [];
 
   return (
     <div className="mx-auto w-full max-w-5xl px-6 py-16">
@@ -256,10 +309,7 @@ export default function Home() {
           <div className="relative">
             <textarea
               value={pasteValue}
-              onChange={(e) => {
-                setPasteValue(e.target.value);
-                setDetected(null);
-              }}
+              onChange={handleChange}
               onPaste={handlePaste}
               placeholder="Paste any data here — we'll detect the format automatically…"
               className="h-24 w-full resize-none rounded-lg border border-edge-emphasis bg-surface-raised px-4 py-3 font-mono text-sm text-fg placeholder:text-fg-secondary focus:border-[#5555cc] focus:outline-none focus:ring-1 focus:ring-[#5555cc]"
@@ -271,13 +321,12 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Detection result */}
+          {/* Detection badge */}
           {detected && detected !== 'unknown' && (
-            <div className="mt-2 flex items-center gap-2 text-sm">
+            <div className="mt-2 flex items-center gap-2">
               <span className="rounded-full bg-[#5555cc]/15 px-2.5 py-0.5 text-xs font-medium text-label-indigo">
                 Detected: {FORMAT_LABELS[detected]}
               </span>
-              <span className="text-xs text-fg-muted">Navigating...</span>
             </div>
           )}
 
@@ -306,18 +355,63 @@ export default function Home() {
           )}
 
           <div className="mt-6 flex justify-center gap-3">
-            <Link
-              to="/json-formatter"
+            <button
+              type="button"
+              onClick={() => {
+                navigateTo(formatterRoute);
+              }}
               className="flex-1 rounded-lg bg-[#5555cc] px-5 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-[#6666dd] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5555cc]"
             >
               Start Formatting
-            </Link>
-            <Link
-              to="/converters"
-              className="flex-1 rounded-lg border border-edge-emphasis bg-surface-raised px-5 py-2 text-center text-sm font-semibold text-fg-secondary transition-colors hover:border-[#5555cc]/50 hover:bg-surface-elevated hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5555cc]"
-            >
-              See all converters
-            </Link>
+            </button>
+
+            {conversions.length > 0 ? (
+              <DropdownMenu.Root open={convertOpen} onOpenChange={setConvertOpen}>
+                <DropdownMenu.Trigger asChild>
+                  <button
+                    type="button"
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-edge-emphasis bg-surface-raised px-5 py-2 text-sm font-semibold text-fg-secondary transition-colors hover:border-[#5555cc]/50 hover:bg-surface-elevated hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5555cc]"
+                    aria-label="Convert to another format"
+                  >
+                    Convert to
+                    <ChevronDown
+                      className={`h-3.5 w-3.5 transition-transform ${convertOpen ? 'rotate-180' : ''}`}
+                      aria-hidden="true"
+                    />
+                  </button>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Portal>
+                  <DropdownMenu.Content
+                    className="z-50 min-w-[140px] overflow-hidden rounded-lg border border-edge-emphasis bg-surface-raised py-1 shadow-lg"
+                    sideOffset={6}
+                    align="end"
+                  >
+                    {conversions.map(({ label, route }) => (
+                      <DropdownMenu.Item
+                        key={route}
+                        onSelect={() => {
+                          navigateTo(route);
+                        }}
+                        className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-fg-secondary outline-none transition-colors hover:bg-surface-elevated hover:text-fg focus:bg-surface-elevated focus:text-fg"
+                      >
+                        <ArrowRight
+                          className="h-3.5 w-3.5 shrink-0 text-fg-muted"
+                          aria-hidden="true"
+                        />
+                        {label}
+                      </DropdownMenu.Item>
+                    ))}
+                  </DropdownMenu.Content>
+                </DropdownMenu.Portal>
+              </DropdownMenu.Root>
+            ) : (
+              <Link
+                to="/converters"
+                className="flex-1 rounded-lg border border-edge-emphasis bg-surface-raised px-5 py-2 text-center text-sm font-semibold text-fg-secondary transition-colors hover:border-[#5555cc]/50 hover:bg-surface-elevated hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5555cc]"
+              >
+                See all converters
+              </Link>
+            )}
           </div>
         </div>
       </div>
