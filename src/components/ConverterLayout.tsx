@@ -14,7 +14,7 @@ import { usePiiMasking } from '@/hooks/usePiiMasking';
 import { useRegisterCommands } from '@/hooks/useRegisterCommands';
 import { type Command } from '@/stores/commandStore';
 import type { ConversionResult, ConvertResult, ConvertError } from '@/features/convert/converters';
-import { useEditorStore } from '@/stores/editorStore';
+import { usePreloadedInput } from '@/hooks/usePreloadedInput';
 import { Keyboard } from 'lucide-react';
 
 function isConvertError(r: ConversionResult): r is ConvertError {
@@ -99,14 +99,7 @@ export function ConverterLayout({
     };
   }, [input, runConvert]);
 
-  // Load pre-populated input from the home page paste flow
-  useEffect(() => {
-    const preloaded = useEditorStore.getState().input;
-    if (preloaded) {
-      setInputRaw(preloaded);
-      useEditorStore.getState().reset();
-    }
-  }, []);
+  usePreloadedInput(setInputRaw);
 
   // Load parsed file into input
   useEffect(() => {

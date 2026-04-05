@@ -15,8 +15,8 @@ import { ProgressBar } from '@/components/ProgressBar';
 import { useXmlFormatter } from '@/features/xml/useXmlFormatter';
 import { type XmlMode } from '@/features/xml/useXmlFormatter';
 import { type XmlIndent } from '@/features/xml/xmlFormatter';
-import { useEditorStore } from '@/stores/editorStore';
 import { useFileParser } from '@/hooks/useFileParser';
+import { usePreloadedInput } from '@/hooks/usePreloadedInput';
 import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
 import { usePiiMasking } from '@/hooks/usePiiMasking';
 import { useRegisterCommands } from '@/hooks/useRegisterCommands';
@@ -64,15 +64,7 @@ export default function XmlFormatter() {
   const [showDiff, setShowDiff] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
 
-  // Load pre-loaded input from the landing page paste flow
-  useEffect(() => {
-    const preloaded = useEditorStore.getState().input;
-    if (preloaded) {
-      fmt.setInput(preloaded);
-      useEditorStore.getState().reset();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  usePreloadedInput(fmt.setInput);
 
   // Auto-process on input/option changes with 400ms debounce
   useEffect(() => {

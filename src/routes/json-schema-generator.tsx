@@ -15,7 +15,7 @@ import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcut
 import { usePiiMasking } from '@/hooks/usePiiMasking';
 import { useRegisterCommands } from '@/hooks/useRegisterCommands';
 import { type Command } from '@/stores/commandStore';
-import { useEditorStore } from '@/stores/editorStore';
+import { usePreloadedInput } from '@/hooks/usePreloadedInput';
 import { cn } from '@/lib/utils';
 import { Keyboard } from 'lucide-react';
 
@@ -34,15 +34,7 @@ export default function JsonSchemaGenerator() {
   const schema = useJsonSchema();
   const [showShortcuts, setShowShortcuts] = useState(false);
 
-  // Load pre-loaded input from the landing page paste flow
-  useEffect(() => {
-    const preloaded = useEditorStore.getState().input;
-    if (preloaded) {
-      schema.setJsonInput(preloaded);
-      useEditorStore.getState().reset();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  usePreloadedInput(schema.setJsonInput);
 
   // Auto-generate on input change with debounce (generate mode only)
   useEffect(() => {

@@ -42,28 +42,11 @@ Tests: `src/lib/routes.test.ts` — 23 tests covering uniqueness, shape, group h
 
 ## Structural Refactors
 
-### SR-1 — Extract `usePreloadedInput` hook
+### ~~SR-1 — Extract `usePreloadedInput` hook~~ ✅ DONE
 
-**Affects:** 6 formatter routes + `ConverterLayout` + `jwt-decoder`, `base64-encoder`, `url-encoder`, `regex-tester` (12 sites total)
-**Problem:** The editorStore preload pattern is copy-pasted across 12 files:
-
-```ts
-useEffect(() => {
-  const preloaded = useEditorStore.getState().input;
-  if (preloaded) {
-    setInput(preloaded);
-    useEditorStore.getState().reset();
-  }
-}, []);
-```
-
-**Fix:** Create `src/hooks/usePreloadedInput.ts`:
-
-```ts
-export function usePreloadedInput(setInput: (v: string) => void): void;
-```
-
-**Why (SRP):** A hook should own one concern. This pattern appears 12 times — it belongs in one place.
+**Files changed:** `src/hooks/usePreloadedInput.ts` (new), 6 formatter routes, `ConverterLayout`, `jwt-decoder`, `base64-encoder`, `url-encoder`, `regex-tester`, `json-schema-generator` (12 call sites).
+Removed `useEditorStore` import from all 12 call sites. Removed `useEffect` from React imports in `regex-tester` and `jwt-decoder` (it was their only effect).
+Tests: `src/hooks/usePreloadedInput.test.ts` — 6 tests.
 
 ### SR-2 — Extract `useFormatterPage` orchestration hook
 
@@ -168,7 +151,7 @@ This should be done AFTER SR-2 so the layout component stays purely presentation
 | 4        | QW-4 Remove/wire autoFormat           | ~20 min | Clarity               | ✅ Done |
 | 5        | QW-5 Clean up types/                  | ~5 min  | Clarity               | ✅ Done |
 | 6        | QW-6 Shared route registry            | 2–3 hrs | Maintainability       | ✅ Done |
-| 7        | SR-1 usePreloadedInput hook           | ~1 hr   | DRY (12 sites)        | ⬜      |
+| 7        | SR-1 usePreloadedInput hook           | ~1 hr   | DRY (12 sites)        | ✅ Done |
 | 8        | SR-3 useTreeData hook                 | ~1 hr   | DRY (3 sites)         | ⬜      |
 | 9        | SR-4 Feature hooks for tool routes    | 3–4 hrs | Consistency + size    | ⬜      |
 | 10       | SR-5 Extract inline sub-components    | 2–3 hrs | Testability + size    | ⬜      |

@@ -1,6 +1,6 @@
 import type { Route } from './+types/regex-tester';
 import { buildMeta } from '@/lib/meta';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import DOMPurify from 'dompurify';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -9,7 +9,7 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useRegisterCommands } from '@/hooks/useRegisterCommands';
 import { type Command } from '@/stores/commandStore';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
-import { useEditorStore } from '@/stores/editorStore';
+import { usePreloadedInput } from '@/hooks/usePreloadedInput';
 import {
   testRegex,
   highlightMatches,
@@ -45,14 +45,7 @@ export default function RegexTester() {
   const [input, setInputRaw] = useState('');
   const [showShortcuts, setShowShortcuts] = useState(false);
 
-  // Load pre-loaded input from the landing page paste flow
-  useEffect(() => {
-    const preloaded = useEditorStore.getState().input;
-    if (preloaded) {
-      setInputRaw(preloaded);
-      useEditorStore.getState().reset();
-    }
-  }, []);
+  usePreloadedInput(setInputRaw);
 
   const result = useMemo(() => testRegex(pattern, flags, input), [pattern, flags, input]);
 

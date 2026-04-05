@@ -16,8 +16,8 @@ import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useJsonFormatter } from '@/features/json/useJsonFormatter';
 import { useSettingsStore } from '@/stores/settingsStore';
-import { useEditorStore } from '@/stores/editorStore';
 import { useFileParser } from '@/hooks/useFileParser';
+import { usePreloadedInput } from '@/hooks/usePreloadedInput';
 import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
 import { usePiiMasking } from '@/hooks/usePiiMasking';
 import { useRegisterCommands } from '@/hooks/useRegisterCommands';
@@ -72,15 +72,7 @@ export default function JsonFormatter() {
   const [showTree, setShowTree] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
 
-  // Load pre-loaded input from the landing page paste flow
-  useEffect(() => {
-    const preloaded = useEditorStore.getState().input;
-    if (preloaded) {
-      fmt.setInput(preloaded);
-      useEditorStore.getState().reset();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  usePreloadedInput(fmt.setInput);
 
   // Auto-process on input/option changes with 400ms debounce
   useEffect(() => {

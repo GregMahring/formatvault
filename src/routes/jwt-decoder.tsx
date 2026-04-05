@@ -1,6 +1,6 @@
 import type { Route } from './+types/jwt-decoder';
 import { buildMeta } from '@/lib/meta';
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
@@ -8,7 +8,7 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { usePiiMasking } from '@/hooks/usePiiMasking';
 import { useRegisterCommands } from '@/hooks/useRegisterCommands';
 import { PiiMaskToggle } from '@/components/PiiMaskToggle';
-import { useEditorStore } from '@/stores/editorStore';
+import { usePreloadedInput } from '@/hooks/usePreloadedInput';
 import { type Command } from '@/stores/commandStore';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
 import {
@@ -175,14 +175,7 @@ export default function JwtDecoder() {
   const [showShortcuts, setShowShortcuts] = useState(false);
   const { copy: copyRaw, copied: copiedRaw } = useCopyToClipboard();
 
-  // Load pre-loaded input from the landing page paste flow
-  useEffect(() => {
-    const preloaded = useEditorStore.getState().input;
-    if (preloaded) {
-      setInput(preloaded);
-      useEditorStore.getState().reset();
-    }
-  }, []);
+  usePreloadedInput(setInput);
 
   const result = input.trim() ? decodeJwtToken(input) : null;
   const decoded = result && !isJwtError(result) ? result : null;

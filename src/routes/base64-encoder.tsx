@@ -10,7 +10,7 @@ import { useRegisterCommands } from '@/hooks/useRegisterCommands';
 import { PiiMaskToggle } from '@/components/PiiMaskToggle';
 import { type Command } from '@/stores/commandStore';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
-import { useEditorStore } from '@/stores/editorStore';
+import { usePreloadedInput } from '@/hooks/usePreloadedInput';
 import {
   encodeBase64,
   decodeBase64,
@@ -57,15 +57,7 @@ export default function Base64Encoder() {
   const [urlSafe, setUrlSafe] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
 
-  // Load pre-loaded input from the landing page paste flow
-  useEffect(() => {
-    const preloaded = useEditorStore.getState().input;
-    if (preloaded) {
-      setInput(preloaded);
-      useEditorStore.getState().reset();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  usePreloadedInput(setInput);
 
   // Auto-detect mode when input changes
   useEffect(() => {
