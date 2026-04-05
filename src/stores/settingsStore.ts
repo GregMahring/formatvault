@@ -9,7 +9,6 @@ interface SettingsState {
   editorFontSize: number;
   indentSize: IndentSize;
   indentWithTabs: boolean;
-  autoFormat: boolean;
   wordWrap: boolean;
 }
 
@@ -18,7 +17,6 @@ interface SettingsActions {
   setEditorFontSize: (size: number) => void;
   setIndentSize: (size: IndentSize) => void;
   setIndentWithTabs: (enabled: boolean) => void;
-  setAutoFormat: (enabled: boolean) => void;
   setWordWrap: (enabled: boolean) => void;
   resetToDefaults: () => void;
 }
@@ -28,7 +26,6 @@ const defaults: SettingsState = {
   editorFontSize: 14,
   indentSize: 2,
   indentWithTabs: false,
-  autoFormat: false, // Explicit action preferred over auto — avoids surprise reformatting
   wordWrap: true,
 };
 
@@ -48,7 +45,6 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
       setEditorFontSize: (editorFontSize) => set({ editorFontSize }),
       setIndentSize: (indentSize) => set({ indentSize }),
       setIndentWithTabs: (indentWithTabs) => set({ indentWithTabs }),
-      setAutoFormat: (autoFormat) => set({ autoFormat }),
       setWordWrap: (wordWrap) => set({ wordWrap }),
 
       resetToDefaults: () => set(defaults),
@@ -61,7 +57,6 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
         editorFontSize: state.editorFontSize,
         indentSize: state.indentSize,
         indentWithTabs: state.indentWithTabs,
-        autoFormat: state.autoFormat,
         wordWrap: state.wordWrap,
       }),
     }

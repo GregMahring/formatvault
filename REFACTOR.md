@@ -21,11 +21,10 @@ Architecture review against Bulletproof React (feature-based modularity) and 202
 **File:** `src/stores/editorStore.ts`
 Removed `output`, `error`, `isProcessing` and their setters. Store now only holds `input` + `reset()`.
 
-### QW-4 — Remove `autoFormat` phantom setting
+### ~~QW-4 — Remove `autoFormat` phantom setting~~ ✅ DONE
 
-**File:** `src/stores/settingsStore.ts`
-**Problem:** `autoFormat` is persisted, surfaced in the command palette, and passed around — but no formatter route reads it. Every formatter always auto-formats regardless of this toggle.
-**Fix:** Either (a) delete the field and the command palette entry, or (b) wire it up to actually gate the debounce in all formatter routes. Option (a) unless the feature is planned.
+**Files:** `src/stores/settingsStore.ts`, `src/components/AppLayout.tsx`
+Removed `autoFormat` field, `setAutoFormat` action, `partialize` entry, command palette toggle, and unused `Zap` import.
 
 ### QW-5 — Remove or populate `src/types/`
 
@@ -167,7 +166,7 @@ This should be done AFTER SR-2 so the layout component stays purely presentation
 | 1        | QW-1 Bug fix: xml-formatter parseFile | ~5 min  | Correctness           | ✅ Done |
 | 2        | QW-2 Bug fix: ConverterLayout ternary | ~5 min  | Correctness           | ✅ Done |
 | 3        | QW-3 Remove dead editorStore fields   | ~30 min | Clarity               | ✅ Done |
-| 4        | QW-4 Remove/wire autoFormat           | ~20 min | Clarity               | ⬜ Next |
+| 4        | QW-4 Remove/wire autoFormat           | ~20 min | Clarity               | ✅ Done |
 | 5        | QW-5 Clean up types/                  | ~5 min  | Clarity               | ⬜      |
 | 6        | QW-6 Shared route registry            | 2–3 hrs | Maintainability       | ⬜      |
 | 7        | SR-1 usePreloadedInput hook           | ~1 hr   | DRY (12 sites)        | ⬜      |

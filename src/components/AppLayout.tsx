@@ -24,7 +24,6 @@ import {
   Sun,
   Moon,
   WrapText,
-  Zap,
   Indent,
   Database,
   Slash,
@@ -56,16 +55,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const isToolPage = !FULL_WIDTH_PATHS.has(location.pathname);
-  const {
-    theme,
-    setTheme,
-    indentSize,
-    setIndentSize,
-    wordWrap,
-    setWordWrap,
-    autoFormat,
-    setAutoFormat,
-  } = useSettingsStore();
+  const { theme, setTheme, indentSize, setIndentSize, wordWrap, setWordWrap } = useSettingsStore();
 
   // Global Cmd+K handler — capture phase fires before per-route handlers
   useEffect(() => {
@@ -288,19 +278,9 @@ export function AppLayout({ children }: AppLayoutProps) {
           setWordWrap(!wordWrap);
         },
       },
-      {
-        id: 'settings:toggle-auto-format',
-        label: `${autoFormat ? 'Disable' : 'Enable'} auto-format`,
-        group: 'Settings',
-        icon: Zap,
-        keywords: ['auto', 'format'],
-        handler: () => {
-          setAutoFormat(!autoFormat);
-        },
-      },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [navigate, theme, indentSize, wordWrap, autoFormat]
+    [navigate, theme, indentSize, wordWrap]
   );
 
   useEffect(() => {
