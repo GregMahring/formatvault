@@ -1,6 +1,6 @@
 import type { Route } from './+types/url-encoder';
 import { buildMeta } from '@/lib/meta';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { PaneActions } from '@/components/PaneActions';
@@ -10,16 +10,8 @@ import { useRegisterCommands } from '@/hooks/useRegisterCommands';
 import { PiiMaskToggle } from '@/components/PiiMaskToggle';
 import { type Command } from '@/stores/commandStore';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
-import { usePreloadedInput } from '@/hooks/usePreloadedInput';
-import {
-  encodeUrl,
-  decodeUrl,
-  looksLikeEncoded,
-  parseQueryString,
-  isUrlError,
-  type UrlMode,
-  type UrlEncodeVariant,
-} from '@/features/tools/urlCodec';
+import { type UrlMode, type UrlEncodeVariant } from '@/features/tools/urlCodec';
+import { useUrlEncoder } from '@/features/tools/useUrlEncoder';
 import { Keyboard, ArrowLeftRight, Table2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -35,46 +27,26 @@ export function meta(_args: Route.MetaArgs) {
 }
 
 export default function UrlEncoderPage() {
-  const [input, setInputRaw] = useState('');
-  const [mode, setMode] = useState<UrlMode>('encode');
-  const [variant, setVariant] = useState<UrlEncodeVariant>('component');
-  const [showParsed, setShowParsed] = useState(false);
+  const {
+    input,
+    mode,
+    variant,
+    showParsed,
+    output,
+    error,
+    looksLikeQuery,
+    parsedParams,
+    inputParams,
+    setInput,
+    setMode,
+    setVariant,
+    setShowParsed,
+    clear,
+    swap,
+  } = useUrlEncoder();
   const [showShortcuts, setShowShortcuts] = useState(false);
 
-  usePreloadedInput(setInput);
-
-  // Auto-detect mode from input
-  useEffect(() => {
-    if (!input.trim()) return;
-    setMode(looksLikeEncoded(input) ? 'decode' : 'encode');
-  }, [input]);
-
-  const result = input.trim()
-    ? mode === 'encode'
-      ? encodeUrl(input, variant)
-      : decodeUrl(input)
-    : null;
-
-  const output = result && !isUrlError(result) ? result.output : '';
-  const error = result && isUrlError(result) ? result.error : null;
   const pii = usePiiMasking(output);
-
-  // Parsed query params (shown when output looks like a query string)
-  const parsedParams = showParsed && output ? parseQueryString(output) : null;
-  const inputParams = showParsed && input ? parseQueryString(input) : null;
-
-  const setInput = useCallback((v: string) => {
-    setInputRaw(v);
-  }, []);
-  const clear = useCallback(() => {
-    setInputRaw('');
-  }, []);
-  const swap = useCallback(() => {
-    if (output) {
-      setInputRaw(output);
-      setMode((m) => (m === 'encode' ? 'decode' : 'encode'));
-    }
-  }, [output]);
 
   const shortcuts = [
     {
@@ -125,9 +97,6 @@ export default function UrlEncoderPage() {
     [swap, clear]
   );
   useRegisterCommands(commands);
-
-  // Determine if input looks like a query string (for showing the parsed panel)
-  const looksLikeQuery = /[?&=]/.test(input);
 
   return (
     <div className="flex h-full flex-col">
@@ -183,7 +152,7 @@ export default function UrlEncoderPage() {
 
         <div className="flex-1" />
 
-        {result && !isUrlError(result) && input.trim() && (
+        {output && input.trim() && !error && (
           <Badge variant="success" dot>
             {mode === 'encode' ? 'encoded' : 'decoded'}
           </Badge>
@@ -201,7 +170,7 @@ export default function UrlEncoderPage() {
             variant={showParsed ? 'secondary' : 'ghost'}
             className="h-7 gap-1.5 px-3 text-xs"
             onClick={() => {
-              setShowParsed((v) => !v);
+              setShowParsed(!showParsed);
             }}
             title="Show parsed query parameters"
           >

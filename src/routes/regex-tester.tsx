@@ -1,6 +1,6 @@
 import type { Route } from './+types/regex-tester';
 import { buildMeta } from '@/lib/meta';
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import DOMPurify from 'dompurify';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -9,13 +9,8 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useRegisterCommands } from '@/hooks/useRegisterCommands';
 import { type Command } from '@/stores/commandStore';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
-import { usePreloadedInput } from '@/hooks/usePreloadedInput';
-import {
-  testRegex,
-  highlightMatches,
-  DEFAULT_FLAGS,
-  type RegexFlags,
-} from '@/features/tools/regexTester';
+import { highlightMatches, type RegexFlags } from '@/features/tools/regexTester';
+import { useRegexTester } from '@/features/tools/useRegexTester';
 import { Keyboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -40,36 +35,27 @@ const FLAG_DEFS: { key: keyof RegexFlags; letter: string; title: string }[] = [
 ];
 
 export default function RegexTester() {
-  const [pattern, setPattern] = useState('');
-  const [flags, setFlags] = useState<RegexFlags>(DEFAULT_FLAGS);
-  const [input, setInputRaw] = useState('');
+  const {
+    pattern,
+    flags,
+    input,
+    result,
+    copyContent,
+    matchCount,
+    hasPattern,
+    hasInput,
+    setPattern,
+    setInput,
+    toggleFlag,
+    clear,
+  } = useRegexTester();
   const [showShortcuts, setShowShortcuts] = useState(false);
-
-  usePreloadedInput(setInputRaw);
-
-  const result = useMemo(() => testRegex(pattern, flags, input), [pattern, flags, input]);
 
   const safeHighlightHtml = useMemo(() => {
     if (!result.matches || result.matches.length === 0) return null;
     const raw = highlightMatches(input, result.matches);
     return DOMPurify.sanitize(raw, { ALLOWED_TAGS: ['mark'], ALLOWED_ATTR: [] });
   }, [result, input]);
-
-  const copyContent = useMemo(() => {
-    if (!result.matches || result.matches.length === 0) return '';
-    return result.matches
-      .map((m, i) => `Match ${String(i + 1)}: "${m.value}" at ${String(m.index)}–${String(m.end)}`)
-      .join('\n');
-  }, [result]);
-
-  const toggleFlag = useCallback((key: keyof RegexFlags) => {
-    setFlags((prev) => ({ ...prev, [key]: !prev[key] }));
-  }, []);
-
-  const clear = useCallback(() => {
-    setPattern('');
-    setInputRaw('');
-  }, []);
 
   const shortcuts = [
     {
@@ -105,10 +91,6 @@ export default function RegexTester() {
     [clear]
   );
   useRegisterCommands(commands);
-
-  const matchCount = result.matches?.length ?? 0;
-  const hasPattern = pattern.length > 0;
-  const hasInput = input.length > 0;
 
   return (
     <div className="flex h-full flex-col">
@@ -221,7 +203,7 @@ export default function RegexTester() {
             placeholder="Paste or type text to test against…"
             value={input}
             onChange={(e) => {
-              setInputRaw(e.target.value);
+              setInput(e.target.value);
             }}
             spellCheck={false}
             aria-label="Test string input"

@@ -1,6 +1,6 @@
 import type { Route } from './+types/base64-encoder';
 import { buildMeta } from '@/lib/meta';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { PaneActions } from '@/components/PaneActions';
@@ -10,14 +10,8 @@ import { useRegisterCommands } from '@/hooks/useRegisterCommands';
 import { PiiMaskToggle } from '@/components/PiiMaskToggle';
 import { type Command } from '@/stores/commandStore';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
-import { usePreloadedInput } from '@/hooks/usePreloadedInput';
-import {
-  encodeBase64,
-  decodeBase64,
-  looksLikeBase64,
-  isBase64Error,
-  type Base64Mode,
-} from '@/features/tools/base64Codec';
+import { type Base64Mode } from '@/features/tools/base64Codec';
+import { useBase64Encoder } from '@/features/tools/useBase64Encoder';
 import { ToolPageContent } from '@/components/ToolPageContent';
 import { Keyboard, ArrowLeftRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -52,41 +46,11 @@ export function meta(_args: Route.MetaArgs) {
 }
 
 export default function Base64Encoder() {
-  const [input, setInputRaw] = useState('');
-  const [mode, setMode] = useState<Base64Mode>('encode');
-  const [urlSafe, setUrlSafe] = useState(false);
+  const { input, mode, urlSafe, output, error, setInput, setMode, setUrlSafe, clear, swap } =
+    useBase64Encoder();
   const [showShortcuts, setShowShortcuts] = useState(false);
 
-  usePreloadedInput(setInput);
-
-  // Auto-detect mode when input changes
-  useEffect(() => {
-    if (!input.trim()) return;
-    setMode(looksLikeBase64(input) ? 'decode' : 'encode');
-  }, [input]);
-
-  const result = input.trim()
-    ? mode === 'encode'
-      ? encodeBase64(input, urlSafe)
-      : decodeBase64(input)
-    : null;
-
-  const output = result && !isBase64Error(result) ? result.output : '';
-  const error = result && isBase64Error(result) ? result.error : null;
   const pii = usePiiMasking(output);
-
-  const setInput = useCallback((v: string) => {
-    setInputRaw(v);
-  }, []);
-  const clear = useCallback(() => {
-    setInputRaw('');
-  }, []);
-  const swap = useCallback(() => {
-    if (output) {
-      setInputRaw(output);
-      setMode((m) => (m === 'encode' ? 'decode' : 'encode'));
-    }
-  }, [output]);
 
   const shortcuts = [
     {
@@ -200,7 +164,7 @@ export default function Base64Encoder() {
 
           <div className="flex-1" />
 
-          {result && !isBase64Error(result) && input.trim() && (
+          {output && input.trim() && !error && (
             <Badge variant="success" dot>
               {mode === 'encode' ? 'encoded' : 'decoded'}
             </Badge>

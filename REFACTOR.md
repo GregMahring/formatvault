@@ -70,20 +70,11 @@ The current `json-formatter.tsx` is 722 lines; a thin route using this hook woul
 YAML/TOML use result-object parsers (not throw-on-error), so each formatter got a module-level `parseXxxForTree` wrapper to normalize the interface. JSON passes `JSON.parse` directly.
 Tests: `src/hooks/useTreeData.test.ts` — 11 tests.
 
-### SR-4 — Extract feature hooks for utility tool routes
+### ~~SR-4 — Extract feature hooks for utility tool routes~~ ✅ DONE
 
-**Affects:** `base64-encoder.tsx` (424 lines), `url-encoder.tsx` (384 lines), `regex-tester.tsx` (348 lines), `unix-timestamp-converter.tsx` (366 lines), `color-picker.tsx` (270 lines)
-**Problem:** These routes own all state inline because `features/tools/` has pure logic files but no corresponding React hooks (except `useHashGenerator`). This is inconsistent with the json/yaml/csv/sql pattern.
-**Fix:** Create:
-
-- `src/features/tools/useBase64Encoder.ts`
-- `src/features/tools/useUrlEncoder.ts`
-- `src/features/tools/useRegexTester.ts`
-- `src/features/tools/useTimestampConverter.ts`
-- `src/features/tools/useColorPicker.ts`
-
-Each hook owns the tool's state, derived values, and handlers. Route files become thin layout wrappers.
-**Why (Bulletproof React):** Feature hooks are the pattern already established by `useJsonFormatter`, `useYamlFormatter`, etc. Consistency reduces onboarding cost and makes logic independently testable.
+**Files created:** `useBase64Encoder.ts`, `useUrlEncoder.ts`, `useRegexTester.ts`, `useTimestampConverter.ts`, `useColorPicker.ts` in `src/features/tools/`.
+Each follows the `useHashGenerator` pattern: unexported State/Actions interfaces, hook returns their intersection. Routes now call the hook and keep only `showShortcuts`, `usePiiMasking`, `safeHighlightHtml` (regex), `useKeyboardShortcuts`, `useRegisterCommands`, and JSX.
+Also fixed a pre-existing TDZ bug in base64/url-encoder where `usePreloadedInput(setInput)` was called before `setInput` was defined.
 
 ### SR-5 — Extract inline sub-components from route files
 
@@ -143,7 +134,7 @@ This should be done AFTER SR-2 so the layout component stays purely presentation
 | 6        | QW-6 Shared route registry            | 2–3 hrs | Maintainability       | ✅ Done |
 | 7        | SR-1 usePreloadedInput hook           | ~1 hr   | DRY (12 sites)        | ✅ Done |
 | 8        | SR-3 useTreeData hook                 | ~1 hr   | DRY (3 sites)         | ✅ Done |
-| 9        | SR-4 Feature hooks for tool routes    | 3–4 hrs | Consistency + size    | ⬜      |
+| 9        | SR-4 Feature hooks for tool routes    | 3–4 hrs | Consistency + size    | ✅ Done |
 | 10       | SR-5 Extract inline sub-components    | 2–3 hrs | Testability + size    | ⬜      |
 | 11       | SR-2 useFormatterPage hook            | 3–4 hrs | DRY + size (6 routes) | ⬜      |
 | 12       | SR-6 FormatterLayout component        | 4–6 hrs | Size + consistency    | ⬜      |

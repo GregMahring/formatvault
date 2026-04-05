@@ -1,21 +1,14 @@
 import type { Route } from './+types/color-picker';
 import { buildMeta } from '@/lib/meta';
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useRegisterCommands } from '@/hooks/useRegisterCommands';
 import { type Command } from '@/stores/commandStore';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
-import {
-  parseColor,
-  isColorError,
-  cssHex,
-  cssRgb,
-  cssHsl,
-  cssOklch,
-  type ParsedColor,
-} from '@/features/tools/colorConverter';
+import { cssHex, cssRgb, cssHsl, cssOklch } from '@/features/tools/colorConverter';
+import { useColorPicker } from '@/features/tools/useColorPicker';
 import { cn } from '@/lib/utils';
 import { Pipette, Copy, Check, Keyboard } from 'lucide-react';
 
@@ -72,42 +65,9 @@ function ColorValueRow({ label, value }: ColorValueRowProps) {
 // ── Main route ────────────────────────────────────────────────────────────────
 
 export default function ColorPicker() {
-  const [textInput, setTextInput] = useState('');
-  const [color, setColor] = useState<ParsedColor | null>(null);
-  const [inputError, setInputError] = useState<string | null>(null);
+  const { textInput, color, inputError, pickerHex, applyText, onPickerChange, clear } =
+    useColorPicker();
   const [showShortcuts, setShowShortcuts] = useState(false);
-
-  // pickerHex stays in sync with current color for the native <input type="color">
-  const pickerHex = color?.hex ?? '#3b82f6';
-
-  const applyText = useCallback((raw: string) => {
-    setTextInput(raw);
-    if (!raw.trim()) {
-      setColor(null);
-      setInputError(null);
-      return;
-    }
-    const result = parseColor(raw);
-    if (isColorError(result)) {
-      setInputError(result.error);
-    } else {
-      setColor(result);
-      setInputError(null);
-    }
-  }, []);
-
-  const onPickerChange = useCallback(
-    (hex: string) => {
-      applyText(hex);
-    },
-    [applyText]
-  );
-
-  const clear = useCallback(() => {
-    setTextInput('');
-    setColor(null);
-    setInputError(null);
-  }, []);
 
   const shortcuts = [
     {

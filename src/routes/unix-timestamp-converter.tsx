@@ -1,22 +1,14 @@
 import type { Route } from './+types/unix-timestamp-converter';
 import { buildMeta } from '@/lib/meta';
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useRegisterCommands } from '@/hooks/useRegisterCommands';
 import { type Command } from '@/stores/commandStore';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
-import {
-  parseTimestamp,
-  dateStringToTimestamps,
-  nowSeconds,
-  toDatetimeLocalValue,
-  isTimestampError,
-  detectUnit,
-  type TimestampUnit,
-  type TimestampBreakdown,
-} from '@/features/tools/timestampConverter';
+import { isTimestampError, type TimestampUnit } from '@/features/tools/timestampConverter';
+import { useTimestampConverter } from '@/features/tools/useTimestampConverter';
 import { cn } from '@/lib/utils';
 import { Clock, Copy, Check, Keyboard, RefreshCw } from 'lucide-react';
 
@@ -96,46 +88,22 @@ function TimestampCopyRow({ label, value }: { label: string; value: number }) {
 // ── Main component ──────────────────────────────────────────────────────────
 
 export default function UnixTimestampConverter() {
-  const [input, setInput] = useState('');
-  const [forceUnit, setForceUnit] = useState<TimestampUnit | undefined>(undefined);
-  const [reverseInput, setReverseInput] = useState('');
+  const {
+    input,
+    forceUnit,
+    reverseInput,
+    result,
+    breakdown,
+    error,
+    effectiveUnit,
+    reverseResult,
+    setTimestampInput,
+    setForceUnit,
+    setReverseInput,
+    handleNow,
+    clear,
+  } = useTimestampConverter();
   const [showShortcuts, setShowShortcuts] = useState(false);
-
-  const result = useMemo(
-    () => (input.trim() ? parseTimestamp(input, forceUnit) : null),
-    [input, forceUnit]
-  );
-
-  const breakdown: TimestampBreakdown | null =
-    result && !isTimestampError(result) ? result.breakdown : null;
-  const error = result && isTimestampError(result) ? result.error : null;
-
-  // Show the detected unit in the toggle
-  const effectiveUnit =
-    result && !isTimestampError(result)
-      ? result.detectedUnit
-      : (forceUnit ?? (input.trim() ? detectUnit(Number(input.trim())) : 'seconds'));
-
-  const reverseResult = useMemo(() => dateStringToTimestamps(reverseInput), [reverseInput]);
-
-  const handleNow = useCallback(() => {
-    const ts = nowSeconds();
-    setInput(ts);
-    setForceUnit(undefined);
-  }, []);
-
-  const clear = useCallback(() => {
-    setInput('');
-    setForceUnit(undefined);
-    setReverseInput('');
-  }, []);
-
-  // When a valid result exists, keep reverse input in sync
-  useEffect(() => {
-    if (breakdown) {
-      setReverseInput(toDatetimeLocalValue(new Date(breakdown.milliseconds)));
-    }
-  }, [breakdown]);
 
   const shortcuts = [
     {
@@ -232,8 +200,7 @@ export default function UnixTimestampConverter() {
               inputMode="numeric"
               value={input}
               onChange={(e) => {
-                setInput(e.target.value);
-                setForceUnit(undefined);
+                setTimestampInput(e.target.value);
               }}
               placeholder="e.g. 1735689600"
               className="w-52 rounded border border-edge-emphasis bg-surface-raised px-3 py-1.5 font-mono text-sm text-fg placeholder:text-fg-secondary focus:border-accent-500 focus:outline-none"
