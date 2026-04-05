@@ -26,11 +26,9 @@ Removed `output`, `error`, `isProcessing` and their setters. Store now only hold
 **Files:** `src/stores/settingsStore.ts`, `src/components/AppLayout.tsx`
 Removed `autoFormat` field, `setAutoFormat` action, `partialize` entry, command palette toggle, and unused `Zap` import.
 
-### QW-5 — Remove or populate `src/types/`
+### ~~QW-5 — Remove or populate `src/types/`~~ ✅ DONE
 
-**File:** `src/types/` (empty directory)
-**Problem:** An empty `types/` directory signals to contributors that shared types live there. They don't — types are co-located in feature modules.
-**Fix:** Delete the directory, or document in a README that types are co-located per feature.
+Deleted the empty `src/types/` directory. Updated `CLAUDE.md` repository layout and Coding Conventions to document that types are co-located with their feature module.
 
 ### QW-6 — Create a shared route registry
 
@@ -167,7 +165,7 @@ This should be done AFTER SR-2 so the layout component stays purely presentation
 | 2        | QW-2 Bug fix: ConverterLayout ternary | ~5 min  | Correctness           | ✅ Done |
 | 3        | QW-3 Remove dead editorStore fields   | ~30 min | Clarity               | ✅ Done |
 | 4        | QW-4 Remove/wire autoFormat           | ~20 min | Clarity               | ✅ Done |
-| 5        | QW-5 Clean up types/                  | ~5 min  | Clarity               | ⬜      |
+| 5        | QW-5 Clean up types/                  | ~5 min  | Clarity               | ✅ Done |
 | 6        | QW-6 Shared route registry            | 2–3 hrs | Maintainability       | ⬜      |
 | 7        | SR-1 usePreloadedInput hook           | ~1 hr   | DRY (12 sites)        | ⬜      |
 | 8        | SR-3 useTreeData hook                 | ~1 hr   | DRY (3 sites)         | ⬜      |
