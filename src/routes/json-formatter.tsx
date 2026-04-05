@@ -563,7 +563,7 @@ export default function JsonFormatter() {
               className="h-full"
             >
               {/* Left: input */}
-              <div className="flex h-full flex-col">
+              <div className="flex h-full min-h-0 flex-col">
                 <div className="flex items-center justify-between border-b border-edge px-3 py-1">
                   <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
                     Input
@@ -605,7 +605,7 @@ export default function JsonFormatter() {
               ) : showMarkdown ? (
                 <MarkdownPreview source={fmt.output || fmt.input} className="h-full" />
               ) : (
-                <div className="flex h-full flex-col">
+                <div className="flex h-full min-h-0 flex-col">
                   <div className="flex items-center justify-between border-b border-edge px-3 py-1">
                     <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
                       Output

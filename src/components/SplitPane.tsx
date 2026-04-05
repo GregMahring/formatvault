@@ -106,7 +106,7 @@ export function SplitPane({
     >
       {/* Left pane */}
       <section
-        className="flex min-w-0 flex-col overflow-hidden"
+        className="flex h-full min-w-0 flex-col overflow-hidden"
         style={{ width: `${String(splitPct)}%` }}
         aria-label={leftLabel}
       >
@@ -144,7 +144,7 @@ export function SplitPane({
 
       {/* Right pane */}
       <section
-        className="flex min-w-0 flex-col overflow-hidden"
+        className="flex h-full min-w-0 flex-col overflow-hidden"
         style={{ width: `${String(100 - splitPct)}%` }}
         aria-label={rightLabel}
       >

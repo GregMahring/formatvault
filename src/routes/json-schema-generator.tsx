@@ -269,7 +269,7 @@ export default function JsonSchemaGenerator() {
           className="h-full"
         >
           {/* Left: JSON input */}
-          <div className="flex h-full flex-col">
+          <div className="flex h-full min-h-0 flex-col">
             <div className="flex h-8 shrink-0 items-center justify-between border-b border-edge px-3">
               <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
                 JSON Input
@@ -287,7 +287,7 @@ export default function JsonSchemaGenerator() {
           </div>
 
           {/* Right: Schema output/input + validation results */}
-          <div className="flex h-full flex-col">
+          <div className="flex h-full min-h-0 flex-col">
             <div className="flex h-8 shrink-0 items-center justify-between border-b border-edge px-3">
               <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
                 {schema.mode === 'generate' ? 'JSON Schema' : 'Schema'}

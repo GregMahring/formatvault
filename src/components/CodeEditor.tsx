@@ -117,35 +117,47 @@ export function CodeEditor({
     [onChange]
   );
 
+  const editor = (
+    <ReactCodeMirror
+      value={value}
+      onChange={readOnly ? undefined : handleChange}
+      theme={theme === 'dark' ? formatvaultDark : formatvaultLight}
+      extensions={extensions}
+      placeholder={placeholder}
+      readOnly={readOnly}
+      height={height ?? undefined}
+      minHeight={minHeight}
+      maxHeight={maxHeight}
+      // When filling a positioned container, the ReactCodeMirror wrapper div
+      // also needs height: 100% so that .cm-editor { height: 100% } resolves
+      // against a definite value rather than collapsing to auto.
+      style={height !== undefined ? { height: '100%' } : undefined}
+      basicSetup={{
+        lineNumbers: true,
+        foldGutter: true,
+        highlightActiveLine: !readOnly,
+        autocompletion: !readOnly,
+        bracketMatching: true,
+        closeBrackets: !readOnly,
+        indentOnInput: !readOnly,
+      }}
+    />
+  );
+
   return (
     <div
-      className={cn(
-        'relative overflow-hidden rounded-md border border-edge bg-surface-raised',
-        className
-      )}
+      className={cn('relative rounded-md border border-edge bg-surface-raised', className)}
       role="group"
       aria-label={label}
     >
-      <ReactCodeMirror
-        value={value}
-        onChange={readOnly ? undefined : handleChange}
-        theme={theme === 'dark' ? formatvaultDark : formatvaultLight}
-        extensions={extensions}
-        placeholder={placeholder}
-        readOnly={readOnly}
-        height={height}
-        minHeight={minHeight}
-        maxHeight={maxHeight}
-        basicSetup={{
-          lineNumbers: true,
-          foldGutter: true,
-          highlightActiveLine: !readOnly,
-          autocompletion: !readOnly,
-          bracketMatching: true,
-          closeBrackets: !readOnly,
-          indentOnInput: !readOnly,
-        }}
-      />
+      {height !== undefined ? (
+        // absolute inset-0 gives the positioned parent's flex-1 height as a
+        // definite anchor. % heights inside resolve correctly without depending
+        // on the flex percentage-height chain, which browsers handle inconsistently.
+        <div className="absolute inset-0">{editor}</div>
+      ) : (
+        editor
+      )}
     </div>
   );
 }
