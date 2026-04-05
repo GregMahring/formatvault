@@ -5,57 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { cn } from '@/lib/utils';
+import { NAV_GROUPS } from '@/lib/routes';
 
 export interface HeaderProps {
   className?: string;
   onOpenCommandPalette?: () => void;
 }
-
-const NAV_GROUPS = [
-  {
-    label: 'Formatters',
-    items: [
-      { to: '/json-formatter', label: 'JSON Formatter' },
-      { to: '/xml-formatter', label: 'XML Formatter' },
-      { to: '/csv-formatter', label: 'CSV Formatter' },
-      { to: '/yaml-formatter', label: 'YAML Formatter' },
-      { to: '/toml-formatter', label: 'TOML Formatter' },
-      { to: '/sql-formatter', label: 'SQL Formatter' },
-    ],
-  },
-  {
-    label: 'Converters',
-    items: [
-      { to: '/xml-to-json-converter', label: 'XML → JSON' },
-      { to: '/json-to-xml-converter', label: 'JSON → XML' },
-      { to: '/json-to-csv-converter', label: 'JSON → CSV' },
-      { to: '/json-to-yaml-converter', label: 'JSON → YAML' },
-      { to: '/json-to-toml-converter', label: 'JSON → TOML' },
-      { to: '/json-to-typescript', label: 'JSON → TypeScript' },
-      { to: '/csv-to-json-converter', label: 'CSV → JSON' },
-      { to: '/csv-to-yaml-converter', label: 'CSV → YAML' },
-      { to: '/yaml-to-json-converter', label: 'YAML → JSON' },
-      { to: '/yaml-to-toml-converter', label: 'YAML → TOML' },
-      { to: '/toml-to-json-converter', label: 'TOML → JSON' },
-      { to: '/toml-to-yaml-converter', label: 'TOML → YAML' },
-    ],
-  },
-  {
-    label: 'Utilities',
-    items: [
-      { to: '/regex-tester', label: 'Regex Tester' },
-      { to: '/jwt-decoder', label: 'JWT Decoder' },
-      { to: '/base64-encoder', label: 'Base64 Encoder' },
-      { to: '/url-encoder', label: 'URL Encoder' },
-      { to: '/unix-timestamp-converter', label: 'Timestamp Converter' },
-      { to: '/cron-expression-explainer', label: 'Cron Explainer' },
-      { to: '/color-picker', label: 'Color Picker' },
-      { to: '/number-base-converter', label: 'Number Base Converter' },
-      { to: '/hash-generator', label: 'Hash Generator' },
-      { to: '/json-schema-generator', label: 'JSON Schema Generator' },
-    ],
-  },
-] as const;
 
 interface NavGroupProps {
   label: string;

@@ -12,26 +12,8 @@ const CommandPalette = lazy(() =>
 );
 import { useCommandStore, type Command } from '@/stores/commandStore';
 import { useSettingsStore, type IndentSize } from '@/stores/settingsStore';
-import {
-  Home,
-  Braces,
-  FileText,
-  FileCode2,
-  ArrowLeftRight,
-  KeyRound,
-  Lock,
-  Globe,
-  Sun,
-  Moon,
-  WrapText,
-  Indent,
-  Database,
-  Slash,
-  Timer,
-  CalendarClock,
-  Pipette,
-  Binary,
-} from 'lucide-react';
+import { TOOL_ROUTES } from '@/lib/routes';
+import { Home, ArrowLeftRight, Sun, Moon, WrapText, Indent } from 'lucide-react';
 
 export interface AppLayoutProps {
   children: React.ReactNode;
@@ -87,106 +69,6 @@ export function AppLayout({ children }: AppLayoutProps) {
         },
       },
       {
-        id: 'nav:json-formatter',
-        label: 'JSON Formatter',
-        group: 'Navigation',
-        icon: Braces,
-        keywords: ['pretty', 'beautify', 'validate', 'minify'],
-        handler: () => {
-          void navigate('/json-formatter');
-        },
-      },
-      {
-        id: 'nav:csv-formatter',
-        label: 'CSV Formatter',
-        group: 'Navigation',
-        icon: FileText,
-        keywords: ['delimiter', 'comma', 'tab'],
-        handler: () => {
-          void navigate('/csv-formatter');
-        },
-      },
-      {
-        id: 'nav:yaml-formatter',
-        label: 'YAML Formatter',
-        group: 'Navigation',
-        icon: FileCode2,
-        keywords: ['yml'],
-        handler: () => {
-          void navigate('/yaml-formatter');
-        },
-      },
-      {
-        id: 'nav:toml-formatter',
-        label: 'TOML Formatter',
-        group: 'Navigation',
-        icon: FileCode2,
-        keywords: ['cargo', 'pyproject', 'config'],
-        handler: () => {
-          void navigate('/toml-formatter');
-        },
-      },
-      {
-        id: 'nav:sql-formatter',
-        label: 'SQL Formatter',
-        group: 'Navigation',
-        icon: Database,
-        keywords: ['query', 'database', 'select', 'postgres', 'mysql'],
-        handler: () => {
-          void navigate('/sql-formatter');
-        },
-      },
-      {
-        id: 'nav:regex-tester',
-        label: 'Regex Tester',
-        group: 'Navigation',
-        icon: Slash,
-        keywords: ['regexp', 'pattern', 'match', 'test'],
-        handler: () => {
-          void navigate('/regex-tester');
-        },
-      },
-      {
-        id: 'nav:unix-timestamp-converter',
-        label: 'Unix Timestamp Converter',
-        group: 'Navigation',
-        icon: Timer,
-        keywords: ['timestamp', 'unix', 'epoch', 'date', 'time', 'seconds', 'milliseconds'],
-        handler: () => {
-          void navigate('/unix-timestamp-converter');
-        },
-      },
-      {
-        id: 'nav:cron-expression-explainer',
-        label: 'Cron Expression Explainer',
-        group: 'Navigation',
-        icon: CalendarClock,
-        keywords: ['cron', 'schedule', 'recurring', 'job', 'task', 'cronjob', 'next run'],
-        handler: () => {
-          void navigate('/cron-expression-explainer');
-        },
-      },
-      {
-        id: 'nav:color-picker',
-        label: 'Color Picker',
-        group: 'Navigation',
-        icon: Pipette,
-        keywords: ['color', 'colour', 'hex', 'rgb', 'hsl', 'oklch', 'picker', 'converter'],
-        handler: () => {
-          void navigate('/color-picker');
-        },
-      },
-      {
-        id: 'nav:number-base-converter',
-        label: 'Number Base Converter',
-        group: 'Navigation',
-        icon: Binary,
-        keywords: ['binary', 'hex', 'octal', 'decimal', 'base', 'bits', 'number', 'convert'],
-        handler: () => {
-          void navigate('/number-base-converter');
-        },
-      },
-      {
         id: 'nav:converters',
         label: 'Converters',
         group: 'Navigation',
@@ -196,36 +78,16 @@ export function AppLayout({ children }: AppLayoutProps) {
           void navigate('/converters');
         },
       },
-      {
-        id: 'nav:jwt-decoder',
-        label: 'JWT Decoder',
-        group: 'Navigation',
-        icon: KeyRound,
-        keywords: ['token', 'decode'],
+      ...TOOL_ROUTES.map((route) => ({
+        id: `nav:${route.id}`,
+        label: route.label,
+        group: 'Navigation' as const,
+        icon: route.icon,
+        keywords: route.keywords ? [...route.keywords] : undefined,
         handler: () => {
-          void navigate('/jwt-decoder');
+          void navigate(route.path);
         },
-      },
-      {
-        id: 'nav:base64-encoder',
-        label: 'Base64 Encoder',
-        group: 'Navigation',
-        icon: Lock,
-        keywords: ['encode', 'decode', 'base64'],
-        handler: () => {
-          void navigate('/base64-encoder');
-        },
-      },
-      {
-        id: 'nav:url-encoder',
-        label: 'URL Encoder',
-        group: 'Navigation',
-        icon: Globe,
-        keywords: ['percent', 'encode', 'decode', 'query'],
-        handler: () => {
-          void navigate('/url-encoder');
-        },
-      },
+      })),
 
       // ── Settings ────────────────────────────────────────────────
       {

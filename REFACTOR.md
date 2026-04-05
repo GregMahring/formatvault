@@ -30,12 +30,13 @@ Removed `autoFormat` field, `setAutoFormat` action, `partialize` entry, command 
 
 Deleted the empty `src/types/` directory. Updated `CLAUDE.md` repository layout and Coding Conventions to document that types are co-located with their feature module.
 
-### QW-6 — Create a shared route registry
+### ~~QW-6 — Create a shared route registry~~ ✅ DONE
 
-**Files:** `src/components/AppLayout.tsx` (lines 89–238), `src/components/Header.tsx` (lines 14–57)
-**Problem:** Both files independently hardcode the full tool route list. A new tool requires updating two files with no compile-time check that they're in sync.
-**Fix:** Create `src/lib/routes.ts` exporting a typed `TOOLS` array with `{ label, path, icon, group, description }`. Both `AppLayout` command registration and `Header` nav groups consume this array.
-**Why (Cal.com pattern):** Route metadata should have a single source of truth. Cal.com's `apps/web/lib/apps.ts` serves this role for their app registry.
+**Files:** `src/lib/routes.ts` (new), `src/components/AppLayout.tsx`, `src/components/Header.tsx`
+Created `TOOL_ROUTES` (28 entries) with `{ id, label, navLabel?, path, group, icon, keywords? }`.
+`NAV_GROUPS` and `getRoutesByGroup` derived from it. Both `Header` and `AppLayout` consume the registry.
+AppLayout navigation commands now also cover all converter routes (previously missing).
+Tests: `src/lib/routes.test.ts` — 23 tests covering uniqueness, shape, group helpers, and nav label fallback.
 
 ---
 
@@ -166,7 +167,7 @@ This should be done AFTER SR-2 so the layout component stays purely presentation
 | 3        | QW-3 Remove dead editorStore fields   | ~30 min | Clarity               | ✅ Done |
 | 4        | QW-4 Remove/wire autoFormat           | ~20 min | Clarity               | ✅ Done |
 | 5        | QW-5 Clean up types/                  | ~5 min  | Clarity               | ✅ Done |
-| 6        | QW-6 Shared route registry            | 2–3 hrs | Maintainability       | ⬜      |
+| 6        | QW-6 Shared route registry            | 2–3 hrs | Maintainability       | ✅ Done |
 | 7        | SR-1 usePreloadedInput hook           | ~1 hr   | DRY (12 sites)        | ⬜      |
 | 8        | SR-3 useTreeData hook                 | ~1 hr   | DRY (3 sites)         | ⬜      |
 | 9        | SR-4 Feature hooks for tool routes    | 3–4 hrs | Consistency + size    | ⬜      |
