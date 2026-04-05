@@ -17,6 +17,7 @@ import { useYamlFormatter } from '@/features/yaml/useYamlFormatter';
 import { parseYaml } from '@/features/yaml/yamlFormatter';
 import { useFileParser } from '@/hooks/useFileParser';
 import { usePreloadedInput } from '@/hooks/usePreloadedInput';
+import { useTreeData } from '@/hooks/useTreeData';
 import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
 import { usePiiMasking } from '@/hooks/usePiiMasking';
 import { useRegisterCommands } from '@/hooks/useRegisterCommands';
@@ -59,6 +60,11 @@ export function meta(_args: Route.MetaArgs) {
   });
 }
 
+function parseYamlForTree(source: string): unknown {
+  const result = parseYaml(source);
+  return result.error === null ? result.value : undefined;
+}
+
 export default function YamlFormatter() {
   const fmt = useYamlFormatter();
   const fileParser = useFileParser();
@@ -96,13 +102,7 @@ export default function YamlFormatter() {
     [fileParser]
   );
 
-  // Parse the output (or input) as a JS value for the tree view
-  const treeData = useMemo(() => {
-    const source = fmt.output || fmt.input;
-    if (!source.trim()) return undefined;
-    const result = parseYaml(source);
-    return result.error === null ? result.value : undefined;
-  }, [fmt.output, fmt.input]);
+  const treeData = useTreeData(fmt.output, fmt.input, parseYamlForTree);
 
   const shortcuts: Shortcut[] = [
     {

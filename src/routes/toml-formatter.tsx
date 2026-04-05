@@ -15,6 +15,7 @@ import { useTomlFormatter } from '@/features/toml/useTomlFormatter';
 import { parseToml } from '@/features/toml/tomlFormatter';
 import { useFileParser } from '@/hooks/useFileParser';
 import { usePreloadedInput } from '@/hooks/usePreloadedInput';
+import { useTreeData } from '@/hooks/useTreeData';
 import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
 import { usePiiMasking } from '@/hooks/usePiiMasking';
 import { useRegisterCommands } from '@/hooks/useRegisterCommands';
@@ -31,6 +32,11 @@ export function meta(_args: Route.MetaArgs) {
       'Format and validate TOML config files privately in your browser — no data uploaded. Line-level error reporting. Supports Cargo.toml, pyproject.toml, and all standard TOML.',
     path: '/toml-formatter',
   });
+}
+
+function parseTomlForTree(source: string): unknown {
+  const result = parseToml(source);
+  return result.error === null ? result.value : undefined;
 }
 
 export default function TomlFormatter() {
@@ -68,13 +74,7 @@ export default function TomlFormatter() {
     [fileParser]
   );
 
-  // Parse the output (or input) as a JS value for the tree view
-  const treeData = useMemo(() => {
-    const source = fmt.output || fmt.input;
-    if (!source.trim()) return undefined;
-    const result = parseToml(source);
-    return result.error === null ? result.value : undefined;
-  }, [fmt.output, fmt.input]);
+  const treeData = useTreeData(fmt.output, fmt.input, parseTomlForTree);
 
   const shortcuts: Shortcut[] = [
     {

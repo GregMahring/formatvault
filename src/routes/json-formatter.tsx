@@ -18,6 +18,7 @@ import { useJsonFormatter } from '@/features/json/useJsonFormatter';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { useFileParser } from '@/hooks/useFileParser';
 import { usePreloadedInput } from '@/hooks/usePreloadedInput';
+import { useTreeData } from '@/hooks/useTreeData';
 import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
 import { usePiiMasking } from '@/hooks/usePiiMasking';
 import { useRegisterCommands } from '@/hooks/useRegisterCommands';
@@ -105,16 +106,7 @@ export default function JsonFormatter() {
     [fileParser]
   );
 
-  // Parse the output (or input) as a JS value for the tree view
-  const treeData = useMemo(() => {
-    const source = fmt.output || fmt.input;
-    if (!source.trim()) return undefined;
-    try {
-      return JSON.parse(source) as unknown;
-    } catch {
-      return undefined;
-    }
-  }, [fmt.output, fmt.input]);
+  const treeData = useTreeData(fmt.output, fmt.input, JSON.parse);
 
   const shortcuts: Shortcut[] = [
     {

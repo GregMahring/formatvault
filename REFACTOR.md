@@ -64,21 +64,11 @@ The current `json-formatter.tsx` is 722 lines; a thin route using this hook woul
 
 **Why (Bulletproof React):** Route files should express WHAT a page does, not HOW the framework wiring works. The DRY violation across 6 routes is the clearest refactor target in the codebase.
 
-### SR-3 — Extract `useTreeData` hook
+### ~~SR-3 — Extract `useTreeData` hook~~ ✅ DONE
 
-**Affects:** `json-formatter.tsx`, `yaml-formatter.tsx`, `toml-formatter.tsx`
-**Problem:** Each duplicates a near-identical `useMemo` that parses `fmt.output || fmt.input` into tree-view data, catching parse errors silently.
-**Fix:** Create `src/hooks/useTreeData.ts`:
-
-```ts
-export function useTreeData(
-  output: string,
-  input: string,
-  parse: (s: string) => unknown
-): unknown | undefined;
-```
-
-**Why:** Three identical `useMemo` blocks with identical try/catch and fallback logic is a textbook extraction candidate.
+**Files changed:** `src/hooks/useTreeData.ts` (new), `json-formatter.tsx`, `yaml-formatter.tsx`, `toml-formatter.tsx`.
+YAML/TOML use result-object parsers (not throw-on-error), so each formatter got a module-level `parseXxxForTree` wrapper to normalize the interface. JSON passes `JSON.parse` directly.
+Tests: `src/hooks/useTreeData.test.ts` — 11 tests.
 
 ### SR-4 — Extract feature hooks for utility tool routes
 
@@ -152,7 +142,7 @@ This should be done AFTER SR-2 so the layout component stays purely presentation
 | 5        | QW-5 Clean up types/                  | ~5 min  | Clarity               | ✅ Done |
 | 6        | QW-6 Shared route registry            | 2–3 hrs | Maintainability       | ✅ Done |
 | 7        | SR-1 usePreloadedInput hook           | ~1 hr   | DRY (12 sites)        | ✅ Done |
-| 8        | SR-3 useTreeData hook                 | ~1 hr   | DRY (3 sites)         | ⬜      |
+| 8        | SR-3 useTreeData hook                 | ~1 hr   | DRY (3 sites)         | ✅ Done |
 | 9        | SR-4 Feature hooks for tool routes    | 3–4 hrs | Consistency + size    | ⬜      |
 | 10       | SR-5 Extract inline sub-components    | 2–3 hrs | Testability + size    | ⬜      |
 | 11       | SR-2 useFormatterPage hook            | 3–4 hrs | DRY + size (6 routes) | ⬜      |
