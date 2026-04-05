@@ -1,48 +1,30 @@
 import { create } from 'zustand';
 
 /**
- * In-memory editor state — NEVER persisted (ADR-0010).
- * Users may paste API keys, credentials, or PII; we do not save any of it.
+ * In-memory store for shuttling a pasted value from the home page to the
+ * destination tool route. NEVER persisted (ADR-0010).
+ *
+ * Contract: call setInput() before navigating, then read + reset() on mount
+ * in the destination route. All other editor state (output, error, processing)
+ * is owned locally by each feature hook.
  */
 interface EditorState {
   input: string;
-  output: string;
-  error: string | null;
-  isProcessing: boolean;
 }
 
 interface EditorActions {
   setInput: (input: string) => void;
-  setOutput: (output: string) => void;
-  setError: (error: string | null) => void;
-  setIsProcessing: (isProcessing: boolean) => void;
-  /** Reset all editor state — called on route change to avoid stale content across tools */
+  /** Clear the store after the destination route has consumed the value. */
   reset: () => void;
 }
 
-const emptyState: EditorState = {
-  input: '',
-  output: '',
-  error: null,
-  isProcessing: false,
-};
-
 export const useEditorStore = create<EditorState & EditorActions>()((set) => ({
-  ...emptyState,
+  input: '',
 
   setInput: (input) => {
     set({ input });
   },
-  setOutput: (output) => {
-    set({ output });
-  },
-  setError: (error) => {
-    set({ error });
-  },
-  setIsProcessing: (isProcessing) => {
-    set({ isProcessing });
-  },
   reset: () => {
-    set(emptyState);
+    set({ input: '' });
   },
 }));

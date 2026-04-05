@@ -16,12 +16,10 @@ Architecture review against Bulletproof React (feature-based modularity) and 202
 **File:** `src/components/ConverterLayout.tsx` line 122
 `... : 'yaml'` (dead branch) → `... : 'text'`
 
-### QW-3 — Remove dead fields from `editorStore`
+### ~~QW-3 — Remove dead fields from `editorStore`~~ ✅ DONE
 
 **File:** `src/stores/editorStore.ts`
-**Problem:** `output`, `error`, and `isProcessing` are defined and documented but never read by any consumer. They create a false impression that editorStore is the central source of truth for formatter state.
-**Fix:** Delete these three fields and their setters. The store's only real contract is `input` + `reset()`.
-**Why (Bulletproof React):** Stores should own only the state they actually manage. Phantom fields increase cognitive load and invite future misuse.
+Removed `output`, `error`, `isProcessing` and their setters. Store now only holds `input` + `reset()`.
 
 ### QW-4 — Remove `autoFormat` phantom setting
 
@@ -168,7 +166,7 @@ This should be done AFTER SR-2 so the layout component stays purely presentation
 | -------- | ------------------------------------- | ------- | --------------------- | ------- |
 | 1        | QW-1 Bug fix: xml-formatter parseFile | ~5 min  | Correctness           | ✅ Done |
 | 2        | QW-2 Bug fix: ConverterLayout ternary | ~5 min  | Correctness           | ✅ Done |
-| 3        | QW-3 Remove dead editorStore fields   | ~30 min | Clarity               | ⬜ Next |
+| 3        | QW-3 Remove dead editorStore fields   | ~30 min | Clarity               | ✅ Done |
 | 4        | QW-4 Remove/wire autoFormat           | ~20 min | Clarity               | ⬜ Next |
 | 5        | QW-5 Clean up types/                  | ~5 min  | Clarity               | ⬜      |
 | 6        | QW-6 Shared route registry            | 2–3 hrs | Maintainability       | ⬜      |
