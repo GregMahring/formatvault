@@ -97,7 +97,7 @@ export default function XmlFormatter() {
   const handleFileUpload = useCallback(
     (file: File) => {
       // XML files are passed as raw text; the formatter hook handles parsing
-      fileParser.parseFile(file, 'yaml');
+      fileParser.parseFile(file, 'text');
     },
     [fileParser]
   );

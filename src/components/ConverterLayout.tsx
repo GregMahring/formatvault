@@ -120,8 +120,8 @@ export function ConverterLayout({
     (file: File) => {
       fileParser.parseFile(
         file,
-        fromLanguage === 'json' ? 'json' : fromLanguage === 'yaml' ? 'yaml' : 'yaml'
-        // xml and csv both use 'yaml' slot which returns raw text for the formatter hook to handle
+        fromLanguage === 'json' ? 'json' : fromLanguage === 'yaml' ? 'yaml' : 'text'
+        // xml and csv use 'text' which returns raw content for the converter hook to handle
       );
     },
     [fileParser, fromLanguage]
