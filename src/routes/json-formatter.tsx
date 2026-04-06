@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import type { Route } from './+types/json-formatter';
 import { buildMeta } from '@/lib/meta';
 import { SplitPane } from '@/components/SplitPane';
@@ -17,11 +17,9 @@ import { ProgressBar } from '@/components/ProgressBar';
 import { useJsonFormatter } from '@/features/json/useJsonFormatter';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { useFileParser } from '@/hooks/useFileParser';
-import { usePreloadedInput } from '@/hooks/usePreloadedInput';
 import { useTreeData } from '@/hooks/useTreeData';
-import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
-import { usePiiMasking } from '@/hooks/usePiiMasking';
-import { useRegisterCommands } from '@/hooks/useRegisterCommands';
+import { useFormatterPage } from '@/hooks/useFormatterPage';
+import { type Shortcut } from '@/hooks/useKeyboardShortcuts';
 import { type Command } from '@/stores/commandStore';
 import { ToolPageContent } from '@/components/ToolPageContent';
 import { cn } from '@/lib/utils';
@@ -72,39 +70,6 @@ export default function JsonFormatter() {
   const [showMarkdown, setShowMarkdown] = useState(false);
   const [showTree, setShowTree] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
-
-  usePreloadedInput(fmt.setInput);
-
-  // Auto-process on input/option changes with 400ms debounce
-  useEffect(() => {
-    if (!fmt.input.trim()) return;
-    if (fmt.isQueryMode) return;
-    const timer = setTimeout(() => {
-      fmt.process();
-    }, 400);
-    return () => {
-      clearTimeout(timer);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fmt.input, fmt.mode, fmt.relaxed, fmt.sortKeys, indentWithTabs]);
-
-  // When file parse completes, load the text into the formatter input
-  useEffect(() => {
-    if (fileParser.result?.output) {
-      fmt.setInput(fileParser.result.output);
-    } else if (fileParser.result?.error) {
-      // Surface worker/file errors via the formatter's error state
-      fmt.setInput('');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fileParser.result]);
-
-  const handleFileUpload = useCallback(
-    (file: File) => {
-      fileParser.parseFile(file, 'json');
-    },
-    [fileParser]
-  );
 
   const treeData = useTreeData(fmt.output, fmt.input, JSON.parse);
 
@@ -179,8 +144,6 @@ export default function JsonFormatter() {
     },
   ];
 
-  useKeyboardShortcuts(shortcuts, !showShortcuts);
-
   const commands = useMemo<Command[]>(
     () => [
       {
@@ -248,9 +211,18 @@ export default function JsonFormatter() {
     ],
     [fmt, setShowDiff, setShowMarkdown, setShowTree]
   );
-  useRegisterCommands(commands);
 
-  const pii = usePiiMasking(fmt.output);
+  const { pii, handleFileUpload } = useFormatterPage({
+    fmt,
+    fileParser,
+    fileType: 'json',
+    shortcuts,
+    commands,
+    showShortcuts,
+    optionsDepsKey: `${fmt.mode}|${String(fmt.relaxed)}|${String(fmt.sortKeys)}|${String(indentWithTabs)}`,
+    skipAutoProcess: fmt.isQueryMode,
+    clearInputOnFileError: true,
+  });
 
   const hasError = fmt.error !== null;
   const isValid = fmt.validationResult === null && fmt.input.trim().length > 0;

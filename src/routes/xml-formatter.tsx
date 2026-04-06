@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import type { Route } from './+types/xml-formatter';
 import { buildMeta } from '@/lib/meta';
 import { SplitPane } from '@/components/SplitPane';
@@ -16,10 +16,8 @@ import { useXmlFormatter } from '@/features/xml/useXmlFormatter';
 import { type XmlMode } from '@/features/xml/useXmlFormatter';
 import { type XmlIndent } from '@/features/xml/xmlFormatter';
 import { useFileParser } from '@/hooks/useFileParser';
-import { usePreloadedInput } from '@/hooks/usePreloadedInput';
-import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
-import { usePiiMasking } from '@/hooks/usePiiMasking';
-import { useRegisterCommands } from '@/hooks/useRegisterCommands';
+import { useFormatterPage } from '@/hooks/useFormatterPage';
+import { type Shortcut } from '@/hooks/useKeyboardShortcuts';
 import { type Command } from '@/stores/commandStore';
 import { ToolPageContent } from '@/components/ToolPageContent';
 import { cn } from '@/lib/utils';
@@ -64,36 +62,6 @@ export default function XmlFormatter() {
   const [showDiff, setShowDiff] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
 
-  usePreloadedInput(fmt.setInput);
-
-  // Auto-process on input/option changes with 400ms debounce
-  useEffect(() => {
-    if (!fmt.input.trim()) return;
-    const timer = setTimeout(() => {
-      fmt.process();
-    }, 400);
-    return () => {
-      clearTimeout(timer);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fmt.input, fmt.mode, fmt.indent]);
-
-  // Load parsed file into formatter
-  useEffect(() => {
-    if (fileParser.result?.output) {
-      fmt.setInput(fileParser.result.output);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fileParser.result]);
-
-  const handleFileUpload = useCallback(
-    (file: File) => {
-      // XML files are passed as raw text; the formatter hook handles parsing
-      fileParser.parseFile(file, 'text');
-    },
-    [fileParser]
-  );
-
   const shortcuts: Shortcut[] = [
     {
       label: 'Format / Run',
@@ -128,8 +96,6 @@ export default function XmlFormatter() {
       },
     },
   ];
-
-  useKeyboardShortcuts(shortcuts, !showShortcuts);
 
   const commands = useMemo<Command[]>(
     () => [
@@ -177,9 +143,16 @@ export default function XmlFormatter() {
     ],
     [fmt, setShowDiff]
   );
-  useRegisterCommands(commands);
 
-  const pii = usePiiMasking(fmt.output);
+  const { pii, handleFileUpload } = useFormatterPage({
+    fmt,
+    fileParser,
+    fileType: 'text',
+    shortcuts,
+    commands,
+    showShortcuts,
+    optionsDepsKey: `${fmt.mode}|${String(fmt.indent)}`,
+  });
 
   const hasError = fmt.error !== null;
   const isValid =

@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import type { Route } from './+types/sql-formatter';
 import { buildMeta } from '@/lib/meta';
 import { SplitPane } from '@/components/SplitPane';
@@ -13,10 +13,8 @@ import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useSqlFormatter } from '@/features/sql/useSqlFormatter';
 import { useFileParser } from '@/hooks/useFileParser';
-import { usePreloadedInput } from '@/hooks/usePreloadedInput';
-import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
-import { usePiiMasking } from '@/hooks/usePiiMasking';
-import { useRegisterCommands } from '@/hooks/useRegisterCommands';
+import { useFormatterPage } from '@/hooks/useFormatterPage';
+import { type Shortcut } from '@/hooks/useKeyboardShortcuts';
 import { type Command } from '@/stores/commandStore';
 import type { SqlDialect, SqlKeywordCase } from '@/features/sql/sqlFormatter';
 import { cn } from '@/lib/utils';
@@ -48,35 +46,6 @@ export default function SqlFormatter() {
   const fileParser = useFileParser();
   const [showDiff, setShowDiff] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
-
-  usePreloadedInput(fmt.setInput);
-
-  // Auto-process on input/option changes with debounce
-  useEffect(() => {
-    if (!fmt.input.trim()) return;
-    const timer = setTimeout(() => {
-      fmt.process();
-    }, 400);
-    return () => {
-      clearTimeout(timer);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fmt.input, fmt.dialect, fmt.tabWidth, fmt.keywordCase, fmt.linesBetweenQueries]);
-
-  // Load parsed file into formatter
-  useEffect(() => {
-    if (fileParser.result?.output) {
-      fmt.setInput(fileParser.result.output);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fileParser.result]);
-
-  const handleFileUpload = useCallback(
-    (file: File) => {
-      fileParser.parseFile(file, 'text');
-    },
-    [fileParser]
-  );
 
   const shortcuts: Shortcut[] = [
     {
@@ -113,8 +82,6 @@ export default function SqlFormatter() {
     },
   ];
 
-  useKeyboardShortcuts(shortcuts, !showShortcuts);
-
   const commands = useMemo<Command[]>(
     () => [
       {
@@ -143,9 +110,16 @@ export default function SqlFormatter() {
     ],
     [fmt, setShowDiff]
   );
-  useRegisterCommands(commands);
 
-  const pii = usePiiMasking(fmt.output);
+  const { pii, handleFileUpload } = useFormatterPage({
+    fmt,
+    fileParser,
+    fileType: 'text',
+    shortcuts,
+    commands,
+    showShortcuts,
+    optionsDepsKey: `${fmt.dialect}|${String(fmt.tabWidth)}|${fmt.keywordCase}|${String(fmt.linesBetweenQueries)}`,
+  });
 
   const hasError = fmt.error !== null;
   const isValid = !hasError && fmt.input.trim().length > 0;

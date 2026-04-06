@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import type { Route } from './+types/csv-formatter';
 import { buildMeta } from '@/lib/meta';
 import { SplitPane } from '@/components/SplitPane';
@@ -14,10 +14,8 @@ import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useCsvFormatter } from '@/features/csv/useCsvFormatter';
 import { useFileParser } from '@/hooks/useFileParser';
-import { usePreloadedInput } from '@/hooks/usePreloadedInput';
-import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
-import { usePiiMasking } from '@/hooks/usePiiMasking';
-import { useRegisterCommands } from '@/hooks/useRegisterCommands';
+import { useFormatterPage } from '@/hooks/useFormatterPage';
+import { type Shortcut } from '@/hooks/useKeyboardShortcuts';
 import { type Command } from '@/stores/commandStore';
 import type { Delimiter } from '@/features/csv/csvFormatter';
 import { ToolPageContent } from '@/components/ToolPageContent';
@@ -72,35 +70,6 @@ export default function CsvFormatter() {
   const [showMarkdown, setShowMarkdown] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
 
-  usePreloadedInput(fmt.setInput);
-
-  // Auto-process on input/option changes with debounce
-  useEffect(() => {
-    if (!fmt.input.trim()) return;
-    const timer = setTimeout(() => {
-      fmt.process();
-    }, 400);
-    return () => {
-      clearTimeout(timer);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fmt.input, fmt.delimiter, fmt.hasHeader]);
-
-  // Load parsed file into formatter
-  useEffect(() => {
-    if (fileParser.result?.output) {
-      fmt.setInput(fileParser.result.output);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fileParser.result]);
-
-  const handleFileUpload = useCallback(
-    (file: File) => {
-      fileParser.parseFile(file, 'csv');
-    },
-    [fileParser]
-  );
-
   const shortcuts: Shortcut[] = [
     {
       label: 'Format',
@@ -147,8 +116,6 @@ export default function CsvFormatter() {
     },
   ];
 
-  useKeyboardShortcuts(shortcuts, !showShortcuts);
-
   const commands = useMemo<Command[]>(
     () => [
       {
@@ -177,9 +144,16 @@ export default function CsvFormatter() {
     ],
     [fmt, setShowDiff, setShowMarkdown]
   );
-  useRegisterCommands(commands);
 
-  const pii = usePiiMasking(fmt.output);
+  const { pii, handleFileUpload } = useFormatterPage({
+    fmt,
+    fileParser,
+    fileType: 'csv',
+    shortcuts,
+    commands,
+    showShortcuts,
+    optionsDepsKey: `${fmt.delimiter}|${String(fmt.hasHeader)}`,
+  });
 
   const hasError = fmt.error !== null;
 

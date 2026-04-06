@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import type { Route } from './+types/toml-formatter';
 import { buildMeta } from '@/lib/meta';
 import { SplitPane } from '@/components/SplitPane';
@@ -14,11 +14,9 @@ import { ProgressBar } from '@/components/ProgressBar';
 import { useTomlFormatter } from '@/features/toml/useTomlFormatter';
 import { parseToml } from '@/features/toml/tomlFormatter';
 import { useFileParser } from '@/hooks/useFileParser';
-import { usePreloadedInput } from '@/hooks/usePreloadedInput';
 import { useTreeData } from '@/hooks/useTreeData';
-import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
-import { usePiiMasking } from '@/hooks/usePiiMasking';
-import { useRegisterCommands } from '@/hooks/useRegisterCommands';
+import { useFormatterPage } from '@/hooks/useFormatterPage';
+import { type Shortcut } from '@/hooks/useKeyboardShortcuts';
 import { type Command } from '@/stores/commandStore';
 import { cn } from '@/lib/utils';
 import { Keyboard } from 'lucide-react';
@@ -44,35 +42,6 @@ export default function TomlFormatter() {
   const fileParser = useFileParser();
   const [showTree, setShowTree] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
-
-  usePreloadedInput(fmt.setInput);
-
-  // Auto-process on input changes with debounce
-  useEffect(() => {
-    if (!fmt.input.trim()) return;
-    const timer = setTimeout(() => {
-      fmt.process();
-    }, 400);
-    return () => {
-      clearTimeout(timer);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fmt.input]);
-
-  // Load parsed file into formatter
-  useEffect(() => {
-    if (fileParser.result?.output) {
-      fmt.setInput(fileParser.result.output);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fileParser.result]);
-
-  const handleFileUpload = useCallback(
-    (file: File) => {
-      fileParser.parseFile(file, 'text');
-    },
-    [fileParser]
-  );
 
   const treeData = useTreeData(fmt.output, fmt.input, parseTomlForTree);
 
@@ -111,8 +80,6 @@ export default function TomlFormatter() {
     },
   ];
 
-  useKeyboardShortcuts(shortcuts, !showShortcuts);
-
   const commands = useMemo<Command[]>(
     () => [
       {
@@ -141,9 +108,15 @@ export default function TomlFormatter() {
     ],
     [fmt, setShowTree]
   );
-  useRegisterCommands(commands);
 
-  const pii = usePiiMasking(fmt.output);
+  const { pii, handleFileUpload } = useFormatterPage({
+    fmt,
+    fileParser,
+    fileType: 'text',
+    shortcuts,
+    commands,
+    showShortcuts,
+  });
 
   const hasError = fmt.error !== null;
   const isValid = !hasError && fmt.input.trim().length > 0;

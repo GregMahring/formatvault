@@ -48,21 +48,14 @@ Tests: `src/lib/routes.test.ts` — 23 tests covering uniqueness, shape, group h
 Removed `useEditorStore` import from all 12 call sites. Removed `useEffect` from React imports in `regex-tester` and `jwt-decoder` (it was their only effect).
 Tests: `src/hooks/usePreloadedInput.test.ts` — 6 tests.
 
-### SR-2 — Extract `useFormatterPage` orchestration hook
+### ~~SR-2 — Extract `useFormatterPage` orchestration hook~~ ✅ DONE
 
-**Affects:** All 6 formatter routes (`json`, `yaml`, `xml`, `csv`, `sql`, `toml`)
-**Problem:** Each formatter route repeats an identical triad of `useEffect`s:
-
-1. Preload from `editorStore` on mount
-2. 400ms debounce auto-process on input/option change
-3. Seed input from `fileParser.result`
-
-Plus identical boilerplate: `useKeyboardShortcuts`, `useRegisterCommands`, `usePiiMasking`.
-The current `json-formatter.tsx` is 722 lines; a thin route using this hook would be ~200.
-
-**Fix:** Create `src/hooks/useFormatterPage.ts` accepting `{ fmt, fileParser, shortcuts, commands }` and returning nothing (side-effects only). Internally handles SR-1, the debounce effect, and the file-result effect.
-
-**Why (Bulletproof React):** Route files should express WHAT a page does, not HOW the framework wiring works. The DRY violation across 6 routes is the clearest refactor target in the codebase.
+**Files changed:** `src/hooks/useFormatterPage.ts` (new), all 6 formatter routes.
+Hook accepts `{ fmt, fileParser, fileType, shortcuts, commands, showShortcuts, optionsDepsKey?, skipAutoProcess?, clearInputOnFileError? }` and returns `{ pii, handleFileUpload }`.
+Internally handles `usePreloadedInput`, 400ms debounce effect, file-result seeding effect, `useKeyboardShortcuts`, `useRegisterCommands`, and `usePiiMasking`.
+Each route passes an `optionsDepsKey` string built from its formatter-specific options to drive the debounce deps.
+JSON formatter uses `skipAutoProcess: fmt.isQueryMode` and `clearInputOnFileError: true`.
+Tests: `src/hooks/useFormatterPage.test.ts` — 11 tests.
 
 ### ~~SR-3 — Extract `useTreeData` hook~~ ✅ DONE
 
@@ -126,7 +119,7 @@ This should be done AFTER SR-2 so the layout component stays purely presentation
 | 8        | SR-3 useTreeData hook                 | ~1 hr   | DRY (3 sites)         | ✅ Done |
 | 9        | SR-4 Feature hooks for tool routes    | 3–4 hrs | Consistency + size    | ✅ Done |
 | 10       | SR-5 Extract inline sub-components    | 2–3 hrs | Testability + size    | ✅ Done |
-| 11       | SR-2 useFormatterPage hook            | 3–4 hrs | DRY + size (6 routes) | ⬜      |
+| 11       | SR-2 useFormatterPage hook            | 3–4 hrs | DRY + size (6 routes) | ✅ Done |
 | 12       | SR-6 FormatterLayout component        | 4–6 hrs | Size + consistency    | ⬜      |
 
 SR-6 depends on SR-2. All other tasks are independent and can be done in any order.
