@@ -1,5 +1,11 @@
 @import 'tailwindcss';
 
+/* Explicit source scanning — ensures Tailwind generates utilities from all
+   component and route files regardless of how this CSS file is imported
+   (e.g. the ?inline import in root.tsx may not walk the full module graph). */
+@source "../src/components/**/*.tsx";
+@source "../src/routes/**/*.tsx";
+
 /*
   Design tokens for formatvault.
   Brand: indigo (#5555cc) + cyan (#00d4e8) on indigo-tinted dark backgrounds.
