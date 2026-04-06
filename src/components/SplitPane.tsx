@@ -22,8 +22,11 @@ export interface SplitPaneProps {
  * Resizable split pane — left (input) and right (output) side by side on desktop,
  * stacked vertically on mobile (below md breakpoint).
  *
+ * Layout is CSS-first (`flex-col md:flex-row`) to avoid CLS: the stacked mobile
+ * layout renders correctly before JS hydrates. JS only controls the drag-resize
+ * widths on desktop.
+ *
  * Drag the handle or use ArrowLeft/ArrowRight keys to resize (desktop only).
- * No external library — keeps bundle lean and avoids SSR hydration mismatches.
  */
 export function SplitPane({
   children,
@@ -36,6 +39,8 @@ export function SplitPane({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const isDragging = React.useRef(false);
   const [splitPct, setSplitPct] = React.useState(defaultSplit);
+  // isMobile is only used to suppress inline resize widths, not to toggle layout.
+  // The layout itself is handled by flex-col / md:flex-row CSS classes.
   const isMobile = useMediaQuery('(max-width: 767px)');
 
   const handleDragStart = React.useCallback((e: React.MouseEvent | React.TouchEvent) => {
@@ -57,9 +62,7 @@ export function SplitPane({
       handleMove(e.clientX);
     };
     const onTouchMove = (e: TouchEvent) => {
-      if (e.touches[0]) {
-        handleMove(e.touches[0].clientX);
-      }
+      if (e.touches[0]) handleMove(e.touches[0].clientX);
     };
     const onEnd = () => {
       if (!isDragging.current) return;
@@ -81,39 +84,25 @@ export function SplitPane({
     };
   }, []);
 
-  if (isMobile) {
-    return (
-      <div
-        className={cn('flex h-full min-h-0 w-full flex-col overflow-hidden', className)}
-        role="group"
-      >
-        <section className="flex min-h-0 flex-1 flex-col overflow-hidden" aria-label={leftLabel}>
-          {left}
-        </section>
-        <div className="h-px w-full shrink-0 bg-edge" aria-hidden="true" />
-        <section className="flex min-h-0 flex-1 flex-col overflow-hidden" aria-label={rightLabel}>
-          {right}
-        </section>
-      </div>
-    );
-  }
-
   return (
     <div
       ref={containerRef}
-      className={cn('flex h-full min-h-0 w-full overflow-hidden', className)}
+      className={cn('flex h-full min-h-0 w-full flex-col overflow-hidden md:flex-row', className)}
       role="group"
     >
-      {/* Left pane */}
+      {/* Left pane — flex-1 on mobile (equal halves), explicit width on desktop */}
       <section
-        className="flex h-full min-w-0 flex-col overflow-hidden"
-        style={{ width: `${String(splitPct)}%` }}
+        className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-none"
+        style={isMobile ? undefined : { width: `${String(splitPct)}%` }}
         aria-label={leftLabel}
       >
         {left}
       </section>
 
-      {/* Drag handle — role="slider" makes keyboard/pointer interactions semantically valid */}
+      {/* Mobile: thin horizontal divider between panes */}
+      <div className="h-px w-full shrink-0 bg-edge md:hidden" aria-hidden="true" />
+
+      {/* Desktop-only drag handle */}
       <button
         type="button"
         role="slider"
@@ -122,19 +111,14 @@ export function SplitPane({
         aria-valuenow={splitPct}
         aria-valuemin={20}
         aria-valuemax={80}
-        className="group relative flex w-1 shrink-0 cursor-col-resize items-center justify-center bg-surface-elevated transition-colors hover:bg-accent-600/60 focus-visible:bg-accent-600/60 focus-visible:outline-none"
+        className="group relative hidden w-1 shrink-0 cursor-col-resize items-center justify-center bg-surface-elevated transition-colors hover:bg-accent-600/60 focus-visible:bg-accent-600/60 focus-visible:outline-none md:flex"
         onMouseDown={handleDragStart}
         onTouchStart={handleDragStart}
         onKeyDown={(e) => {
-          if (e.key === 'ArrowLeft') {
-            setSplitPct((p) => Math.max(20, p - 1));
-          }
-          if (e.key === 'ArrowRight') {
-            setSplitPct((p) => Math.min(80, p + 1));
-          }
+          if (e.key === 'ArrowLeft') setSplitPct((p) => Math.max(20, p - 1));
+          if (e.key === 'ArrowRight') setSplitPct((p) => Math.min(80, p + 1));
         }}
       >
-        {/* Visual grip dots */}
         <div className="flex flex-col gap-0.5 opacity-40 group-hover:opacity-70">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="h-1 w-1 rounded-full bg-fg-secondary" aria-hidden="true" />
@@ -144,8 +128,8 @@ export function SplitPane({
 
       {/* Right pane */}
       <section
-        className="flex h-full min-w-0 flex-col overflow-hidden"
-        style={{ width: `${String(100 - splitPct)}%` }}
+        className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-none"
+        style={isMobile ? undefined : { width: `${String(100 - splitPct)}%` }}
         aria-label={rightLabel}
       >
         {right}
