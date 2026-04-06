@@ -1,18 +1,11 @@
 import { useState, useMemo } from 'react';
 import type { Route } from './+types/yaml-formatter';
 import { buildMeta } from '@/lib/meta';
-import { SplitPane } from '@/components/SplitPane';
-import { CodeEditor } from '@/components/CodeEditor';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { FileUploadZone } from '@/components/FileUploadZone';
-import { PaneActions } from '@/components/PaneActions';
-import { PiiMaskToggle } from '@/components/PiiMaskToggle';
 import { DiffPanel } from '@/components/DiffPanel';
 import { MarkdownPreview } from '@/components/MarkdownPreview';
 import { TreeView } from '@/components/TreeView';
-import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
-import { ProgressBar } from '@/components/ProgressBar';
+import { FormatterLayout } from '@/components/FormatterLayout';
 import { useYamlFormatter } from '@/features/yaml/useYamlFormatter';
 import { parseYaml } from '@/features/yaml/yamlFormatter';
 import { useFileParser } from '@/hooks/useFileParser';
@@ -23,7 +16,6 @@ import { type Command } from '@/stores/commandStore';
 import type { YamlIndent, YamlStyle } from '@/features/yaml/yamlFormatter';
 import { ToolPageContent } from '@/components/ToolPageContent';
 import { cn } from '@/lib/utils';
-import { Keyboard } from 'lucide-react';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
 
@@ -74,13 +66,7 @@ export default function YamlFormatter() {
   const treeData = useTreeData(fmt.output, fmt.input, parseYamlForTree);
 
   const shortcuts: Shortcut[] = [
-    {
-      label: 'Format',
-      display: '⌘ ↵',
-      key: 'Enter',
-      meta: true,
-      handler: fmt.process,
-    },
+    { label: 'Format', display: '⌘ ↵', key: 'Enter', meta: true, handler: fmt.process },
     {
       label: 'Toggle diff panel',
       display: '⌘ D',
@@ -186,15 +172,36 @@ export default function YamlFormatter() {
   const hasError = fmt.error !== null;
   const isValid = !hasError && fmt.input.trim().length > 0;
 
+  const rightPaneLabel = showTree ? 'Tree view' : showMarkdown ? 'Markdown preview' : undefined;
+
   return (
-    <>
-      <div className="flex flex-col">
-        {/* Toolbar */}
-        <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-          <h1 className="text-sm font-semibold text-label-indigo">YAML Formatter</h1>
-
-          <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
-
+    <FormatterLayout
+      title="YAML Formatter"
+      language="yaml"
+      input={fmt.input}
+      onInputChange={fmt.setInput}
+      inputAccept=".yaml,.yml,text/yaml"
+      onFileUpload={handleFileUpload}
+      inputPlaceholder="Paste or type YAML here…"
+      pii={pii}
+      downloadFilename="output.yaml"
+      outputPlaceholder="Formatted output will appear here…"
+      onFormat={fmt.process}
+      onClear={fmt.clear}
+      hasInput={!!fmt.input.trim()}
+      error={fmt.error?.error ?? null}
+      errorLine={fmt.error?.line ?? null}
+      fileParser={fileParser}
+      shortcuts={shortcuts}
+      showShortcuts={showShortcuts}
+      onOpenShortcuts={() => {
+        setShowShortcuts(true);
+      }}
+      onCloseShortcuts={() => {
+        setShowShortcuts(false);
+      }}
+      toolbarOptionsSlot={
+        <>
           <label htmlFor="yaml-indent-select" className="text-xs text-fg-secondary">
             Indent
           </label>
@@ -224,16 +231,15 @@ export default function YamlFormatter() {
             <option value="block">Block</option>
             <option value="flow">Flow</option>
           </select>
-
-          <div className="flex-1" />
-
+        </>
+      }
+      toolbarBadgesSlot={
+        <>
           {fmt.documentCount > 1 && (
             <Badge variant="secondary" className="text-xs">
               {String(fmt.documentCount)} documents
             </Badge>
           )}
-
-          {/* Diff toggle */}
           <button
             type="button"
             className={cn(
@@ -251,8 +257,6 @@ export default function YamlFormatter() {
           >
             Diff
           </button>
-
-          {/* Markdown preview toggle */}
           <button
             type="button"
             className={cn(
@@ -271,8 +275,6 @@ export default function YamlFormatter() {
           >
             Markdown
           </button>
-
-          {/* Tree view toggle */}
           <button
             type="button"
             className={cn(
@@ -291,138 +293,27 @@ export default function YamlFormatter() {
           >
             Tree
           </button>
-
           {fmt.input.trim() && (
             <Badge variant={isValid ? 'success' : 'destructive'} dot>
               {isValid ? 'valid' : 'invalid'}
             </Badge>
           )}
-
-          <Button
-            size="sm"
-            variant="outline"
-            className="h-7 px-3 text-xs"
-            onClick={fmt.process}
-            disabled={!fmt.input.trim()}
-          >
-            Format
-            <kbd className="ml-1 rounded bg-surface-elevated px-1 text-[10px] text-fg-secondary">
-              ⌘↵
-            </kbd>
-          </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            className="h-7 px-3 text-xs text-fg-secondary"
-            onClick={fmt.clear}
-            disabled={!fmt.input.trim()}
-          >
-            Clear
-          </Button>
-
-          <button
-            type="button"
-            className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
-            onClick={() => {
-              setShowShortcuts(true);
-            }}
-            aria-label="Keyboard shortcuts"
-            title="Keyboard shortcuts (?)"
-          >
-            <Keyboard className="h-3.5 w-3.5" aria-hidden="true" />
-          </button>
-        </div>
-
-        {fileParser.showProgress && fileParser.isParsing && (
-          <ProgressBar percent={fileParser.progress} label="Parsing file…" />
-        )}
-
-        {hasError && (
-          <div
-            role="alert"
-            className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
-          >
-            <span className="shrink-0 font-mono font-semibold">Error</span>
-            <span className="flex-1">{fmt.error?.error}</span>
-            {fmt.error?.line && (
-              <span className="ml-auto shrink-0 text-red-500/70">
-                Line {String(fmt.error.line)}
-              </span>
-            )}
-          </div>
-        )}
-
-        <div className="h-[calc(100vh-260px)] min-h-[480px]">
-          {showDiff ? (
-            <DiffPanel original={fmt.input} modified={fmt.output} className="h-full" />
-          ) : (
-            <SplitPane
-              leftLabel="YAML input editor"
-              rightLabel={
-                showTree ? 'Tree view' : showMarkdown ? 'Markdown preview' : 'Formatted output'
-              }
-              className="h-full"
-            >
-              <div className="flex h-full min-h-0 flex-col">
-                <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                  <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
-                    Input
-                  </span>
-                  <FileUploadZone
-                    accept=".yaml,.yml,text/yaml"
-                    onFile={handleFileUpload}
-                    disabled={fileParser.isParsing}
-                  />
-                </div>
-                <CodeEditor
-                  value={fmt.input}
-                  onChange={fmt.setInput}
-                  language="yaml"
-                  label="YAML input"
-                  placeholder="Paste or type YAML here…"
-                  className="flex-1 rounded-none border-0"
-                  height="100%"
-                />
-              </div>
-
-              {showTree && treeData !== undefined ? (
-                <TreeView data={treeData} className="h-full" />
-              ) : showMarkdown ? (
-                <MarkdownPreview source={fmt.output || fmt.input} className="h-full" />
-              ) : (
-                <div className="flex h-full min-h-0 flex-col">
-                  <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                    <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
-                      Output
-                    </span>
-                    <div className="flex items-center gap-1">
-                      <PiiMaskToggle pii={pii} />
-                      <PaneActions content={pii.displayContent} downloadFilename="output.yaml" />
-                    </div>
-                  </div>
-                  <CodeEditor
-                    value={pii.displayContent}
-                    language="yaml"
-                    label="Formatted YAML output"
-                    readOnly
-                    placeholder="Formatted output will appear here…"
-                    className="flex-1 rounded-none border-0"
-                    height="100%"
-                  />
-                </div>
-              )}
-            </SplitPane>
-          )}
-        </div>
-
-        <KeyboardShortcutsModal
-          shortcuts={shortcuts}
-          isOpen={showShortcuts}
-          onClose={() => {
-            setShowShortcuts(false);
-          }}
-        />
-      </div>
+        </>
+      }
+      fullPaneSlot={
+        showDiff ? (
+          <DiffPanel original={fmt.input} modified={fmt.output} className="h-full" />
+        ) : undefined
+      }
+      rightPaneSlot={
+        showTree && treeData !== undefined ? (
+          <TreeView data={treeData} className="h-full" />
+        ) : showMarkdown ? (
+          <MarkdownPreview source={fmt.output || fmt.input} className="h-full" />
+        ) : undefined
+      }
+      rightPaneLabel={rightPaneLabel}
+    >
       <ToolPageContent
         toolName="YAML formatter"
         why={
@@ -493,6 +384,6 @@ export default function YamlFormatter() {
           },
         ]}
       />
-    </>
+    </FormatterLayout>
   );
 }

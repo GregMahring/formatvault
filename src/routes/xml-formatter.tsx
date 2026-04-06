@@ -1,17 +1,10 @@
 import { useState, useMemo } from 'react';
 import type { Route } from './+types/xml-formatter';
 import { buildMeta } from '@/lib/meta';
-import { SplitPane } from '@/components/SplitPane';
-import { CodeEditor } from '@/components/CodeEditor';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { FileUploadZone } from '@/components/FileUploadZone';
-import { PaneActions } from '@/components/PaneActions';
-import { PiiMaskToggle } from '@/components/PiiMaskToggle';
 import { DiffPanel } from '@/components/DiffPanel';
-import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
-import { ProgressBar } from '@/components/ProgressBar';
+import { FormatterLayout } from '@/components/FormatterLayout';
 import { useXmlFormatter } from '@/features/xml/useXmlFormatter';
 import { type XmlMode } from '@/features/xml/useXmlFormatter';
 import { type XmlIndent } from '@/features/xml/xmlFormatter';
@@ -21,7 +14,6 @@ import { type Shortcut } from '@/hooks/useKeyboardShortcuts';
 import { type Command } from '@/stores/commandStore';
 import { ToolPageContent } from '@/components/ToolPageContent';
 import { cn } from '@/lib/utils';
-import { Keyboard } from 'lucide-react';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
 
@@ -63,13 +55,7 @@ export default function XmlFormatter() {
   const [showShortcuts, setShowShortcuts] = useState(false);
 
   const shortcuts: Shortcut[] = [
-    {
-      label: 'Format / Run',
-      display: '⌘ ↵',
-      key: 'Enter',
-      meta: true,
-      handler: fmt.process,
-    },
+    { label: 'Format / Run', display: '⌘ ↵', key: 'Enter', meta: true, handler: fmt.process },
     {
       label: 'Toggle diff panel',
       display: '⌘ D',
@@ -158,16 +144,39 @@ export default function XmlFormatter() {
   const isValid =
     !hasError && fmt.input.trim().length > 0 && (fmt.output.length > 0 || fmt.mode === 'validate');
 
+  const formatLabel =
+    fmt.mode === 'validate' ? 'Validate' : fmt.mode === 'minify' ? 'Minify' : 'Format';
+
   return (
-    <>
-      <div className="flex flex-col">
-        {/* Toolbar */}
-        <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-          <h1 className="text-sm font-semibold text-label-indigo">XML Formatter</h1>
-
-          <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
-
-          {/* Mode tabs */}
+    <FormatterLayout
+      title="XML Formatter"
+      language="xml"
+      input={fmt.input}
+      onInputChange={fmt.setInput}
+      inputAccept=".xml,text/xml,application/xml"
+      onFileUpload={handleFileUpload}
+      inputPlaceholder="Paste or type XML here…"
+      pii={pii}
+      downloadFilename="output.xml"
+      outputPlaceholder="Formatted output will appear here…"
+      onFormat={fmt.process}
+      onClear={fmt.clear}
+      formatLabel={formatLabel}
+      hasInput={!!fmt.input.trim()}
+      error={fmt.error?.error ?? null}
+      errorLine={fmt.error?.line ?? null}
+      errorColumn={fmt.error?.col ?? null}
+      fileParser={fileParser}
+      shortcuts={shortcuts}
+      showShortcuts={showShortcuts}
+      onOpenShortcuts={() => {
+        setShowShortcuts(true);
+      }}
+      onCloseShortcuts={() => {
+        setShowShortcuts(false);
+      }}
+      toolbarOptionsSlot={
+        <>
           <Tabs
             value={fmt.mode}
             onValueChange={(v) => {
@@ -192,7 +201,6 @@ export default function XmlFormatter() {
 
           <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
-          {/* Indent toggle — only relevant in format mode */}
           {fmt.mode === 'format' && (
             <div className="flex items-center rounded-md border border-edge bg-surface-raised p-0.5">
               {([2, 4] as XmlIndent[]).map((n) => (
@@ -219,10 +227,10 @@ export default function XmlFormatter() {
               </span>
             </div>
           )}
-
-          <div className="flex-1" />
-
-          {/* Diff toggle */}
+        </>
+      }
+      toolbarBadgesSlot={
+        <>
           <button
             type="button"
             className={cn(
@@ -238,8 +246,6 @@ export default function XmlFormatter() {
           >
             Diff
           </button>
-
-          {/* Validation badge */}
           {fmt.input.trim() && (
             <Badge
               variant={isValid ? 'success' : hasError ? 'destructive' : 'secondary'}
@@ -248,152 +254,35 @@ export default function XmlFormatter() {
               {isValid ? 'valid' : hasError ? 'invalid' : '—'}
             </Badge>
           )}
-
-          <Button
-            size="sm"
-            variant="outline"
-            className="h-7 px-3 text-xs"
-            onClick={fmt.process}
-            disabled={!fmt.input.trim()}
-          >
-            {fmt.mode === 'validate' ? 'Validate' : fmt.mode === 'minify' ? 'Minify' : 'Format'}
-            <kbd className="ml-1 rounded bg-surface-elevated px-1 text-[10px] text-fg-secondary">
-              ⌘↵
-            </kbd>
-          </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            className="h-7 px-3 text-xs text-fg-secondary"
-            onClick={fmt.clear}
-            disabled={!fmt.input.trim()}
-          >
-            Clear
-          </Button>
-
-          <button
-            type="button"
-            className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
-            onClick={() => {
-              setShowShortcuts(true);
-            }}
-            aria-label="Keyboard shortcuts"
-            title="Keyboard shortcuts (?)"
-          >
-            <Keyboard className="h-3.5 w-3.5" aria-hidden="true" />
-          </button>
-        </div>
-
-        {/* File parsing progress */}
-        {fileParser.showProgress && fileParser.isParsing && (
-          <ProgressBar percent={fileParser.progress} label="Parsing file…" />
-        )}
-
-        {/* Error bar */}
-        {hasError && (
-          <div
-            role="alert"
-            className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
-          >
-            <span className="shrink-0 font-mono font-semibold">Error</span>
-            <span className="flex-1">{fmt.error?.error}</span>
-            {fmt.error?.line != null && (
-              <span className="ml-auto shrink-0 text-red-500/70">
-                Line {String(fmt.error.line)}
-                {fmt.error.col != null ? `:${String(fmt.error.col)}` : ''}
-              </span>
-            )}
-          </div>
-        )}
-
-        {/* Validate success notice */}
-        {fmt.mode === 'validate' && !hasError && fmt.input.trim() && (
-          <div
-            role="status"
-            className="flex items-center gap-2 border-b border-green-900/40 bg-green-950/30 px-4 py-1.5 text-xs text-green-400"
-          >
-            <span>✓ Well-formed XML</span>
-          </div>
-        )}
-
-        {/* File parse error */}
-        {fileParser.result?.error && (
-          <div
-            role="alert"
-            className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
-          >
-            <span className="shrink-0 font-mono font-semibold">File error</span>
-            <span className="flex-1">{fileParser.result.error}</span>
-          </div>
-        )}
-
-        {/* Main area */}
-        <div className="h-[calc(100vh-260px)] min-h-[480px]">
-          {showDiff ? (
-            <DiffPanel original={fmt.input} modified={fmt.output} className="h-full" />
-          ) : (
-            <SplitPane
-              leftLabel="XML input editor"
-              rightLabel="Formatted output"
-              className="h-full"
+        </>
+      }
+      noticeSlot={
+        <>
+          {fmt.mode === 'validate' && !hasError && fmt.input.trim() && (
+            <div
+              role="status"
+              className="flex items-center gap-2 border-b border-green-900/40 bg-green-950/30 px-4 py-1.5 text-xs text-green-400"
             >
-              {/* Left: input */}
-              <div className="flex h-full min-h-0 flex-col">
-                <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                  <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
-                    Input
-                  </span>
-                  <FileUploadZone
-                    accept=".xml,text/xml,application/xml"
-                    onFile={handleFileUpload}
-                    disabled={fileParser.isParsing}
-                  />
-                </div>
-                <CodeEditor
-                  value={fmt.input}
-                  onChange={fmt.setInput}
-                  language="xml"
-                  label="XML input"
-                  placeholder="Paste or type XML here…"
-                  className="flex-1 rounded-none border-0"
-                  height="100%"
-                />
-              </div>
-
-              {/* Right: output */}
-              <div className="flex h-full min-h-0 flex-col">
-                <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                  <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
-                    Output
-                  </span>
-                  <div className="flex items-center gap-1">
-                    <PiiMaskToggle pii={pii} />
-                    <PaneActions content={pii.displayContent} downloadFilename="output.xml" />
-                  </div>
-                </div>
-                <CodeEditor
-                  value={pii.displayContent}
-                  language="xml"
-                  label="Formatted XML output"
-                  readOnly
-                  placeholder="Formatted output will appear here…"
-                  className="flex-1 rounded-none border-0"
-                  height="100%"
-                />
-              </div>
-            </SplitPane>
+              <span>✓ Well-formed XML</span>
+            </div>
           )}
-        </div>
-
-        <KeyboardShortcutsModal
-          shortcuts={shortcuts}
-          isOpen={showShortcuts}
-          onClose={() => {
-            setShowShortcuts(false);
-          }}
-        />
-      </div>
-
+          {fileParser.result?.error && (
+            <div
+              role="alert"
+              className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
+            >
+              <span className="shrink-0 font-mono font-semibold">File error</span>
+              <span className="flex-1">{fileParser.result.error}</span>
+            </div>
+          )}
+        </>
+      }
+      fullPaneSlot={
+        showDiff ? (
+          <DiffPanel original={fmt.input} modified={fmt.output} className="h-full" />
+        ) : undefined
+      }
+    >
       <ToolPageContent
         toolName="XML formatter"
         why={
@@ -470,6 +359,6 @@ export default function XmlFormatter() {
           },
         ]}
       />
-    </>
+    </FormatterLayout>
   );
 }

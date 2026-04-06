@@ -75,7 +75,7 @@ Also fixed a pre-existing TDZ bug in base64/url-encoder where `usePreloadedInput
 Also extracted `TimestampCopyRow` from `unix-timestamp-converter.tsx` (inline component not listed in original plan).
 All three route files updated to import from the new locations.
 
-### SR-6 — `FormatterLayout` component (mirrors `ConverterLayout`)
+### ~~SR-6 — `FormatterLayout` component (mirrors `ConverterLayout`)~~ ✅ DONE
 
 **Affects:** All 6 formatter routes
 **Depends on:** SR-2 (`useFormatterPage`)
@@ -103,6 +103,8 @@ interface FormatterLayoutProps {
 This should be done AFTER SR-2 so the layout component stays purely presentational with no orchestration logic.
 **Why (Bulletproof React):** Layout components are the primary reuse mechanism. `ConverterLayout` proves the pattern works — `FormatterLayout` completes the symmetry.
 
+**Implemented:** `src/components/FormatterLayout.tsx` with slots: `toolbarOptionsSlot`, `toolbarBadgesSlot`, `noticeSlot`, `fullPaneSlot`, `rightPaneSlot`, `rightPaneLabel`, `inputActionsSlot` (added for JSONPath toggle in JSON formatter's input pane header), `children`. All 6 formatter routes updated. JSON formatter also uses `formatLabel` prop for dynamic "Format" / "Run query" button label.
+
 ---
 
 ## Implementation Order
@@ -120,6 +122,6 @@ This should be done AFTER SR-2 so the layout component stays purely presentation
 | 9        | SR-4 Feature hooks for tool routes    | 3–4 hrs | Consistency + size    | ✅ Done |
 | 10       | SR-5 Extract inline sub-components    | 2–3 hrs | Testability + size    | ✅ Done |
 | 11       | SR-2 useFormatterPage hook            | 3–4 hrs | DRY + size (6 routes) | ✅ Done |
-| 12       | SR-6 FormatterLayout component        | 4–6 hrs | Size + consistency    | ⬜      |
+| 12       | SR-6 FormatterLayout component        | 4–6 hrs | Size + consistency    | ✅ Done |
 
 SR-6 depends on SR-2. All other tasks are independent and can be done in any order.

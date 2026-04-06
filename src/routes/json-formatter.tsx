@@ -1,19 +1,13 @@
 import { useState, useMemo } from 'react';
 import type { Route } from './+types/json-formatter';
 import { buildMeta } from '@/lib/meta';
-import { SplitPane } from '@/components/SplitPane';
-import { CodeEditor } from '@/components/CodeEditor';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { FileUploadZone } from '@/components/FileUploadZone';
-import { PaneActions } from '@/components/PaneActions';
-import { PiiMaskToggle } from '@/components/PiiMaskToggle';
 import { DiffPanel } from '@/components/DiffPanel';
 import { MarkdownPreview } from '@/components/MarkdownPreview';
 import { TreeView } from '@/components/TreeView';
-import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
-import { ProgressBar } from '@/components/ProgressBar';
+import { FormatterLayout } from '@/components/FormatterLayout';
 import { useJsonFormatter } from '@/features/json/useJsonFormatter';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { useFileParser } from '@/hooks/useFileParser';
@@ -23,7 +17,6 @@ import { type Shortcut } from '@/hooks/useKeyboardShortcuts';
 import { type Command } from '@/stores/commandStore';
 import { ToolPageContent } from '@/components/ToolPageContent';
 import { cn } from '@/lib/utils';
-import { Keyboard } from 'lucide-react';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
 
@@ -227,16 +220,52 @@ export default function JsonFormatter() {
   const hasError = fmt.error !== null;
   const isValid = fmt.validationResult === null && fmt.input.trim().length > 0;
 
+  const rightPaneLabel = showTree ? 'Tree view' : showMarkdown ? 'Markdown preview' : undefined;
+
   return (
-    <>
-      <div className="flex flex-col">
-        {/* Toolbar */}
-        <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-          <h1 className="text-sm font-semibold text-label-indigo">JSON Formatter</h1>
-
-          <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
-
-          {/* Mode tabs */}
+    <FormatterLayout
+      title="JSON Formatter"
+      language="json"
+      input={fmt.input}
+      onInputChange={fmt.setInput}
+      inputAccept=".json,application/json,.json5"
+      onFileUpload={handleFileUpload}
+      inputPlaceholder="Paste or type JSON here…"
+      pii={pii}
+      downloadFilename="output.json"
+      outputPlaceholder="Formatted output will appear here…"
+      onFormat={fmt.isQueryMode ? fmt.runQuery : fmt.process}
+      onClear={fmt.clear}
+      formatLabel={fmt.isQueryMode ? 'Run query' : 'Format'}
+      hasInput={!!fmt.input.trim()}
+      error={fmt.error?.error ?? null}
+      errorLine={fmt.error?.line ?? null}
+      errorColumn={fmt.error?.column ?? null}
+      fileParser={fileParser}
+      shortcuts={shortcuts}
+      showShortcuts={showShortcuts}
+      onOpenShortcuts={() => {
+        setShowShortcuts(true);
+      }}
+      onCloseShortcuts={() => {
+        setShowShortcuts(false);
+      }}
+      inputActionsSlot={
+        <button
+          type="button"
+          className={cn(
+            'rounded px-1.5 py-0.5 text-[11px] transition-colors hover:bg-surface-elevated',
+            fmt.isQueryMode ? 'text-accent-400' : 'text-fg-secondary hover:text-fg'
+          )}
+          onClick={() => {
+            fmt.setQueryMode(!fmt.isQueryMode);
+          }}
+        >
+          {fmt.isQueryMode ? 'JSONPath ✓' : 'JSONPath'}
+        </button>
+      }
+      toolbarOptionsSlot={
+        <>
           <Tabs
             value={fmt.mode}
             onValueChange={(v) => {
@@ -261,7 +290,6 @@ export default function JsonFormatter() {
 
           <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
-          {/* Options */}
           <label className="flex cursor-pointer items-center gap-1.5 text-xs text-fg-secondary">
             <input
               type="checkbox"
@@ -287,7 +315,6 @@ export default function JsonFormatter() {
 
           <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
-          {/* Indent character toggle */}
           <div className="flex items-center rounded-md border border-edge bg-surface-raised p-0.5">
             <button
               type="button"
@@ -314,10 +341,10 @@ export default function JsonFormatter() {
               Tabs
             </button>
           </div>
-
-          <div className="flex-1" />
-
-          {/* Diff toggle */}
+        </>
+      }
+      toolbarBadgesSlot={
+        <>
           <button
             type="button"
             className={cn(
@@ -335,8 +362,6 @@ export default function JsonFormatter() {
           >
             Diff
           </button>
-
-          {/* Markdown preview toggle */}
           <button
             type="button"
             className={cn(
@@ -355,8 +380,6 @@ export default function JsonFormatter() {
           >
             Markdown
           </button>
-
-          {/* Tree view toggle */}
           <button
             type="button"
             className={cn(
@@ -375,8 +398,6 @@ export default function JsonFormatter() {
           >
             Tree
           </button>
-
-          {/* Validation badge */}
           {fmt.input.trim() && (
             <Badge
               variant={isValid ? 'success' : hasError ? 'destructive' : 'secondary'}
@@ -385,215 +406,81 @@ export default function JsonFormatter() {
               {isValid ? 'valid' : hasError ? 'invalid' : '—'}
             </Badge>
           )}
-
-          {/* Format action */}
-          <Button
-            size="sm"
-            variant="outline"
-            className="h-7 px-3 text-xs"
-            onClick={() => {
-              if (fmt.isQueryMode) fmt.runQuery();
-              else fmt.process();
-            }}
-            disabled={!fmt.input.trim()}
-          >
-            {fmt.isQueryMode ? 'Run query' : 'Format'}
-            <kbd className="ml-1 rounded bg-surface-elevated px-1 text-[10px] text-fg-secondary">
-              ⌘↵
-            </kbd>
-          </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            className="h-7 px-3 text-xs text-fg-secondary"
-            onClick={fmt.clear}
-            disabled={!fmt.input.trim()}
-          >
-            Clear
-          </Button>
-
-          {/* Shortcuts help */}
-          <button
-            type="button"
-            className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
-            onClick={() => {
-              setShowShortcuts(true);
-            }}
-            aria-label="Keyboard shortcuts"
-            title="Keyboard shortcuts (?)"
-          >
-            <Keyboard className="h-3.5 w-3.5" aria-hidden="true" />
-          </button>
-        </div>
-
-        {/* File parsing progress */}
-        {fileParser.showProgress && fileParser.isParsing && (
-          <ProgressBar percent={fileParser.progress} label="Parsing file…" />
-        )}
-
-        {/* Error bar */}
-        {hasError && (
-          <div
-            role="alert"
-            className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
-          >
-            <span className="shrink-0 font-mono font-semibold">Error</span>
-            <span className="flex-1">{fmt.error?.error}</span>
-            {fmt.error?.line && (
-              <span className="ml-auto shrink-0 text-red-500/70">
-                Line {String(fmt.error.line)}
-                {fmt.error.column ? `:${String(fmt.error.column)}` : ''}
-              </span>
-            )}
-          </div>
-        )}
-
-        {/* File parse error */}
-        {fileParser.result?.error && (
-          <div
-            role="alert"
-            className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
-          >
-            <span className="shrink-0 font-mono font-semibold">File error</span>
-            <span className="flex-1">{fileParser.result.error}</span>
-          </div>
-        )}
-
-        {/* Curly-quote notice */}
-        {fmt.normalisedQuotes && (
-          <div
-            role="status"
-            className="flex items-center gap-2 border-b border-yellow-900/40 bg-yellow-950/30 px-4 py-1.5 text-xs text-yellow-400"
-          >
-            <span>
-              ⚠ Smart/curly quotes were automatically converted to straight quotes before parsing.
-            </span>
-          </div>
-        )}
-
-        {/* Bracket repair notice */}
-        {fmt.repairedBrackets && (
-          <div
-            role="status"
-            className="flex items-center gap-2 border-b border-yellow-900/40 bg-yellow-950/30 px-4 py-1.5 text-xs text-yellow-400"
-          >
-            <span>⚠ Missing closing brackets/braces were automatically appended.</span>
-          </div>
-        )}
-
-        {/* JSONPath bar */}
-        {fmt.isQueryMode && (
-          <div className="flex items-center gap-2 border-b border-edge bg-surface-raised/50 px-4 py-2">
-            <label htmlFor="jsonpath-input" className="shrink-0 text-xs text-fg-secondary">
-              JSONPath
-            </label>
-            <input
-              id="jsonpath-input"
-              type="text"
-              value={fmt.jsonPath}
-              onChange={(e) => {
-                fmt.setJsonPath(e.target.value);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') fmt.runQuery();
-              }}
-              className="flex-1 rounded border border-edge-emphasis bg-surface-raised px-2 py-1 font-mono text-xs text-fg placeholder:text-fg-secondary focus:border-accent-500 focus:outline-none"
-              placeholder="$.store.book[*].title"
-            />
-            <Button size="sm" variant="outline" className="h-7 px-3 text-xs" onClick={fmt.runQuery}>
-              Run
-            </Button>
-          </div>
-        )}
-
-        {/* Main area: split pane OR diff panel OR markdown preview */}
-        <div className="h-[calc(100vh-260px)] min-h-[480px]">
-          {showDiff ? (
-            <DiffPanel original={fmt.input} modified={fmt.output} className="h-full" />
-          ) : (
-            <SplitPane
-              leftLabel="JSON input editor"
-              rightLabel={
-                showTree ? 'Tree view' : showMarkdown ? 'Markdown preview' : 'Formatted output'
-              }
-              className="h-full"
+        </>
+      }
+      noticeSlot={
+        <>
+          {fileParser.result?.error && (
+            <div
+              role="alert"
+              className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
             >
-              {/* Left: input */}
-              <div className="flex h-full min-h-0 flex-col">
-                <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                  <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
-                    Input
-                  </span>
-                  <div className="flex items-center gap-1">
-                    <FileUploadZone
-                      accept=".json,application/json,.json5"
-                      onFile={handleFileUpload}
-                      disabled={fileParser.isParsing}
-                    />
-                    <button
-                      type="button"
-                      className={cn(
-                        'rounded px-1.5 py-0.5 text-[11px] transition-colors hover:bg-surface-elevated',
-                        fmt.isQueryMode ? 'text-accent-400' : 'text-fg-secondary hover:text-fg'
-                      )}
-                      onClick={() => {
-                        fmt.setQueryMode(!fmt.isQueryMode);
-                      }}
-                    >
-                      {fmt.isQueryMode ? 'JSONPath ✓' : 'JSONPath'}
-                    </button>
-                  </div>
-                </div>
-                <CodeEditor
-                  value={fmt.input}
-                  onChange={fmt.setInput}
-                  language="json"
-                  label="JSON input"
-                  placeholder="Paste or type JSON here…"
-                  className="flex-1 rounded-none border-0"
-                  height="100%"
-                />
-              </div>
-
-              {/* Right: output, markdown preview, or tree view */}
-              {showTree && treeData !== undefined ? (
-                <TreeView data={treeData} className="h-full" />
-              ) : showMarkdown ? (
-                <MarkdownPreview source={fmt.output || fmt.input} className="h-full" />
-              ) : (
-                <div className="flex h-full min-h-0 flex-col">
-                  <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                    <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
-                      Output
-                    </span>
-                    <div className="flex items-center gap-1">
-                      <PiiMaskToggle pii={pii} />
-                      <PaneActions content={pii.displayContent} downloadFilename="output.json" />
-                    </div>
-                  </div>
-                  <CodeEditor
-                    value={pii.displayContent}
-                    language="json"
-                    label="Formatted JSON output"
-                    readOnly
-                    placeholder="Formatted output will appear here…"
-                    className="flex-1 rounded-none border-0"
-                    height="100%"
-                  />
-                </div>
-              )}
-            </SplitPane>
+              <span className="shrink-0 font-mono font-semibold">File error</span>
+              <span className="flex-1">{fileParser.result.error}</span>
+            </div>
           )}
-        </div>
-
-        <KeyboardShortcutsModal
-          shortcuts={shortcuts}
-          isOpen={showShortcuts}
-          onClose={() => {
-            setShowShortcuts(false);
-          }}
-        />
-      </div>
+          {fmt.normalisedQuotes && (
+            <div
+              role="status"
+              className="flex items-center gap-2 border-b border-yellow-900/40 bg-yellow-950/30 px-4 py-1.5 text-xs text-yellow-400"
+            >
+              <span>
+                ⚠ Smart/curly quotes were automatically converted to straight quotes before parsing.
+              </span>
+            </div>
+          )}
+          {fmt.repairedBrackets && (
+            <div
+              role="status"
+              className="flex items-center gap-2 border-b border-yellow-900/40 bg-yellow-950/30 px-4 py-1.5 text-xs text-yellow-400"
+            >
+              <span>⚠ Missing closing brackets/braces were automatically appended.</span>
+            </div>
+          )}
+          {fmt.isQueryMode && (
+            <div className="flex items-center gap-2 border-b border-edge bg-surface-raised/50 px-4 py-2">
+              <label htmlFor="jsonpath-input" className="shrink-0 text-xs text-fg-secondary">
+                JSONPath
+              </label>
+              <input
+                id="jsonpath-input"
+                type="text"
+                value={fmt.jsonPath}
+                onChange={(e) => {
+                  fmt.setJsonPath(e.target.value);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') fmt.runQuery();
+                }}
+                className="flex-1 rounded border border-edge-emphasis bg-surface-raised px-2 py-1 font-mono text-xs text-fg placeholder:text-fg-secondary focus:border-accent-500 focus:outline-none"
+                placeholder="$.store.book[*].title"
+              />
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-7 px-3 text-xs"
+                onClick={fmt.runQuery}
+              >
+                Run
+              </Button>
+            </div>
+          )}
+        </>
+      }
+      fullPaneSlot={
+        showDiff ? (
+          <DiffPanel original={fmt.input} modified={fmt.output} className="h-full" />
+        ) : undefined
+      }
+      rightPaneSlot={
+        showTree && treeData !== undefined ? (
+          <TreeView data={treeData} className="h-full" />
+        ) : showMarkdown ? (
+          <MarkdownPreview source={fmt.output || fmt.input} className="h-full" />
+        ) : undefined
+      }
+      rightPaneLabel={rightPaneLabel}
+    >
       <ToolPageContent
         toolName="JSON formatter"
         why={
@@ -673,6 +560,6 @@ export default function JsonFormatter() {
           },
         ]}
       />
-    </>
+    </FormatterLayout>
   );
 }

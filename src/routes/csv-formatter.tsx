@@ -1,17 +1,10 @@
 import { useState, useMemo } from 'react';
 import type { Route } from './+types/csv-formatter';
 import { buildMeta } from '@/lib/meta';
-import { SplitPane } from '@/components/SplitPane';
-import { CodeEditor } from '@/components/CodeEditor';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { FileUploadZone } from '@/components/FileUploadZone';
-import { PaneActions } from '@/components/PaneActions';
-import { PiiMaskToggle } from '@/components/PiiMaskToggle';
 import { DiffPanel } from '@/components/DiffPanel';
 import { MarkdownPreview } from '@/components/MarkdownPreview';
-import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
-import { ProgressBar } from '@/components/ProgressBar';
+import { FormatterLayout } from '@/components/FormatterLayout';
 import { useCsvFormatter } from '@/features/csv/useCsvFormatter';
 import { useFileParser } from '@/hooks/useFileParser';
 import { useFormatterPage } from '@/hooks/useFormatterPage';
@@ -20,7 +13,6 @@ import { type Command } from '@/stores/commandStore';
 import type { Delimiter } from '@/features/csv/csvFormatter';
 import { ToolPageContent } from '@/components/ToolPageContent';
 import { cn } from '@/lib/utils';
-import { Keyboard } from 'lucide-react';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
 
@@ -71,13 +63,7 @@ export default function CsvFormatter() {
   const [showShortcuts, setShowShortcuts] = useState(false);
 
   const shortcuts: Shortcut[] = [
-    {
-      label: 'Format',
-      display: '⌘ ↵',
-      key: 'Enter',
-      meta: true,
-      handler: fmt.process,
-    },
+    { label: 'Format', display: '⌘ ↵', key: 'Enter', meta: true, handler: fmt.process },
     {
       label: 'Toggle diff panel',
       display: '⌘ D',
@@ -158,14 +144,33 @@ export default function CsvFormatter() {
   const hasError = fmt.error !== null;
 
   return (
-    <>
-      <div className="flex flex-col">
-        {/* Toolbar */}
-        <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-          <h1 className="text-sm font-semibold text-label-indigo">CSV Formatter</h1>
-
-          <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
-
+    <FormatterLayout
+      title="CSV Formatter"
+      language="csv"
+      input={fmt.input}
+      onInputChange={fmt.setInput}
+      inputAccept=".csv,text/csv"
+      onFileUpload={handleFileUpload}
+      inputPlaceholder="Paste or type CSV here…"
+      pii={pii}
+      downloadFilename="output.csv"
+      outputPlaceholder="Formatted output will appear here…"
+      onFormat={fmt.process}
+      onClear={fmt.clear}
+      hasInput={!!fmt.input.trim()}
+      error={fmt.error ?? null}
+      warning={fmt.warning ?? null}
+      fileParser={fileParser}
+      shortcuts={shortcuts}
+      showShortcuts={showShortcuts}
+      onOpenShortcuts={() => {
+        setShowShortcuts(true);
+      }}
+      onCloseShortcuts={() => {
+        setShowShortcuts(false);
+      }}
+      toolbarOptionsSlot={
+        <>
           <label htmlFor="delimiter-select" className="text-xs text-fg-secondary">
             Delimiter
           </label>
@@ -197,9 +202,10 @@ export default function CsvFormatter() {
             />
             Header row
           </label>
-
-          <div className="flex-1" />
-
+        </>
+      }
+      toolbarBadgesSlot={
+        <>
           {fmt.rowCount > 0 && (
             <Badge variant="secondary" className="text-xs">
               {String(fmt.rowCount)} rows × {String(fmt.columnCount)} cols
@@ -208,8 +214,6 @@ export default function CsvFormatter() {
                 : ''}
             </Badge>
           )}
-
-          {/* Diff toggle */}
           <button
             type="button"
             className={cn(
@@ -226,8 +230,6 @@ export default function CsvFormatter() {
           >
             Diff
           </button>
-
-          {/* Markdown preview toggle */}
           <button
             type="button"
             className={cn(
@@ -245,7 +247,6 @@ export default function CsvFormatter() {
           >
             Markdown
           </button>
-
           {fmt.input.trim() && !hasError && (
             <Badge variant="success" dot>
               valid
@@ -256,133 +257,20 @@ export default function CsvFormatter() {
               invalid
             </Badge>
           )}
-
-          <Button
-            size="sm"
-            variant="outline"
-            className="h-7 px-3 text-xs"
-            onClick={fmt.process}
-            disabled={!fmt.input.trim()}
-          >
-            Format
-            <kbd className="ml-1 rounded bg-surface-elevated px-1 text-[10px] text-fg-secondary">
-              ⌘↵
-            </kbd>
-          </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            className="h-7 px-3 text-xs text-fg-secondary"
-            onClick={fmt.clear}
-            disabled={!fmt.input.trim()}
-          >
-            Clear
-          </Button>
-
-          <button
-            type="button"
-            className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
-            onClick={() => {
-              setShowShortcuts(true);
-            }}
-            aria-label="Keyboard shortcuts"
-            title="Keyboard shortcuts (?)"
-          >
-            <Keyboard className="h-3.5 w-3.5" aria-hidden="true" />
-          </button>
-        </div>
-
-        {fileParser.showProgress && fileParser.isParsing && (
-          <ProgressBar percent={fileParser.progress} label="Parsing file…" />
-        )}
-
-        {hasError && (
-          <div
-            role="alert"
-            className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
-          >
-            <span className="shrink-0 font-mono font-semibold">Error</span>
-            <span className="flex-1">{fmt.error}</span>
-          </div>
-        )}
-
-        {fmt.warning && !hasError && (
-          <div
-            role="status"
-            className="flex items-start gap-2 border-b border-yellow-900/60 bg-yellow-950/30 px-4 py-2 text-xs text-yellow-400"
-          >
-            <span className="shrink-0 font-mono font-semibold">Warning</span>
-            <span className="flex-1">{fmt.warning}</span>
-          </div>
-        )}
-
-        <div className="h-[calc(100vh-260px)] min-h-[480px]">
-          {showDiff ? (
-            <DiffPanel original={fmt.input} modified={fmt.output} className="h-full" />
-          ) : (
-            <SplitPane
-              leftLabel="CSV input editor"
-              rightLabel={showMarkdown ? 'Markdown preview' : 'Formatted output'}
-              className="h-full"
-            >
-              <div className="flex h-full min-h-0 flex-col">
-                <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                  <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
-                    Input
-                  </span>
-                  <FileUploadZone
-                    accept=".csv,text/csv"
-                    onFile={handleFileUpload}
-                    disabled={fileParser.isParsing}
-                  />
-                </div>
-                <CodeEditor
-                  value={fmt.input}
-                  onChange={fmt.setInput}
-                  language="csv"
-                  label="CSV input"
-                  placeholder="Paste or type CSV here…"
-                  className="flex-1 rounded-none border-0"
-                  height="100%"
-                />
-              </div>
-
-              {showMarkdown ? (
-                <MarkdownPreview source={fmt.output || fmt.input} className="h-full" />
-              ) : (
-                <div className="flex h-full min-h-0 flex-col">
-                  <div className="flex items-center justify-between border-b border-edge px-3 py-1">
-                    <span className="text-[11px] font-medium uppercase tracking-wide text-label-cyan">
-                      Output
-                    </span>
-                    <div className="flex items-center gap-1">
-                      <PiiMaskToggle pii={pii} />
-                      <PaneActions content={pii.displayContent} downloadFilename="output.csv" />
-                    </div>
-                  </div>
-                  <CodeEditor
-                    value={pii.displayContent}
-                    language="csv"
-                    label="Formatted CSV output"
-                    readOnly
-                    placeholder="Formatted output will appear here…"
-                    className="flex-1 rounded-none border-0"
-                    height="100%"
-                  />
-                </div>
-              )}
-            </SplitPane>
-          )}
-        </div>
-
-        <KeyboardShortcutsModal
-          shortcuts={shortcuts}
-          isOpen={showShortcuts}
-          onClose={() => {
-            setShowShortcuts(false);
-          }}
-        />
-      </div>
+        </>
+      }
+      fullPaneSlot={
+        showDiff ? (
+          <DiffPanel original={fmt.input} modified={fmt.output} className="h-full" />
+        ) : undefined
+      }
+      rightPaneSlot={
+        showMarkdown ? (
+          <MarkdownPreview source={fmt.output || fmt.input} className="h-full" />
+        ) : undefined
+      }
+      rightPaneLabel="Markdown preview"
+    >
       <ToolPageContent
         toolName="CSV formatter"
         why={
@@ -446,6 +334,6 @@ export default function CsvFormatter() {
           },
         ]}
       />
-    </>
+    </FormatterLayout>
   );
 }
