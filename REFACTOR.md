@@ -76,21 +76,11 @@ Tests: `src/hooks/useTreeData.test.ts` — 11 tests.
 Each follows the `useHashGenerator` pattern: unexported State/Actions interfaces, hook returns their intersection. Routes now call the hook and keep only `showShortcuts`, `usePiiMasking`, `safeHighlightHtml` (regex), `useKeyboardShortcuts`, `useRegisterCommands`, and JSX.
 Also fixed a pre-existing TDZ bug in base64/url-encoder where `usePreloadedInput(setInput)` was called before `setInput` was defined.
 
-### SR-5 — Extract inline sub-components from route files
+### ~~SR-5 — Extract inline sub-components from route files~~ ✅ DONE
 
-**Affects:**
-
-- `cron-expression-explainer.tsx` — `CronBuilder` (187 lines), `FieldTable`, `FieldSelect`, `NextRunRow`
-- `jwt-decoder.tsx` — `ClaimRow`, `TimestampRow`, `JsonBlock`, `TimingSection`
-- `unix-timestamp-converter.tsx` — `ResultRow`
-
-**Problem:** Defining components inside a route file violates SRP and makes them untestable in isolation. `CronBuilder` in particular is a fully interactive stateful component that deserves its own file.
-**Fix:**
-
-- Move cron sub-components to `src/features/tools/cron/` or `src/components/CronBuilder.tsx`
-- Move JWT display components to `src/features/tools/jwt/` or `src/components/JwtViewer.tsx`
-
-**Why (Bulletproof React):** Components defined inside a module file cannot be independently imported, tested, or reused. They are invisible to the component tree and to test runners targeting component files.
+**Files created:** `src/features/tools/CronBuilder.tsx` (CronBuilder, FieldSelect, builder constants), `src/features/tools/CronResultViews.tsx` (NextRunRow, FieldTable, date formatting), `src/features/tools/JwtViewer.tsx` (ClaimRow, TimestampRow, JsonBlock, TimingSection), `src/features/tools/TimestampRows.tsx` (ResultRow, TimestampCopyRow).
+Also extracted `TimestampCopyRow` from `unix-timestamp-converter.tsx` (inline component not listed in original plan).
+All three route files updated to import from the new locations.
 
 ### SR-6 — `FormatterLayout` component (mirrors `ConverterLayout`)
 
@@ -135,7 +125,7 @@ This should be done AFTER SR-2 so the layout component stays purely presentation
 | 7        | SR-1 usePreloadedInput hook           | ~1 hr   | DRY (12 sites)        | ✅ Done |
 | 8        | SR-3 useTreeData hook                 | ~1 hr   | DRY (3 sites)         | ✅ Done |
 | 9        | SR-4 Feature hooks for tool routes    | 3–4 hrs | Consistency + size    | ✅ Done |
-| 10       | SR-5 Extract inline sub-components    | 2–3 hrs | Testability + size    | ⬜      |
+| 10       | SR-5 Extract inline sub-components    | 2–3 hrs | Testability + size    | ✅ Done |
 | 11       | SR-2 useFormatterPage hook            | 3–4 hrs | DRY + size (6 routes) | ⬜      |
 | 12       | SR-6 FormatterLayout component        | 4–6 hrs | Size + consistency    | ⬜      |
 
