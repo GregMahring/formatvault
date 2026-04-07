@@ -11,6 +11,7 @@ import { type Command } from '@/stores/commandStore';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
 import { highlightMatches, type RegexFlags } from '@/features/tools/regexTester';
 import { useRegexTester } from '@/features/tools/useRegexTester';
+import { ToolPageContent } from '@/components/ToolPageContent';
 import { Keyboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -22,6 +23,28 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Test regular expressions privately in your browser — no data sent anywhere. Real-time match highlighting, all JS flags (g, i, m, s, u, d), named capture groups, and multi-match display.',
     path: '/regex-tester',
+    faqItems: [
+      {
+        q: 'Which regex flags are supported?',
+        a: 'All six JavaScript RegExp flags: g (global — find all matches), i (case-insensitive), m (multiline — ^ and $ match line boundaries), s (dot-all — . matches newlines), u (Unicode — enables full Unicode category support), and d (hasIndices — exposes per-match start/end index ranges in the detail list).',
+      },
+      {
+        q: 'Are named capture groups supported?',
+        a: 'Yes. Named capture groups using the (?<name>...) syntax are displayed per-match in the results panel, alongside unnamed positional groups. This works in all modern browsers that support the ECMAScript 2018 named groups specification.',
+      },
+      {
+        q: 'Is it safe to test patterns against sensitive log data here?',
+        a: "Yes. The regex engine is JavaScript's built-in RegExp — no data leaves your browser. You can safely paste API responses, log lines, or PII-containing text. Open DevTools → Network to confirm zero outbound requests.",
+      },
+      {
+        q: 'Why does my pattern match differently here than in Python or Go?',
+        a: "This tester uses JavaScript's RegExp engine, which differs from Python's re module and Go's regexp package in several ways: lookaheads/lookbehinds work, but possessive quantifiers and atomic groups are not supported. Unicode behaviour also differs — use the u flag to enable standard Unicode categories.",
+      },
+      {
+        q: 'What does the d flag (hasIndices) do?',
+        a: 'The d flag adds a .indices property to each match object, exposing the start and end character positions of each capture group as well as the full match. The results panel shows these as index ranges (e.g. 4–12) next to each match.',
+      },
+    ],
   });
 }
 
@@ -93,7 +116,7 @@ export default function RegexTester() {
   useRegisterCommands(commands);
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <h1 className="text-sm font-semibold text-label-indigo">Regex Tester</h1>
@@ -190,7 +213,7 @@ export default function RegexTester() {
       )}
 
       {/* Split layout */}
-      <div className="flex min-h-0 flex-1 flex-col md:flex-row">
+      <div className="flex h-[calc(100vh-260px)] min-h-[480px] flex-col md:flex-row">
         {/* Left pane — test string */}
         <div className="flex w-full flex-col border-b border-r-0 border-edge md:w-1/2 md:border-b-0 md:border-r">
           <div className="flex h-8 shrink-0 items-center border-b border-edge px-3">
@@ -317,6 +340,106 @@ export default function RegexTester() {
         onClose={() => {
           setShowShortcuts(false);
         }}
+      />
+
+      <ToolPageContent
+        toolName="Regex tester"
+        why={
+          <div className="space-y-3 text-fg-secondary">
+            <p>
+              Testing regular expressions against real data often means pasting log lines, API
+              responses, or user records into a form field on a third-party site. That data sits in
+              someone else's server logs. For patterns that validate email addresses, parse auth
+              tokens, or extract fields from PII-containing logs, that's an unnecessary risk.
+            </p>
+            <p>
+              formatvault's regex tester runs entirely in your browser using JavaScript's built-in{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
+                RegExp
+              </code>{' '}
+              engine. You can test against any text without it ever leaving your machine.
+            </p>
+          </div>
+        }
+        howItWorks={
+          <div className="space-y-3 text-fg-secondary">
+            <p>
+              Patterns are compiled with JavaScript's{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
+                RegExp
+              </code>{' '}
+              constructor as you type. Each match is extracted with{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
+                matchAll
+              </code>
+              , which returns the full match, all capture groups (named and positional), and — with
+              the{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
+                d
+              </code>{' '}
+              flag — the start/end index of each group. The test string is sanitized with DOMPurify
+              before being highlighted in the output panel.
+            </p>
+            <p>
+              All six JS flags are supported:{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
+                g
+              </code>{' '}
+              (global),{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
+                i
+              </code>{' '}
+              (case-insensitive),{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
+                m
+              </code>{' '}
+              (multiline),{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
+                s
+              </code>{' '}
+              (dot-all),{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
+                u
+              </code>{' '}
+              (Unicode), and{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
+                d
+              </code>{' '}
+              (hasIndices).
+            </p>
+          </div>
+        }
+        useCases={[
+          'Extracting fields from structured log lines (timestamps, levels, request IDs) without uploading logs',
+          'Validating email, phone, or postal code patterns against real user data during development',
+          'Testing URL routing patterns before deploying to Express, Nginx, or React Router',
+          'Parsing CSV-like text with irregular delimiters or quoted fields',
+          'Writing named capture groups to extract labelled data (e.g. (?<year>\\d{4})) and verifying output',
+          'Debugging why a pattern matches in one context but not another by toggling flags live',
+          'Learning regex — seeing every match, group, and index position in real time accelerates understanding',
+        ]}
+        faq={[
+          {
+            q: 'Which regex flags are supported?',
+            a: 'All six JavaScript RegExp flags: g (global — find all matches), i (case-insensitive), m (multiline — ^ and $ match line boundaries), s (dot-all — . matches newlines), u (Unicode — enables full Unicode category support), and d (hasIndices — exposes per-match start/end index ranges).',
+          },
+          {
+            q: 'Are named capture groups supported?',
+            a: 'Yes. Named groups using the (?<name>...) syntax are displayed per-match in the results panel alongside positional groups. This follows the ECMAScript 2018 named groups specification and works in all modern browsers.',
+          },
+          {
+            q: 'Is it safe to test patterns against sensitive log data here?',
+            a: "Yes. The regex engine is JavaScript's built-in RegExp — no data leaves your browser. You can safely paste API responses, log lines, or PII-containing text and verify zero outbound requests in DevTools → Network.",
+          },
+          {
+            q: 'Why does my pattern match differently here than in Python or Go?',
+            a: "This tester uses JavaScript's RegExp engine, which differs from Python's re module and Go's regexp package. Lookaheads and lookbehinds work, but possessive quantifiers and atomic groups are not supported. Use the u flag to enable standard Unicode behaviour.",
+          },
+          {
+            q: 'What does the d flag (hasIndices) do?',
+            a: 'The d flag adds an .indices property to each match, exposing the start and end character positions of each capture group as well as the full match. The results panel shows these as index ranges (e.g. 4–12) next to each match.',
+          },
+        ]}
       />
     </div>
   );
