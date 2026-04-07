@@ -17,6 +17,11 @@ const CATEGORY_LABELS: Record<PiiCategory, string> = {
   AWS_KEY: 'AWS keys',
   CC: 'Credit cards',
   UUID: 'UUIDs',
+  SSN: 'SSNs',
+  IBAN: 'IBANs',
+  DOB: 'Dates of birth',
+  DL: "Driver's licenses",
+  PASSPORT: 'Passport numbers',
 };
 
 /**
