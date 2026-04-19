@@ -7,6 +7,7 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useRegisterCommands } from '@/hooks/useRegisterCommands';
 import { type Command } from '@/stores/commandStore';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
+import { ToolPageContent } from '@/components/ToolPageContent';
 import {
   convertNumber,
   isNumberError,
@@ -26,6 +27,28 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Convert numbers between binary, octal, decimal, and hexadecimal privately in your browser — no data sent anywhere. Supports negative integers and large values. 100% client-side.',
     path: '/number-base-converter',
+    faqItems: [
+      {
+        q: 'Which number bases are supported?',
+        a: 'Binary (base 2), octal (base 8), decimal (base 10), and hexadecimal (base 16). Type a value in any field and all others update instantly.',
+      },
+      {
+        q: 'What do the 0x and 0o prefixes mean?',
+        a: '0x is the conventional prefix for hexadecimal values used in most programming languages. 0o is the octal prefix used in Python, JavaScript, and other modern languages. The converter copies these prefixes with the value when you click Copy.',
+      },
+      {
+        q: 'Does it support large numbers?',
+        a: 'Yes. The converter uses JavaScript BigInt internally, so there is no practical upper limit on the size of the number. It also handles negative integers in all four bases.',
+      },
+      {
+        q: 'Why is 255 a common preset value?',
+        a: '255 is 0xFF in hex and 11111111 in binary — the maximum value of an 8-bit unsigned integer. It appears frequently in networking (subnet masks), color values (RGB channels), and low-level programming.',
+      },
+      {
+        q: 'Why is 65535 a preset?',
+        a: '65535 is 0xFFFF — the maximum value of a 16-bit unsigned integer. It is the upper limit for port numbers, common in networking and embedded systems.',
+      },
+    ],
   });
 }
 
@@ -190,7 +213,7 @@ export default function NumberBaseConverter() {
   ];
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
         <Binary className="h-4 w-4 text-fg-secondary" aria-hidden="true" />
@@ -221,7 +244,7 @@ export default function NumberBaseConverter() {
       </div>
 
       {/* Main content */}
-      <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-6">
+      <div className="flex flex-col gap-6 p-6">
         {/* ── Inputs ────────────────────────────────────────────────── */}
         <section>
           <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-label-cyan">
@@ -289,6 +312,79 @@ export default function NumberBaseConverter() {
         onClose={() => {
           setShowShortcuts(false);
         }}
+      />
+
+      <ToolPageContent
+        toolName="number base converter"
+        why={
+          <div className="space-y-3 text-fg-secondary">
+            <p>
+              Developers constantly move between number bases — hex memory addresses in debuggers,
+              binary register values in embedded systems, octal Unix file permissions, decimal port
+              numbers. Mental arithmetic between bases is error-prone and slow. A dedicated
+              converter eliminates that friction and reduces transcription mistakes.
+            </p>
+            <p>
+              Most online converters require a form submission or show ads. This one updates all
+              four bases simultaneously as you type, runs entirely in your browser, and handles
+              integers of any size — including the large values that appear in networking and
+              cryptography.
+            </p>
+          </div>
+        }
+        howItWorks={
+          <div className="space-y-3 text-fg-secondary">
+            <p>
+              Type a value in any of the four fields — binary, octal, decimal, or hexadecimal — and
+              the converter immediately parses it as a JavaScript BigInt and recomputes all other
+              representations. BigInt has no upper size limit, so there are no overflow issues with
+              large values like 64-bit integers or cryptographic constants.
+            </p>
+            <p>
+              Negative numbers are supported in all bases. The Copy button on each row includes the
+              conventional prefix —{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
+                0x
+              </code>{' '}
+              for hex,{' '}
+              <code className="rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8">
+                0o
+              </code>{' '}
+              for octal — so you can paste directly into code.
+            </p>
+          </div>
+        }
+        useCases={[
+          'Reading hex memory addresses in a debugger and converting to decimal for arithmetic',
+          'Checking Unix file permission bits — e.g. confirming 755 in octal is 111 101 101 in binary',
+          'Working with IPv4 subnet masks like 255.255.255.0 and understanding their binary structure',
+          'Converting RGB color channel values between decimal and hex for CSS or design tools',
+          'Inspecting 16-bit or 32-bit register values in embedded systems or microcontroller datasheets',
+          'Understanding port number limits — 65535 is 0xFFFF, the maximum for a 16-bit unsigned integer',
+          'Verifying bit flag values in low-level protocol implementations or network packet analysis',
+        ]}
+        faq={[
+          {
+            q: 'Which number bases are supported?',
+            a: 'Binary (base 2), octal (base 8), decimal (base 10), and hexadecimal (base 16). Type a value in any field and all others update instantly — no submit button needed.',
+          },
+          {
+            q: 'What do the 0x and 0o prefixes mean?',
+            a: '0x is the conventional prefix for hexadecimal values used in C, JavaScript, Python, and most other languages. 0o is the octal prefix used in Python 3 and modern JavaScript. The Copy button on each row includes the prefix so you can paste directly into code.',
+          },
+          {
+            q: 'Does it support large numbers?',
+            a: 'Yes. The converter uses JavaScript BigInt internally, so there is no practical upper limit. It correctly handles 64-bit integers, cryptographic constants, and other values that overflow standard 32-bit or 53-bit representations.',
+          },
+          {
+            q: 'Are negative numbers supported?',
+            a: 'Yes. Prefix any value with a minus sign and the converter handles it correctly across all four bases.',
+          },
+          {
+            q: 'Why are values like 255, 65535, and 4294967295 listed as presets?',
+            a: '255 (0xFF) is the maximum 8-bit unsigned integer — the upper limit for a single byte, common in RGB color values and networking. 65535 (0xFFFF) is the maximum 16-bit value and the highest valid network port number. 4294967295 (0xFFFFFFFF) is the maximum 32-bit unsigned integer, which appears in IPv4 address arithmetic and 32-bit register values.',
+          },
+        ]}
       />
     </div>
   );
