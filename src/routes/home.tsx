@@ -211,6 +211,10 @@ export default function Home() {
   const handlePaste = useCallback((e: React.ClipboardEvent<HTMLTextAreaElement>) => {
     const pasted = e.clipboardData.getData('text');
     if (!pasted.trim()) return;
+    // Prevent the native paste too — otherwise the browser inserts the
+    // clipboard text a second time after this handler's setState re-renders
+    // the controlled value, doubling the pasted content.
+    e.preventDefault();
     setPasteValue(pasted);
     const result = detectFormat(pasted);
     setDetected(result.primary !== 'unknown' ? result.primary : 'unknown');
