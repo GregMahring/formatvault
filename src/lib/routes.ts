@@ -6,6 +6,7 @@ import {
   CalendarClock,
   Database,
   FileCode2,
+  FileCode,
   FileJson,
   FileText,
   Globe,
@@ -88,6 +89,15 @@ export const TOOL_ROUTES: readonly ToolRoute[] = [
     group: 'Formatters',
     icon: Database,
     keywords: ['query', 'database', 'select', 'postgres', 'mysql'],
+  },
+  {
+    id: 'javascript-formatter',
+    label: 'JavaScript Formatter',
+    navLabel: 'JS Formatter',
+    path: '/javascript-formatter',
+    group: 'Formatters',
+    icon: FileCode,
+    keywords: ['js', 'beautify', 'prettier', 'pretty', 'jsx', 'typescript', 'ts', 'tsx'],
   },
 
   // ── Converters ──────────────────────────────────────────────────────────

@@ -6,14 +6,7 @@ import { useSettingsStore } from '@/stores/settingsStore';
 import { formatvaultDark, formatvaultLight } from '@/lib/editorTheme';
 
 export type EditorLanguage =
-  | 'json'
-  | 'yaml'
-  | 'csv'
-  | 'toml'
-  | 'sql'
-  | 'xml'
-  | 'text'
-  | 'typescript';
+  'json' | 'yaml' | 'csv' | 'toml' | 'sql' | 'xml' | 'text' | 'javascript' | 'typescript';
 
 export interface CodeEditorProps {
   value: string;
@@ -38,6 +31,10 @@ async function loadLangExtension(language: EditorLanguage): Promise<Extension | 
   if (language === 'yaml') {
     const { yaml } = await import('@codemirror/lang-yaml');
     return yaml();
+  }
+  if (language === 'javascript') {
+    const { javascript } = await import('@codemirror/lang-javascript');
+    return javascript({ jsx: true });
   }
   if (language === 'typescript') {
     const { javascript } = await import('@codemirror/lang-javascript');
