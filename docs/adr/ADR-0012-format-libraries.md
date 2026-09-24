@@ -32,6 +32,11 @@ formatvault requires libraries for parsing, formatting, validating, and converti
 | **Markdown**                      | `marked`                                           | ^14.0.0  | Fast, GFM-compliant; always paired with DOMPurify (see ADR-0008)               |
 | **HTML sanitization**             | `dompurify`                                        | ^3.2.0   | Industry standard; used by Google, GitHub; see ADR-0008                        |
 | **Diff computation**              | `diff`                                             | ^7.0.0   | Pure JS diff library; used as in-page panel feature (not a route)              |
+| **JavaScript / TypeScript**       | `prettier` (standalone build)                      | ^3.9.8   | Industry-standard output; pure JS (no WASM, no `eval`), so no CSP change       |
+
+### Amendment (2026-09-23): JavaScript formatter
+
+`prettier` was added for `/javascript-formatter`. Its standalone build plus a parser is ~175 KB gzipped with Babel or ~215 KB with TypeScript, too large for the route chunk, so it is dynamically imported inside `src/workers/jsFormatter.worker.ts` on first use. It always runs in the worker, regardless of input size (a departure from ADR-0009's 1 MB threshold), because formatting cost is unpredictable. Pure-JS formatters and minifiers are preferred over WASM builds (esbuild-wasm, swc) because WASM would require adding `'wasm-unsafe-eval'` to the CSP (ADR-0007). User code is parsed, never executed. `prettier` moved from `devDependencies` to `dependencies`; the same package also formats this repo, so version bumps affect both.
 
 ## Format Feature Matrix
 
@@ -45,6 +50,7 @@ formatvault requires libraries for parsing, formatting, validating, and converti
 | **Base64**   | ✅ encode/decode | —              | —            | —       | —             | —            | Unicode-safe              |
 | **URL**      | ✅ encode/decode | —              | —            | —       | —             | —            | Native APIs               |
 | **Markdown** | → HTML           | —              | Preview      | —       | —             | —            | DOMPurify required        |
+| **JS / TS**  | ✅               | ✅ (syntax)    | ✅           | Planned | —             | ✅           | Prettier in a Web Worker  |
 
 ## In-Page Features (Not Routes)
 

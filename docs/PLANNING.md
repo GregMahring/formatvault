@@ -46,6 +46,7 @@
 | YAML               | `js-yaml`                              | YAML 1.2 spec                                   |
 | TOML               | `@iarna/toml`                          | TOML v1.0                                       |
 | SQL                | `sql-formatter`                        | Multi-dialect SQL formatting                    |
+| JavaScript / TS    | `prettier` (standalone)                | Lazy-loaded in a Web Worker; JSX + TypeScript   |
 | XML                | `fast-xml-parser`                      | **Phase 6 — not yet built**                     |
 | JWT                | `jose`                                 | Decode only, no signature verification          |
 | Base64             | `js-base64`                            | Unicode-safe (native btoa fails on non-ASCII)   |
@@ -68,6 +69,7 @@ All routes are **flat** and **keyword-rich** for SEO/GEO optimization. No query 
 /yaml-formatter                YAML format, validate, multi-document support
 /toml-formatter                TOML format, validate
 /sql-formatter                 SQL format, multi-dialect
+/javascript-formatter          JavaScript / JSX / TypeScript format (Prettier)
 /jwt-decoder                   JWT decode (header + payload display, no verification)
 /base64-encoder                Base64 encode/decode (Unicode-safe)
 /url-encoder                   URL encode/decode, query parameter parser
@@ -175,6 +177,7 @@ Phases 0–5 are functionally complete. The checklist below reflects known gaps.
 - [x] 4.14 CRON expression explainer (`/cron-expression-explainer`) — beyond original scope
 - [x] 4.15 JSON → TypeScript converter (`/json-to-typescript`) — beyond original scope
 - [x] 4.16 JSON↔TOML, YAML↔TOML converters — beyond original scope
+- [x] 4.17 JavaScript formatter (`/javascript-formatter`) — Prettier in a Web Worker; beyond original scope
 
 ### Phase 5 — Polish + Production (partial) ⚠️
 
