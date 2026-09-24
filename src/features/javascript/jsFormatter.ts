@@ -41,8 +41,8 @@ export function isJsError(r: JsResult): r is JsFormatError {
   return r.error !== null;
 }
 
-// Prettier and its parsers total ~170 KB gzipped (TypeScript adds ~210 KB more),
-// so they load on first use rather than with the route chunk.
+// Prettier plus a parser is ~175 KB gzipped with Babel or ~215 KB with TypeScript,
+// so it loads on first use rather than with the route chunk.
 async function loadPrettier(parser: JsParser) {
   const [prettier, estree, parserPlugin] = await Promise.all([
     import('prettier/standalone'),
