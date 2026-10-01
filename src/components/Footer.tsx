@@ -13,11 +13,13 @@ export function Footer({ className }: FooterProps) {
         className
       )}
     >
-      <div className="flex items-center gap-4">
-        <p>
+      <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+        {/* Phones get only the headline promise so the footer stays one line;
+            the header already carries the logo there. */}
+        <p className="min-w-0 truncate">
           <span aria-hidden="true">🔒</span>{' '}
-          <strong className="font-medium text-fg">No data leaves your browser.</strong> All
-          processing is 100% client-side.
+          <strong className="font-medium text-fg">No data leaves your browser.</strong>
+          <span className="hidden md:inline"> All processing is 100% client-side.</span>
         </p>
         <NavLink to="/about" className="shrink-0 transition-colors hover:text-fg">
           About
@@ -28,7 +30,7 @@ export function Footer({ className }: FooterProps) {
       </div>
       <NavLink
         to="/"
-        className="flex items-center font-mono text-sm leading-none"
+        className="ml-4 hidden shrink-0 items-center font-mono text-sm leading-none md:flex"
         aria-label="formatvault home"
       >
         <span className="mr-[5px] font-bold text-brand-indigo">$</span>
