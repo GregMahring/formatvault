@@ -34,6 +34,7 @@ formatvault requires libraries for parsing, formatting, validating, and converti
 | **Diff computation**              | `diff`                                             | ^7.0.0   | Pure JS diff library; used as in-page panel feature (not a route)              |
 | **JavaScript / TypeScript**       | `prettier` (standalone build)                      | ^3.9.8   | Industry-standard output; pure JS (no WASM, no `eval`), so no CSP change       |
 | **JavaScript minification**       | `terser`                                           | ^5.51.2  | Minifier behind Vite/webpack/Rollup builds; pure JS (no WASM, no `eval`)       |
+| **CSS minification**              | `lightningcss-wasm`                                | ^1.33.0  | Only browser-capable minifier tested that preserves native CSS nesting         |
 
 ### Amendment (2026-09-23): JavaScript formatter
 
@@ -42,6 +43,12 @@ formatvault requires libraries for parsing, formatting, validating, and converti
 ### Amendment (2026-09-30): JavaScript minifier
 
 `terser` was added for `/javascript-minifier`. Like Prettier it is dynamically imported inside its own worker (`src/workers/jsMinifier.worker.ts`, ~145 KB gzipped on first use) and always runs there. Both JS workers share one request protocol (`src/workers/workerRequest.ts`) and one main-thread hook (`src/hooks/useLatestWorkerRequest.ts`) that discards superseded results. terser parses standard JavaScript only — TypeScript and JSX are rejected with a parse error. Gzipped sizes shown in the UI are computed with the native `CompressionStream` API and omitted where it is unavailable.
+
+### Amendment (2026-09-30): CSS minifier
+
+`lightningcss-wasm` was chosen for `/css-minifier` after the pure-JS candidates failed a correctness test: **csso 5 and clean-css 5 both silently delete native nested rules** (`.card { &:hover { … } }` minifies to `.card{…}` with the hover rule gone), and both are unmaintained since 2023. clean-css also depends on Node built-ins. csso's error-tolerant parser additionally turned invalid input into empty output without an error. lightningcss preserves nesting and modern syntax, merges duplicate rules, and throws located `SyntaxError`s for invalid CSS (shown with Rust token names stripped).
+
+Trade-offs accepted: a ~3.8 MB gzipped (15.8 MB raw) WASM download on first use, cached immutably afterwards; it is loaded and compiled only inside `src/workers/cssMinifier.worker.ts`. WASM requires `'wasm-unsafe-eval'` in `script-src` — see the ADR-0007 amendment. The engine is given an explicit `?url` asset URL because Vite's dependency pre-bundling breaks the package's own `import.meta.url` lookup. Unit tests run the real engine under Vitest's Node environment; jsdom's cross-realm `Uint8Array`s are rejected by its WASM bindings.
 
 ## Format Feature Matrix
 
@@ -55,6 +62,7 @@ formatvault requires libraries for parsing, formatting, validating, and converti
 | **Base64**   | ✅ encode/decode | —              | —            | —       | —             | —            | Unicode-safe              |
 | **URL**      | ✅ encode/decode | —              | —            | —       | —             | —            | Native APIs               |
 | **Markdown** | → HTML           | —              | Preview      | —       | —             | —            | DOMPurify required        |
+| **CSS**      | —                | ✅ (syntax)    | —            | ✅      | —             | ✅           | lightningcss WASM worker  |
 | **JS / TS**  | ✅               | ✅ (syntax)    | ✅           | ✅ (JS) | —             | ✅           | Prettier / terser workers |
 
 ## In-Page Features (Not Routes)

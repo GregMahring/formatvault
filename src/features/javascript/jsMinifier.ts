@@ -1,5 +1,5 @@
 import type { MinifyOptions } from 'terser';
-import { gzipByteLength, utf8ByteLength } from '@/lib/byteSize';
+import { computeMinifyStats, type MinifyStats } from '@/lib/byteSize';
 
 /**
  * 'module' treats top-level declarations as private, so unused ones are dropped
@@ -18,17 +18,10 @@ export interface JsMinifyOptions {
   comments: JsCommentMode;
 }
 
-export interface JsMinifyStats {
-  originalBytes: number;
-  minifiedBytes: number;
-  /** Null where the browser lacks CompressionStream. */
-  gzipBytes: number | null;
-}
-
 export interface JsMinifySuccess {
   output: string;
   error: null;
-  stats: JsMinifyStats;
+  stats: MinifyStats;
 }
 
 export interface JsMinifyError {
@@ -101,11 +94,7 @@ export async function minifyJs(
     return {
       output,
       error: null,
-      stats: {
-        originalBytes: utf8ByteLength(input),
-        minifiedBytes: utf8ByteLength(output),
-        gzipBytes: await gzipByteLength(output),
-      },
+      stats: await computeMinifyStats(input, output),
     };
   } catch (err) {
     return toMinifyError(err);

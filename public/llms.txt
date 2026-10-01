@@ -15,6 +15,7 @@ formatvault is a collection of browser-based tools for developers to format, val
 - [SQL Formatter](https://formatvault.dev/sql-formatter): Format SQL queries across multiple dialects (MySQL, PostgreSQL, SQLite, etc.).
 - [JavaScript Formatter](https://formatvault.dev/javascript-formatter): Format and beautify JavaScript, JSX, and TypeScript with Prettier — configurable indent, quotes, semicolons, and line width.
 - [JavaScript Minifier](https://formatvault.dev/javascript-minifier): Minify JavaScript with terser — compress, mangle names, keep license comments, and compare original, minified, and gzipped sizes.
+- [CSS Minifier](https://formatvault.dev/css-minifier): Minify CSS with lightningcss — preserves native nesting, @layer, @container and :has(), keeps license comments, and shows minified and gzipped sizes.
 
 ## Utilities
 

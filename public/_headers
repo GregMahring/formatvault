@@ -12,7 +12,8 @@
   # unsafe-inline styles: required for Tailwind CSS v4 (runtime injection) + CodeMirror
   # data: required for CodeMirror gutter icons (SVG data URIs)
   # worker-src blob:: required for Web Workers created via new Worker(new URL(...))
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://plausible.io; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  # wasm-unsafe-eval: lets the CSS minifier compile lightningcss's WebAssembly; does not allow JS eval
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://plausible.io; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
   # HSTS — 1 year, include subdomains
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   # Cross-Origin policies

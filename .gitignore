@@ -37,3 +37,6 @@ blob-report/
 # Logs
 *.log
 npm-debug.log*
+
+# Wrangler local state (pages dev)
+.wrangler/

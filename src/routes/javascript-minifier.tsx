@@ -2,14 +2,14 @@ import { useState, useMemo } from 'react';
 import { Link } from 'react-router';
 import type { Route } from './+types/javascript-minifier';
 import { buildMeta } from '@/lib/meta';
-import { formatBytes } from '@/lib/byteSize';
 import { Badge } from '@/components/ui/badge';
 import { DiffPanel } from '@/components/DiffPanel';
 import { FormatterLayout } from '@/components/FormatterLayout';
+import { MinifyStatsBar } from '@/components/MinifyStatsBar';
 import { ToolPageContent } from '@/components/ToolPageContent';
 import { ToolbarSelect, type ToolbarSelectOption } from '@/components/ToolbarSelect';
 import { useJsMinifier } from '@/features/javascript/useJsMinifier';
-import type { JsCommentMode, JsMinifyStats, JsSourceType } from '@/features/javascript/jsMinifier';
+import type { JsCommentMode, JsSourceType } from '@/features/javascript/jsMinifier';
 import { useFileParser } from '@/hooks/useFileParser';
 import { useFormatterPage } from '@/hooks/useFormatterPage';
 import { type Shortcut } from '@/hooks/useKeyboardShortcuts';
@@ -65,40 +65,6 @@ const COMMENT_OPTIONS: ToolbarSelectOption<JsCommentMode>[] = [
   { value: 'none', label: 'None' },
   { value: 'all', label: 'All' },
 ];
-
-function percentSaved(from: number, to: number): string {
-  if (from === 0) return '0%';
-  return `${String(Math.round((1 - to / from) * 100))}%`;
-}
-
-function StatsBar({ stats }: { stats: JsMinifyStats }) {
-  return (
-    <div
-      role="status"
-      className="flex flex-wrap items-center gap-x-4 gap-y-1 border-b border-edge bg-surface-raised px-4 py-1.5 text-xs text-fg-secondary"
-    >
-      <span>
-        Original <strong className="font-medium text-fg">{formatBytes(stats.originalBytes)}</strong>
-      </span>
-      <span>
-        Minified <strong className="font-medium text-fg">{formatBytes(stats.minifiedBytes)}</strong>{' '}
-        <span className="text-emerald-400">
-          −{percentSaved(stats.originalBytes, stats.minifiedBytes)}
-        </span>
-      </span>
-      {/* gzip's fixed ~20-byte overhead makes tiny inputs grow; servers don't
-          compress responses that small, so the figure would only mislead. */}
-      {stats.gzipBytes !== null && stats.gzipBytes < stats.minifiedBytes && (
-        <span>
-          Gzipped <strong className="font-medium text-fg">{formatBytes(stats.gzipBytes)}</strong>{' '}
-          <span className="text-emerald-400">
-            −{percentSaved(stats.originalBytes, stats.gzipBytes)}
-          </span>
-        </span>
-      )}
-    </div>
-  );
-}
 
 function Code({ children }: { children: string }) {
   return (
@@ -283,7 +249,7 @@ export default function JavaScriptMinifier() {
             ))}
         </>
       }
-      noticeSlot={fmt.stats && !fmt.isMinifying ? <StatsBar stats={fmt.stats} /> : undefined}
+      noticeSlot={fmt.stats && !fmt.isMinifying ? <MinifyStatsBar stats={fmt.stats} /> : undefined}
       fullPaneSlot={
         showDiff ? (
           <DiffPanel original={fmt.input} modified={fmt.output} className="h-full" />

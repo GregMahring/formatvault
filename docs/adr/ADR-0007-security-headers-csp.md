@@ -36,6 +36,7 @@ Enforce the following security headers via Cloudflare Pages configuration, appli
 | ----------------- | ----------------------------- | --------------------------------------------------------------------------- |
 | `default-src`     | `'self'`                      | Deny all unlisted sources by default                                        |
 | `script-src`      | `'self' 'unsafe-inline'`      | Tailwind v4 requires inline styles; React hydration may need inline scripts |
+|                   | `'wasm-unsafe-eval'`          | Compile the CSS minifier's WebAssembly (added 2026-09-30; see below)        |
 | `style-src`       | `'self' 'unsafe-inline'`      | Tailwind utility classes generate inline styles                             |
 | `img-src`         | `'self' data: blob:`          | `data:` for base64 images; `blob:` for file download URLs                   |
 | `connect-src`     | `'self' https://plausible.io` | Allow only Plausible analytics outbound                                     |
@@ -43,6 +44,8 @@ Enforce the following security headers via Cloudflare Pages configuration, appli
 | `frame-ancestors` | `'none'`                      | Prevent clickjacking — equivalent to X-Frame-Options: DENY                  |
 
 **Note on `'unsafe-inline'`:** Tailwind CSS v4 and React's inline style hydration require `unsafe-inline` for both script and style. This is a known trade-off for Tailwind-based SPAs. Mitigation: strict DOMPurify sanitization (see ADR-0008) reduces XSS risk at the application layer. A nonce-based CSP would be ideal but requires SSR nonce injection on every request — deferred as a future hardening step.
+
+**Note on `'wasm-unsafe-eval'` (amendment, 2026-09-30):** Added so the CSS minifier (`/css-minifier`) can compile lightningcss's WebAssembly module. It permits `WebAssembly.compile`/`instantiate` only; JavaScript `eval()`, `new Function()` and string timers remain blocked. The only WASM the site loads is the first-party, same-origin `lightningcss_node-*.wasm` asset (installed from npm, served from `/assets/` with `application/wasm`); `connect-src 'self'` still prevents fetching modules from elsewhere. Pure-JS CSS minifiers were evaluated first and rejected because they silently delete native CSS nesting (ADR-0012). **SOC2:** this widens the CSP slightly; the residual risk is limited to an attacker who can already serve same-origin content, and the change is recorded here for audit (CC6/CC8).
 
 ## XSS Prevention at Application Layer
 
@@ -67,6 +70,7 @@ HTTP headers are defense-in-depth. Primary XSS prevention:
 
 - `unsafe-inline` weakens CSP's XSS protection — mitigated by DOMPurify and lack of server-side rendering of user content
 - Adding new external resources (CDN, font service, etc.) requires updating CSP — acceptable operational overhead
+- `'wasm-unsafe-eval'` applies site-wide, not just to the CSS minifier route — CSP cannot scope it per route while the policy lives in `_headers`
 
 ## Future Hardening
 

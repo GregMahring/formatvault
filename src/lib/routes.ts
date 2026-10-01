@@ -13,6 +13,7 @@ import {
   Hash,
   KeyRound,
   Lock,
+  Paintbrush,
   Pipette,
   Slash,
   Timer,
@@ -107,6 +108,14 @@ export const TOOL_ROUTES: readonly ToolRoute[] = [
     group: 'Formatters',
     icon: FileCode,
     keywords: ['js', 'minify', 'compress', 'uglify', 'terser', 'mangle', 'shrink'],
+  },
+  {
+    id: 'css-minifier',
+    label: 'CSS Minifier',
+    path: '/css-minifier',
+    group: 'Formatters',
+    icon: Paintbrush,
+    keywords: ['css', 'minify', 'compress', 'stylesheet', 'lightningcss', 'shrink', 'styles'],
   },
 
   // ── Converters ──────────────────────────────────────────────────────────

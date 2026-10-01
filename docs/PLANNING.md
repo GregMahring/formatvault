@@ -48,6 +48,7 @@
 | SQL                | `sql-formatter`                        | Multi-dialect SQL formatting                    |
 | JavaScript / TS    | `prettier` (standalone)                | Lazy-loaded in a Web Worker; JSX + TypeScript   |
 | JS minification    | `terser`                               | Lazy-loaded in a Web Worker; JavaScript only    |
+| CSS minification   | `lightningcss-wasm`                    | WASM in a Web Worker; keeps native CSS nesting  |
 | XML                | `fast-xml-parser`                      | **Phase 6 — not yet built**                     |
 | JWT                | `jose`                                 | Decode only, no signature verification          |
 | Base64             | `js-base64`                            | Unicode-safe (native btoa fails on non-ASCII)   |
@@ -72,6 +73,7 @@ All routes are **flat** and **keyword-rich** for SEO/GEO optimization. No query 
 /sql-formatter                 SQL format, multi-dialect
 /javascript-formatter          JavaScript / JSX / TypeScript format (Prettier)
 /javascript-minifier           JavaScript minify with size stats (terser)
+/css-minifier                  CSS minify with size stats (lightningcss)
 /jwt-decoder                   JWT decode (header + payload display, no verification)
 /base64-encoder                Base64 encode/decode (Unicode-safe)
 /url-encoder                   URL encode/decode, query parameter parser
@@ -181,6 +183,7 @@ Phases 0–5 are functionally complete. The checklist below reflects known gaps.
 - [x] 4.16 JSON↔TOML, YAML↔TOML converters — beyond original scope
 - [x] 4.17 JavaScript formatter (`/javascript-formatter`) — Prettier in a Web Worker; beyond original scope
 - [x] 4.18 JavaScript minifier (`/javascript-minifier`) — terser in a Web Worker, original/minified/gzipped size stats; beyond original scope
+- [x] 4.19 CSS minifier (`/css-minifier`) — lightningcss (WASM) in a Web Worker; CSP gains `'wasm-unsafe-eval'` (ADR-0007); beyond original scope
 
 ### Phase 5 — Polish + Production (partial) ⚠️
 

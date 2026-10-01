@@ -27,3 +27,18 @@ export function formatBytes(bytes: number): string {
   if (kb < 1024) return `${kb.toFixed(1)} KB`;
   return `${(kb / 1024).toFixed(2)} MB`;
 }
+
+export interface MinifyStats {
+  originalBytes: number;
+  minifiedBytes: number;
+  /** Null where the browser lacks CompressionStream. */
+  gzipBytes: number | null;
+}
+
+export async function computeMinifyStats(input: string, output: string): Promise<MinifyStats> {
+  return {
+    originalBytes: utf8ByteLength(input),
+    minifiedBytes: utf8ByteLength(output),
+    gzipBytes: await gzipByteLength(output),
+  };
+}

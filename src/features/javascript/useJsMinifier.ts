@@ -7,17 +7,17 @@ import {
   type JsMinifyError,
   type JsMinifyOptions,
   type JsMinifyResult,
-  type JsMinifyStats,
   type JsSourceType,
 } from './jsMinifier';
 import { useLatestWorkerRequest } from '@/hooks/useLatestWorkerRequest';
+import type { MinifyStats } from '@/lib/byteSize';
 import type { JsMinifyPayload } from '@/workers/jsMinifier.worker';
 
 export interface JsMinifierState extends JsMinifyOptions {
   input: string;
   output: string;
   error: JsMinifyError | null;
-  stats: JsMinifyStats | null;
+  stats: MinifyStats | null;
   isMinifying: boolean;
 }
 
@@ -35,7 +35,7 @@ export function useJsMinifier(): JsMinifierState & JsMinifierActions {
   const [input, setInputRaw] = useState('');
   const [output, setOutput] = useState('');
   const [error, setError] = useState<JsMinifyError | null>(null);
-  const [stats, setStats] = useState<JsMinifyStats | null>(null);
+  const [stats, setStats] = useState<MinifyStats | null>(null);
   const [isMinifying, setIsMinifying] = useState(false);
   const [sourceType, setSourceType] = useState<JsSourceType>(DEFAULT_JS_MINIFY_OPTIONS.sourceType);
   const [compress, setCompress] = useState(DEFAULT_JS_MINIFY_OPTIONS.compress);

@@ -36,6 +36,10 @@ async function loadLangExtension(language: EditorLanguage): Promise<Extension | 
     const { javascript } = await import('@codemirror/lang-javascript');
     return javascript({ jsx: true });
   }
+  if (language === 'css') {
+    const { css } = await import('@codemirror/lang-css');
+    return css();
+  }
   if (language === 'typescript') {
     const { javascript } = await import('@codemirror/lang-javascript');
     return javascript({ typescript: true });
