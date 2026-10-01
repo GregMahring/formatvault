@@ -12,6 +12,12 @@ const themeInitScript = `
 (function(){try{var s=JSON.parse(localStorage.getItem('formatvault-settings')||'{}');var t=s.state&&s.state.theme==='light'?'light':'dark';document.documentElement.classList.remove('dark','light');document.documentElement.classList.add(t);document.documentElement.style.colorScheme=t;}catch(e){}})();
 `.trim();
 
+// Swaps the font stylesheet to media="all" once loaded. Must be inline in the SSR HTML:
+// a React onLoad prop isn't serialized and attaches after the sheet has usually loaded.
+const fontSwapScript = `
+(function(){var l=document.getElementById('fv-fonts');if(!l)return;function s(){l.media='all'}if(l.sheet)s();else l.addEventListener('load',s);})();
+`.trim();
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -25,18 +31,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {/* Restore persisted theme before paint to avoid flash of wrong theme */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         {/* Brand fonts — JetBrains Mono, DM Sans, Geist
-            Non-blocking: preconnect warms the connection, media="print" + onLoad swap
+            Non-blocking: preconnect warms the connection, media="print" + inline swap script
             prevents render-blocking without a preload that creates a critical chain. */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
+          id="fv-fonts"
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Geist:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
           media="print"
-          onLoad={(e) => {
-            (e.currentTarget as HTMLLinkElement).media = 'all';
-          }}
+          suppressHydrationWarning
         />
+        <script dangerouslySetInnerHTML={{ __html: fontSwapScript }} />
         {/* Plausible Analytics — privacy-respecting, no cookies, no PII */}
         <script defer data-domain="formatvault.dev" src="https://plausible.io/js/script.js" />
         <Meta />
