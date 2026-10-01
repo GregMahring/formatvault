@@ -6,7 +6,7 @@ import { useSettingsStore } from '@/stores/settingsStore';
 import { formatvaultDark, formatvaultLight } from '@/lib/editorTheme';
 
 export type EditorLanguage =
-  'json' | 'yaml' | 'csv' | 'toml' | 'sql' | 'xml' | 'text' | 'javascript' | 'typescript';
+  'json' | 'yaml' | 'csv' | 'toml' | 'sql' | 'xml' | 'text' | 'javascript' | 'css' | 'typescript';
 
 export interface CodeEditorProps {
   value: string;

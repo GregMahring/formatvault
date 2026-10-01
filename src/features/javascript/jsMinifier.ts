@@ -1,4 +1,3 @@
-import type { MinifyOptions } from 'terser';
 import { computeMinifyStats, type MinifyStats } from '@/lib/byteSize';
 
 /**
@@ -44,7 +43,7 @@ export function isJsMinifyError(r: JsMinifyResult): r is JsMinifyError {
   return r.error !== null;
 }
 
-const COMMENT_FORMAT: Record<JsCommentMode, NonNullable<MinifyOptions['format']>['comments']> = {
+const COMMENT_FORMAT: Record<JsCommentMode, 'some' | 'all' | false> = {
   license: 'some',
   none: false,
   all: 'all',
