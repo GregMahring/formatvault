@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
+import { Link } from 'react-router';
 import type { Route } from './+types/javascript-formatter';
 import { buildMeta } from '@/lib/meta';
 import { Badge } from '@/components/ui/badge';
@@ -336,7 +337,12 @@ export default function JavaScriptFormatter() {
             <p>
               Formatting runs in a Web Worker so large files don&apos;t freeze the page, and the
               parser loads only the first time you format. Syntax errors are reported with the exact
-              line and column, and the diff view shows exactly what Prettier changed.
+              line and column, and the diff view shows exactly what Prettier changed. Need to shrink
+              code for production instead? Use the{' '}
+              <Link to="/javascript-minifier" className="text-label-cyan underline">
+                JavaScript Minifier
+              </Link>
+              .
             </p>
           </div>
         }

@@ -65,5 +65,8 @@ export default defineConfig({
   // Web Worker support — use ES module format for modern browsers
   worker: {
     format: 'es',
+    // Worker bundles are built separately and don't inherit top-level plugins,
+    // so '@/' imports inside workers need the path-alias plugin here too.
+    plugins: () => [tsconfigPaths()],
   },
 });

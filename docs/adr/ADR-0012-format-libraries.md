@@ -33,10 +33,15 @@ formatvault requires libraries for parsing, formatting, validating, and converti
 | **HTML sanitization**             | `dompurify`                                        | ^3.2.0   | Industry standard; used by Google, GitHub; see ADR-0008                        |
 | **Diff computation**              | `diff`                                             | ^7.0.0   | Pure JS diff library; used as in-page panel feature (not a route)              |
 | **JavaScript / TypeScript**       | `prettier` (standalone build)                      | ^3.9.8   | Industry-standard output; pure JS (no WASM, no `eval`), so no CSP change       |
+| **JavaScript minification**       | `terser`                                           | ^5.51.2  | Minifier behind Vite/webpack/Rollup builds; pure JS (no WASM, no `eval`)       |
 
 ### Amendment (2026-09-23): JavaScript formatter
 
 `prettier` was added for `/javascript-formatter`. Its standalone build plus a parser is ~175 KB gzipped with Babel or ~215 KB with TypeScript, too large for the route chunk, so it is dynamically imported inside `src/workers/jsFormatter.worker.ts` on first use. It always runs in the worker, regardless of input size (a departure from ADR-0009's 1 MB threshold), because formatting cost is unpredictable. Pure-JS formatters and minifiers are preferred over WASM builds (esbuild-wasm, swc) because WASM would require adding `'wasm-unsafe-eval'` to the CSP (ADR-0007). User code is parsed, never executed. `prettier` moved from `devDependencies` to `dependencies`; the same package also formats this repo, so version bumps affect both.
+
+### Amendment (2026-09-30): JavaScript minifier
+
+`terser` was added for `/javascript-minifier`. Like Prettier it is dynamically imported inside its own worker (`src/workers/jsMinifier.worker.ts`, ~145 KB gzipped on first use) and always runs there. Both JS workers share one request protocol (`src/workers/workerRequest.ts`) and one main-thread hook (`src/hooks/useLatestWorkerRequest.ts`) that discards superseded results. terser parses standard JavaScript only — TypeScript and JSX are rejected with a parse error. Gzipped sizes shown in the UI are computed with the native `CompressionStream` API and omitted where it is unavailable.
 
 ## Format Feature Matrix
 
@@ -50,7 +55,7 @@ formatvault requires libraries for parsing, formatting, validating, and converti
 | **Base64**   | ✅ encode/decode | —              | —            | —       | —             | —            | Unicode-safe              |
 | **URL**      | ✅ encode/decode | —              | —            | —       | —             | —            | Native APIs               |
 | **Markdown** | → HTML           | —              | Preview      | —       | —             | —            | DOMPurify required        |
-| **JS / TS**  | ✅               | ✅ (syntax)    | ✅           | Planned | —             | ✅           | Prettier in a Web Worker  |
+| **JS / TS**  | ✅               | ✅ (syntax)    | ✅           | ✅ (JS) | —             | ✅           | Prettier / terser workers |
 
 ## In-Page Features (Not Routes)
 

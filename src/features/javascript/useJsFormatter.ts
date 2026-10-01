@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback } from 'react';
 import {
   formatJs,
   isJsError,
@@ -11,7 +11,8 @@ import {
   type JsResult,
   type JsTrailingComma,
 } from './jsFormatter';
-import type { JsFormatRequest, JsFormatResponse } from '@/workers/jsFormatter.worker';
+import { useLatestWorkerRequest } from '@/hooks/useLatestWorkerRequest';
+import type { JsFormatPayload } from '@/workers/jsFormatter.worker';
 
 export interface JsFormatterState extends JsFormatOptions {
   input: string;
@@ -46,21 +47,7 @@ export function useJsFormatter(): JsFormatterState & JsFormatterActions {
     DEFAULT_JS_OPTIONS.trailingComma
   );
 
-  const workerRef = useRef<Worker | null>(null);
-  // Formatting is async; only the most recent request may update state, so a
-  // slow run on old input can't overwrite the result for newer input.
-  const latestIdRef = useRef(0);
-
-  useEffect(
-    () => () => {
-      workerRef.current?.terminate();
-      workerRef.current = null;
-    },
-    []
-  );
-
-  const applyResult = useCallback((id: number, result: JsResult) => {
-    if (id !== latestIdRef.current) return;
+  const applyResult = useCallback((result: JsResult) => {
     setIsFormatting(false);
     if (isJsError(result)) {
       setError(result);
@@ -71,52 +58,33 @@ export function useJsFormatter(): JsFormatterState & JsFormatterActions {
     }
   }, []);
 
-  const runFormat = useCallback(
-    (id: number, text: string, options: JsFormatOptions) => {
-      // jsdom (tests) and very old browsers lack Worker; format inline there.
-      if (typeof Worker === 'undefined') {
-        void formatJs(text, options).then((result) => {
-          applyResult(id, result);
-        });
-        return;
-      }
-
-      if (!workerRef.current) {
-        const worker = new Worker(new URL('../../workers/jsFormatter.worker.ts', import.meta.url), {
-          type: 'module',
-        });
-        worker.onmessage = (e: MessageEvent<JsFormatResponse>) => {
-          applyResult(e.data.id, e.data.result);
-        };
-        worker.onerror = (e) => {
-          console.error('[jsFormatter.worker] worker failed', e.message);
-          workerRef.current?.terminate();
-          workerRef.current = null;
-          applyResult(latestIdRef.current, {
-            output: null,
-            error: 'Formatter failed to load. Please reload the page and try again.',
-            line: null,
-            column: null,
-          });
-        };
-        workerRef.current = worker;
-      }
-      workerRef.current.postMessage({ id, input: text, options } satisfies JsFormatRequest);
+  const { start, cancel } = useLatestWorkerRequest<JsFormatPayload, JsResult>({
+    createWorker: () =>
+      new Worker(new URL('../../workers/jsFormatter.worker.ts', import.meta.url), {
+        type: 'module',
+      }),
+    runInline: ({ input: text, options }) => formatJs(text, options),
+    onResult: applyResult,
+    failureResult: {
+      output: null,
+      error: 'Formatter failed to load. Please reload the page and try again.',
+      line: null,
+      column: null,
     },
-    [applyResult]
-  );
+    name: 'jsFormatter.worker',
+  });
 
   const process = useCallback(() => {
-    const id = ++latestIdRef.current;
     if (!input.trim()) {
+      cancel();
       setOutput('');
       setError(null);
       setIsFormatting(false);
       return;
     }
     setIsFormatting(true);
-    runFormat(id, input, { parser, indent, printWidth, singleQuote, semi, trailingComma });
-  }, [input, parser, indent, printWidth, singleQuote, semi, trailingComma, runFormat]);
+    start({ input, options: { parser, indent, printWidth, singleQuote, semi, trailingComma } });
+  }, [input, parser, indent, printWidth, singleQuote, semi, trailingComma, start, cancel]);
 
   const setInput = useCallback((v: string) => {
     setInputRaw(v);
@@ -124,12 +92,12 @@ export function useJsFormatter(): JsFormatterState & JsFormatterActions {
   }, []);
 
   const clear = useCallback(() => {
-    latestIdRef.current++;
+    cancel();
     setInputRaw('');
     setOutput('');
     setError(null);
     setIsFormatting(false);
-  }, []);
+  }, [cancel]);
 
   return {
     input,

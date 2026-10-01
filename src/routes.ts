@@ -12,6 +12,7 @@ export default [
   route('toml-formatter', 'routes/toml-formatter.tsx'),
   route('sql-formatter', 'routes/sql-formatter.tsx'),
   route('javascript-formatter', 'routes/javascript-formatter.tsx'),
+  route('javascript-minifier', 'routes/javascript-minifier.tsx'),
   route('regex-tester', 'routes/regex-tester.tsx'),
 
   // Converter routes — one route per conversion pair for SEO/GEO (ADR-0003)

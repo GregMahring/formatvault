@@ -99,6 +99,15 @@ export const TOOL_ROUTES: readonly ToolRoute[] = [
     icon: FileCode,
     keywords: ['js', 'beautify', 'prettier', 'pretty', 'jsx', 'typescript', 'ts', 'tsx'],
   },
+  {
+    id: 'javascript-minifier',
+    label: 'JavaScript Minifier',
+    navLabel: 'JS Minifier',
+    path: '/javascript-minifier',
+    group: 'Formatters',
+    icon: FileCode,
+    keywords: ['js', 'minify', 'compress', 'uglify', 'terser', 'mangle', 'shrink'],
+  },
 
   // ── Converters ──────────────────────────────────────────────────────────
   {

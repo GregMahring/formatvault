@@ -85,6 +85,7 @@ describe('TOOL_ROUTES', () => {
     expect(ids.has('toml-formatter')).toBe(true);
     expect(ids.has('sql-formatter')).toBe(true);
     expect(ids.has('javascript-formatter')).toBe(true);
+    expect(ids.has('javascript-minifier')).toBe(true);
   });
 
   it('contains expected converter routes', () => {

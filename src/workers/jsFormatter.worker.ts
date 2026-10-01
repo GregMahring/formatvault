@@ -4,26 +4,22 @@
  * Prettier can take seconds on large bundles, so formatting always runs off
  * the main thread regardless of input size.
  *
- * Message protocol:
+ * Message protocol (see workerRequest.ts):
  *   IN:  { id: number, input: string, options: JsFormatOptions }
  *   OUT: { id: number, result: JsResult }
  */
 
-import { formatJs, type JsFormatOptions, type JsResult } from '../features/javascript/jsFormatter';
+import { formatJs, type JsFormatOptions, type JsResult } from '@/features/javascript/jsFormatter';
+import { createRequestHandler, type WorkerRequest, type WorkerResponse } from './workerRequest';
 
-export interface JsFormatRequest {
-  id: number;
+export interface JsFormatPayload {
   input: string;
   options: JsFormatOptions;
 }
 
-export interface JsFormatResponse {
-  id: number;
-  result: JsResult;
-}
+export type JsFormatRequest = WorkerRequest<JsFormatPayload>;
+export type JsFormatResponse = WorkerResponse<JsResult>;
 
-self.onmessage = async (e: MessageEvent<JsFormatRequest>) => {
-  const { id, input, options } = e.data;
-  const result = await formatJs(input, options);
-  self.postMessage({ id, result } satisfies JsFormatResponse);
-};
+self.onmessage = createRequestHandler<JsFormatPayload, JsResult>(({ input, options }) =>
+  formatJs(input, options)
+);
