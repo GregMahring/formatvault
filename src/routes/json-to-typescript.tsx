@@ -36,7 +36,7 @@ export function meta(_args: Route.MetaArgs) {
 
 export default function JsonToTypescriptConverter() {
   const [rootName, setRootName] = useState('Root');
-  const [style, setStyle] = useState<TypeGenOptions['style']>('interface');
+  const [style, setStyle] = useState<NonNullable<TypeGenOptions['style']>>('interface');
   const [allOptional, setAllOptional] = useState(false);
 
   const convert = useCallback(
@@ -75,7 +75,7 @@ export default function JsonToTypescriptConverter() {
             id="ts-style-select"
             value={style}
             onChange={(e) => {
-              setStyle(e.target.value as TypeGenOptions['style']);
+              setStyle(e.target.value as NonNullable<TypeGenOptions['style']>);
             }}
             className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-fg focus:border-accent-500 focus:outline-none"
           >

@@ -4,9 +4,8 @@ import { formatYaml, validateYaml, parseYaml, serializeToYaml } from './yamlForm
 describe('formatYaml', () => {
   it('formats valid YAML', () => {
     const result = formatYaml('name: Alice\nage: 30', { indent: 2 });
-    expect(result.error).toBeNull();
+    expect(result).toMatchObject({ error: null, documentCount: 1 });
     expect(result.output).toContain('name: Alice');
-    expect(result.documentCount).toBe(1);
   });
 
   it('returns error on empty input', () => {
@@ -18,8 +17,7 @@ describe('formatYaml', () => {
   it('handles multi-document YAML', () => {
     const input = 'a: 1\n---\nb: 2';
     const result = formatYaml(input, { indent: 2 });
-    expect(result.error).toBeNull();
-    expect(result.documentCount).toBe(2);
+    expect(result).toMatchObject({ error: null, documentCount: 2 });
     expect(result.output).toContain('---');
   });
 

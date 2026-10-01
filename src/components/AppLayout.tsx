@@ -83,7 +83,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         label: route.label,
         group: 'Navigation' as const,
         icon: route.icon,
-        keywords: route.keywords ? [...route.keywords] : undefined,
+        ...(route.keywords ? { keywords: [...route.keywords] } : {}),
         handler: () => {
           void navigate(route.path);
         },

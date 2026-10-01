@@ -19,6 +19,9 @@ export default tseslint.config(
       'coverage',
       'test-results',
       'eslint.config.ts',
+      // Local tool state: other sessions' git worktrees, Wrangler's cache
+      '.claude',
+      '.wrangler',
     ],
   },
 
@@ -41,6 +44,7 @@ export default tseslint.config(
   {
     files: [
       '*.config.{ts,mts}',
+      '*.d.ts',
       'react-router.config.ts',
       'functions/**/*.ts',
       'e2e/**/*.{ts,tsx}',

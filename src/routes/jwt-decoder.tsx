@@ -14,7 +14,7 @@ import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
 import { decodeJwtToken, isJwtError } from '@/features/tools/jwtDecoder';
 import { JsonBlock, TimingSection } from '@/features/tools/JwtViewer';
 import { ToolPageContent } from '@/components/ToolPageContent';
-import { Keyboard, Copy, ClipboardPaste } from 'lucide-react';
+import { Keyboard, Copy, ClipboardPaste, CheckCheck } from 'lucide-react';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
 

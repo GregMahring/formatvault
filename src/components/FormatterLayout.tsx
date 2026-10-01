@@ -85,7 +85,7 @@ export interface FormatterLayoutProps {
    * SplitPane `rightLabel` used when `rightPaneSlot` is active.
    * Defaults to "Formatted output" when no slot is provided.
    */
-  rightPaneLabel?: string;
+  rightPaneLabel?: string | undefined;
   /**
    * Extra actions rendered after the FileUploadZone in the input pane header.
    * Use this for formatter-specific controls tied to the input pane (e.g. JSONPath toggle).

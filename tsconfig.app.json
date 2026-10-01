@@ -18,6 +18,10 @@
     // React
     "jsx": "react-jsx",
 
+    // React Router typegen writes route types (./+types/<route>) to .react-router/types;
+    // rootDirs overlays that tree onto the project so the relative imports resolve.
+    "rootDirs": [".", "./.react-router/types"],
+
     // Path aliases
     "baseUrl": ".",
     "paths": {
@@ -28,5 +32,5 @@
     "noEmit": true,
     "skipLibCheck": true
   },
-  "include": ["src"]
+  "include": ["src", ".react-router/types/**/*"]
 }

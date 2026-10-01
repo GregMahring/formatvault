@@ -4,7 +4,7 @@
  * MD5 uses js-md5 (not in Web Crypto API).
  * SHA-256 / SHA-512 use native crypto.subtle.digest().
  */
-import md5 from 'js-md5';
+import { md5 } from 'js-md5';
 
 export type HashAlgorithm = 'md5' | 'sha-256' | 'sha-512';
 
@@ -60,13 +60,7 @@ export async function computeHash(
     if (algorithm === 'md5') {
       // Normalize to string or Uint8Array — md5 may not handle raw ArrayBuffer in all envs.
       const msg = typeof input === 'string' ? input : new Uint8Array(input);
-      // @types/js-md5 uses `export =` CJS style; eslint-typescript can't resolve its member
-      // types under moduleResolution:bundler (false positive — tsc resolves them correctly).
-      /* eslint-disable @typescript-eslint/no-unsafe-call */
-      const hex = md5.hex(msg) as string;
-      const base64 = md5.base64(msg) as string;
-      /* eslint-enable @typescript-eslint/no-unsafe-call */
-      return { hex, base64 };
+      return { hex: md5.hex(msg), base64: md5.base64(msg) };
     }
 
     // SHA-256 / SHA-512 via Web Crypto

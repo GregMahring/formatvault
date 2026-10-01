@@ -13,7 +13,7 @@
     "preview": "vite preview",
     "deploy": "npm run build && wrangler pages deploy",
     "pages:dev": "wrangler pages dev ./build/client",
-    "type-check": "tsc --noEmit",
+    "type-check": "react-router typegen && tsc -p tsconfig.app.json && tsc -p tsconfig.node.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",

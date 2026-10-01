@@ -44,12 +44,10 @@ export function ToolPlaceholder({
 
       {/* Split pane — occupies remaining height */}
       <div className="min-h-0 flex-1">
-        <SplitPane
-          left={placeholderPane(inputLabel)}
-          right={placeholderPane(outputLabel)}
-          leftLabel={inputLabel}
-          rightLabel={outputLabel}
-        />
+        <SplitPane leftLabel={inputLabel} rightLabel={outputLabel}>
+          {placeholderPane(inputLabel)}
+          {placeholderPane(outputLabel)}
+        </SplitPane>
       </div>
     </div>
   );

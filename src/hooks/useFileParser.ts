@@ -78,7 +78,8 @@ export function useFileParser(): UseFileParserState & UseFileParserActions {
         return;
       }
 
-      if (file.size >= WORKER_THRESHOLD) {
+      // Raw text needs no parsing, so a worker round-trip would only copy it twice.
+      if (file.size >= WORKER_THRESHOLD && format !== 'text') {
         // Offload to Web Worker
         const worker = new Worker(new URL('../workers/fileParser.worker.ts', import.meta.url), {
           type: 'module',

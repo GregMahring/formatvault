@@ -14,7 +14,8 @@
 import Papa from 'papaparse';
 import yaml from 'js-yaml';
 
-export type ParseFormat = 'json' | 'csv' | 'yaml';
+/** 'text' returns the file's contents unparsed, for tools that parse it themselves. */
+export type ParseFormat = 'json' | 'csv' | 'yaml' | 'text';
 
 export interface ParseRequest {
   type: 'parse';
@@ -98,6 +99,9 @@ self.onmessage = (e: MessageEvent<ParseRequest>) => {
       break;
     case 'yaml':
       result = parseYamlFile(text, indent);
+      break;
+    case 'text':
+      result = { type: 'result', output: text, error: null };
       break;
     default:
       result = { type: 'error', output: null, error: `Unknown format: ${String(format)}` };

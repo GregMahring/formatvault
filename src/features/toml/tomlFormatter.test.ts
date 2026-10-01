@@ -17,9 +17,11 @@ describe('formatToml', () => {
 
   it('returns error with line number for invalid TOML', () => {
     const result = formatToml('bad [toml');
-    expect(result.output).toBeNull();
-    expect(result.error).toBeTruthy();
-    expect(typeof result.line).toBe('number');
+    expect(result).toMatchObject({
+      output: null,
+      error: expect.stringMatching(/./) as string,
+      line: expect.any(Number) as number,
+    });
   });
 
   it('round-trips TOML correctly', () => {

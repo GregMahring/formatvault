@@ -1,13 +1,7 @@
 import { format } from 'sql-formatter';
 
 export type SqlDialect =
-  | 'sql'
-  | 'postgresql'
-  | 'mysql'
-  | 'transactsql'
-  | 'sqlite'
-  | 'bigquery'
-  | 'snowflake';
+  'sql' | 'postgresql' | 'mysql' | 'transactsql' | 'sqlite' | 'bigquery' | 'snowflake';
 
 export type SqlKeywordCase = 'upper' | 'lower' | 'preserve';
 

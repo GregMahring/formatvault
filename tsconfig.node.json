@@ -15,6 +15,7 @@
     "vitest.config.ts",
     "playwright.config.ts",
     "eslint.config.ts",
+    "eslint-plugin-jsx-a11y.d.ts",
     "react-router.config.ts",
     "functions/**/*.ts",
     "e2e/**/*.ts"

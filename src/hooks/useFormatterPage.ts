@@ -23,7 +23,7 @@ export interface UseFormatterPageOptions {
    * Format passed to fileParser.parseFile. Use 'text' for formatters that
    * want raw file content (SQL, XML, TOML).
    */
-  fileType: ParseFormat | 'text';
+  fileType: ParseFormat;
   shortcuts: Shortcut[];
   commands: Command[];
   showShortcuts: boolean;
@@ -92,7 +92,7 @@ export function useFormatterPage({
 
   const handleFileUpload = useCallback(
     (file: File) => {
-      fileParser.parseFile(file, fileType as ParseFormat);
+      fileParser.parseFile(file, fileType);
     },
     [fileParser, fileType]
   );

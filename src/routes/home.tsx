@@ -160,6 +160,7 @@ const FEATURES = [
 const FORMAT_LABELS: Record<DetectedFormat, string> = {
   json: 'JSON',
   json5: 'JSON5 (relaxed)',
+  xml: 'XML',
   csv: 'CSV',
   yaml: 'YAML',
   toml: 'TOML',

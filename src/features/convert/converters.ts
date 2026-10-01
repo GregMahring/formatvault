@@ -17,7 +17,7 @@ export interface ConvertResult {
   output: string;
   error: null;
   /** Non-fatal notice about lossy conversion or data changes */
-  warning?: string;
+  warning?: string | undefined;
 }
 
 export interface ConvertError {

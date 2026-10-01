@@ -17,8 +17,7 @@ describe('jsonToCsv', () => {
 
   it('warns on nested objects', () => {
     const result = jsonToCsv('[{"a":{"nested":true}}]');
-    expect(result.error).toBeNull();
-    expect(result.warning).toBeTruthy();
+    expect(result).toMatchObject({ error: null, warning: expect.stringMatching(/./) as string });
   });
 
   it('returns error for invalid JSON', () => {
@@ -89,7 +88,6 @@ describe('yamlToCsv', () => {
 
   it('warns on nested values', () => {
     const result = yamlToCsv('- name: Alice\n  tags:\n    - a\n    - b');
-    expect(result.error).toBeNull();
-    expect(result.warning).toBeTruthy();
+    expect(result).toMatchObject({ error: null, warning: expect.stringMatching(/./) as string });
   });
 });

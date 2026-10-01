@@ -24,16 +24,17 @@ export function queryJson(input: string, path: string): JsonQueryResult {
     return { results: null, error: 'JSONPath expression is empty.' };
   }
 
-  let parsed: unknown;
+  // Everything JSON.parse can return; matches jsonpath-plus's `json` option type.
+  let parsed: null | boolean | number | string | object;
   try {
-    parsed = JSON.parse(input);
+    parsed = JSON.parse(input) as typeof parsed;
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     return { results: null, error: `Invalid JSON: ${msg}` };
   }
 
   try {
-    const results = JSONPath({ path, json: parsed }) as unknown[];
+    const results = JSONPath<unknown[]>({ path, json: parsed });
     return { results, error: null };
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);

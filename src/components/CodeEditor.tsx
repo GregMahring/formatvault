@@ -118,21 +118,26 @@ export function CodeEditor({
     [onChange]
   );
 
+  // Only pass props that are set: under exactOptionalPropertyTypes, CodeMirror's
+  // optional props don't accept an explicit undefined.
+  const optionalProps = {
+    ...(readOnly ? {} : { onChange: handleChange }),
+    ...(placeholder !== undefined ? { placeholder } : {}),
+    ...(minHeight !== undefined ? { minHeight } : {}),
+    ...(maxHeight !== undefined ? { maxHeight } : {}),
+    // When filling a positioned container, the ReactCodeMirror wrapper div
+    // also needs height: 100% so that .cm-editor { height: 100% } resolves
+    // against a definite value rather than collapsing to auto.
+    ...(height !== undefined ? { height, style: { height: '100%' } } : {}),
+  };
+
   const editor = (
     <ReactCodeMirror
       value={value}
-      onChange={readOnly ? undefined : handleChange}
       theme={theme === 'dark' ? formatvaultDark : formatvaultLight}
       extensions={extensions}
-      placeholder={placeholder}
       readOnly={readOnly}
-      height={height ?? undefined}
-      minHeight={minHeight}
-      maxHeight={maxHeight}
-      // When filling a positioned container, the ReactCodeMirror wrapper div
-      // also needs height: 100% so that .cm-editor { height: 100% } resolves
-      // against a definite value rather than collapsing to auto.
-      style={height !== undefined ? { height: '100%' } : undefined}
+      {...optionalProps}
       basicSetup={{
         lineNumbers: true,
         foldGutter: true,

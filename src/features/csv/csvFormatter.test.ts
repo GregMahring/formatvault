@@ -19,8 +19,7 @@ describe('formatCsv', () => {
 
   it('detects tab delimiter in auto mode', () => {
     const result = formatCsv('a\tb\nc\td', { delimiter: 'auto', hasHeader: true });
-    expect(result.error).toBeNull();
-    expect(result.detectedDelimiter).toBe('\t');
+    expect(result).toMatchObject({ error: null, detectedDelimiter: '\t' });
   });
 
   it('adds warning comment for inconsistent row lengths', () => {
@@ -30,7 +29,7 @@ describe('formatCsv', () => {
 
   it('reports correct column count', () => {
     const result = formatCsv('x,y,z\n1,2,3', OPTS);
-    expect(result.columnCount).toBe(3);
+    expect(result).toMatchObject({ error: null, columnCount: 3 });
   });
 });
 

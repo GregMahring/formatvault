@@ -3,6 +3,7 @@
  *
  * Detection priority (most specific → least specific):
  * 1. JWT — starts with `eyJ`, 3 dot-separated parts
+ * 1b. XML — starts with `<` and passes the XML validator
  * 2. URL-encoded — contains %XX sequences
  * 3. JSON — JSON.parse succeeds
  * 4. JSON5 — json5.parse succeeds (relaxed JSON with comments/trailing commas)
@@ -19,10 +20,12 @@ import { looksLikeJwt } from '@/features/tools/jwtDecoder';
 import { looksLikeBase64 } from '@/features/tools/base64Codec';
 import { looksLikeEncoded } from '@/features/tools/urlCodec';
 import { parseToml } from '@/features/toml/tomlFormatter';
+import { validateXmlOnly } from '@/features/xml/xmlFormatter';
 
 export type DetectedFormat =
   | 'json'
   | 'json5'
+  | 'xml'
   | 'csv'
   | 'yaml'
   | 'toml'
@@ -44,6 +47,7 @@ export interface DetectionResult {
 /** Maps detected format to the corresponding tool route */
 export const FORMAT_TO_ROUTE: Record<Exclude<DetectedFormat, 'unknown' | 'json5'>, string> = {
   json: '/json-formatter',
+  xml: '/xml-formatter',
   csv: '/csv-formatter',
   yaml: '/yaml-formatter',
   toml: '/toml-formatter',
@@ -137,6 +141,15 @@ function isToml(input: string): boolean {
   return error === null;
 }
 
+function isXml(input: string): boolean {
+  if (!input.startsWith('<')) return false;
+  // Full validation is O(n); for very large input a well-formed opening is a
+  // strong enough signal, matching how the other detectors sample big inputs.
+  if (input.length > 100_000)
+    return /^<(\?xml\b|!--|!DOCTYPE\b|[A-Za-z_][\w.:-]*[\s/>])/.test(input);
+  return validateXmlOnly(input) === null;
+}
+
 function isSql(input: string): boolean {
   return /^\s*(SELECT|INSERT\s+INTO|UPDATE\s+\w|DELETE\s+FROM|CREATE\s+(TABLE|DATABASE|INDEX)|DROP\s+(TABLE|DATABASE)|ALTER\s+TABLE|WITH\s+\w)/i.test(
     input.trim()
@@ -164,6 +177,7 @@ export function detectFormat(input: string): DetectionResult {
 
   // Priority order — most specific first
   if (isJwt(sample)) matches.push('jwt');
+  if (isXml(trimmed)) matches.push('xml');
   if (isUrlEncoded(sample)) matches.push('url-encoded');
   if (isJson(trimmed)) matches.push('json');
   else if (isJson5(trimmed)) matches.push('json5');

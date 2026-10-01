@@ -419,13 +419,7 @@ function computeNextRuns(expr: CronExpression, after: Date, count: number): Date
 // ── Builder ───────────────────────────────────────────────────────────────────
 
 export type BuilderMode =
-  | 'every-minute'
-  | 'every-n-minutes'
-  | 'hourly'
-  | 'daily'
-  | 'weekly'
-  | 'monthly'
-  | 'custom';
+  'every-minute' | 'every-n-minutes' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'custom';
 
 export interface BuilderState {
   mode: BuilderMode;
