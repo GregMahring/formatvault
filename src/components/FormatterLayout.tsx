@@ -150,8 +150,14 @@ export function FormatterLayout({
 
           {toolbarOptionsSlot && (
             <>
-              <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
-              {toolbarOptionsSlot}
+              <div className="hidden h-4 w-px bg-surface-elevated md:block" aria-hidden="true" />
+              {/* Below md the options get their own full-width row under the title and
+                  actions; from md up `contents` flattens them back into the toolbar row.
+                  Pages' decorative dividers are hidden in the wrapped row, where they
+                  would otherwise dangle at line ends. */}
+              <div className="order-last flex w-full flex-wrap items-center gap-x-3 gap-y-2 max-md:[&>div[aria-hidden=true]]:hidden md:order-none md:contents">
+                {toolbarOptionsSlot}
+              </div>
             </>
           )}
 
@@ -159,37 +165,40 @@ export function FormatterLayout({
 
           {toolbarBadgesSlot}
 
-          <Button
-            size="sm"
-            variant="outline"
-            className="h-7 px-3 text-xs"
-            onClick={onFormat}
-            disabled={!hasInput}
-          >
-            {formatLabel}
-            <kbd className="ml-1 rounded bg-surface-elevated px-1 text-[10px] text-fg-secondary">
-              ⌘↵
-            </kbd>
-          </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            className="h-7 px-3 text-xs text-fg-secondary"
-            onClick={onClear}
-            disabled={!hasInput}
-          >
-            Clear
-          </Button>
+          {/* Actions wrap as one unit, right-aligned, so Clear never lands on a line alone. */}
+          <div className="ml-auto flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-7 px-3 text-xs"
+              onClick={onFormat}
+              disabled={!hasInput}
+            >
+              {formatLabel}
+              <kbd className="ml-1 hidden rounded bg-surface-elevated px-1 text-[10px] text-fg-secondary sm:inline">
+                ⌘↵
+              </kbd>
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-7 px-3 text-xs text-fg-secondary"
+              onClick={onClear}
+              disabled={!hasInput}
+            >
+              Clear
+            </Button>
 
-          <button
-            type="button"
-            className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
-            onClick={onOpenShortcuts}
-            aria-label="Keyboard shortcuts"
-            title="Keyboard shortcuts (?)"
-          >
-            <Keyboard className="h-3.5 w-3.5" aria-hidden="true" />
-          </button>
+            <button
+              type="button"
+              className="hidden rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg sm:inline-flex"
+              onClick={onOpenShortcuts}
+              aria-label="Keyboard shortcuts"
+              title="Keyboard shortcuts (?)"
+            >
+              <Keyboard className="h-3.5 w-3.5" aria-hidden="true" />
+            </button>
+          </div>
         </div>
 
         {/* File parsing progress bar */}

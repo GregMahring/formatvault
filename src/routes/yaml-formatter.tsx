@@ -6,6 +6,7 @@ import { DiffPanel } from '@/components/DiffPanel';
 import { MarkdownPreview } from '@/components/MarkdownPreview';
 import { TreeView } from '@/components/TreeView';
 import { FormatterLayout } from '@/components/FormatterLayout';
+import { ToolbarSelect, type ToolbarSelectOption } from '@/components/ToolbarSelect';
 import { useYamlFormatter } from '@/features/yaml/useYamlFormatter';
 import { parseYaml } from '@/features/yaml/yamlFormatter';
 import { useFileParser } from '@/hooks/useFileParser';
@@ -49,6 +50,16 @@ export function meta(_args: Route.MetaArgs) {
     ],
   });
 }
+
+const INDENT_OPTIONS: ToolbarSelectOption<YamlIndent>[] = [
+  { value: 2, label: '2 spaces' },
+  { value: 4, label: '4 spaces' },
+];
+
+const STYLE_OPTIONS: ToolbarSelectOption<YamlStyle>[] = [
+  { value: 'block', label: 'Block' },
+  { value: 'flow', label: 'Flow' },
+];
 
 function parseYamlForTree(source: string): unknown {
   const result = parseYaml(source);
@@ -202,35 +213,20 @@ export default function YamlFormatter() {
       }}
       toolbarOptionsSlot={
         <>
-          <label htmlFor="yaml-indent-select" className="text-xs text-fg-secondary">
-            Indent
-          </label>
-          <select
+          <ToolbarSelect
             id="yaml-indent-select"
+            label="Indent"
             value={fmt.indent}
-            onChange={(e) => {
-              fmt.setIndent(Number(e.target.value) as YamlIndent);
-            }}
-            className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-fg focus:border-accent-500 focus:outline-none"
-          >
-            <option value={2}>2 spaces</option>
-            <option value={4}>4 spaces</option>
-          </select>
-
-          <label htmlFor="yaml-style-select" className="text-xs text-fg-secondary">
-            Style
-          </label>
-          <select
+            options={INDENT_OPTIONS}
+            onChange={fmt.setIndent}
+          />
+          <ToolbarSelect
             id="yaml-style-select"
+            label="Style"
             value={fmt.style}
-            onChange={(e) => {
-              fmt.setStyle(e.target.value as YamlStyle);
-            }}
-            className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-fg focus:border-accent-500 focus:outline-none"
-          >
-            <option value="block">Block</option>
-            <option value="flow">Flow</option>
-          </select>
+            options={STYLE_OPTIONS}
+            onChange={fmt.setStyle}
+          />
         </>
       }
       toolbarBadgesSlot={

@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { DiffPanel } from '@/components/DiffPanel';
 import { MarkdownPreview } from '@/components/MarkdownPreview';
 import { FormatterLayout } from '@/components/FormatterLayout';
+import { ToolbarSelect } from '@/components/ToolbarSelect';
 import { useCsvFormatter } from '@/features/csv/useCsvFormatter';
 import { useFileParser } from '@/hooks/useFileParser';
 import { useFormatterPage } from '@/hooks/useFormatterPage';
@@ -171,23 +172,13 @@ export default function CsvFormatter() {
       }}
       toolbarOptionsSlot={
         <>
-          <label htmlFor="delimiter-select" className="text-xs text-fg-secondary">
-            Delimiter
-          </label>
-          <select
+          <ToolbarSelect
             id="delimiter-select"
+            label="Delimiter"
             value={fmt.delimiter}
-            onChange={(e) => {
-              fmt.setDelimiter(e.target.value as Delimiter);
-            }}
-            className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-fg focus:border-accent-500 focus:outline-none"
-          >
-            {DELIMITERS.map((d) => (
-              <option key={d.value} value={d.value}>
-                {d.label}
-              </option>
-            ))}
-          </select>
+            options={DELIMITERS}
+            onChange={fmt.setDelimiter}
+          />
 
           <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 

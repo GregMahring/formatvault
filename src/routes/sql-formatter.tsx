@@ -4,6 +4,7 @@ import { buildMeta } from '@/lib/meta';
 import { Badge } from '@/components/ui/badge';
 import { DiffPanel } from '@/components/DiffPanel';
 import { FormatterLayout } from '@/components/FormatterLayout';
+import { ToolbarSelect, type ToolbarSelectOption } from '@/components/ToolbarSelect';
 import { useSqlFormatter } from '@/features/sql/useSqlFormatter';
 import { useFileParser } from '@/hooks/useFileParser';
 import { useFormatterPage } from '@/hooks/useFormatterPage';
@@ -23,15 +24,31 @@ export function meta(_args: Route.MetaArgs) {
   });
 }
 
-const DIALECT_LABELS: Record<SqlDialect, string> = {
-  sql: 'Generic SQL',
-  postgresql: 'PostgreSQL',
-  mysql: 'MySQL / MariaDB',
-  transactsql: 'T-SQL (SQL Server)',
-  sqlite: 'SQLite',
-  bigquery: 'BigQuery',
-  snowflake: 'Snowflake',
-};
+const DIALECT_OPTIONS: ToolbarSelectOption<SqlDialect>[] = [
+  { value: 'sql', label: 'Generic SQL' },
+  { value: 'postgresql', label: 'PostgreSQL' },
+  { value: 'mysql', label: 'MySQL / MariaDB' },
+  { value: 'transactsql', label: 'T-SQL (SQL Server)' },
+  { value: 'sqlite', label: 'SQLite' },
+  { value: 'bigquery', label: 'BigQuery' },
+  { value: 'snowflake', label: 'Snowflake' },
+];
+
+const KEYWORD_CASE_OPTIONS: ToolbarSelectOption<SqlKeywordCase>[] = [
+  { value: 'upper', label: 'UPPERCASE' },
+  { value: 'lower', label: 'lowercase' },
+  { value: 'preserve', label: 'Preserve' },
+];
+
+const INDENT_OPTIONS: ToolbarSelectOption<2 | 4>[] = [
+  { value: 2, label: '2 spaces' },
+  { value: 4, label: '4 spaces' },
+];
+
+const LINES_BETWEEN_OPTIONS: ToolbarSelectOption<1 | 2>[] = [
+  { value: 1, label: '1 line' },
+  { value: 2, label: '2 lines' },
+];
 
 export default function SqlFormatter() {
   const fmt = useSqlFormatter();
@@ -137,69 +154,34 @@ export default function SqlFormatter() {
       }}
       toolbarOptionsSlot={
         <>
-          <label htmlFor="sql-dialect-select" className="text-xs text-fg-secondary">
-            Dialect
-          </label>
-          <select
+          <ToolbarSelect
             id="sql-dialect-select"
+            label="Dialect"
             value={fmt.dialect}
-            onChange={(e) => {
-              fmt.setDialect(e.target.value as SqlDialect);
-            }}
-            className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-fg focus:border-accent-500 focus:outline-none"
-          >
-            {(Object.entries(DIALECT_LABELS) as [SqlDialect, string][]).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
-
-          <label htmlFor="sql-keyword-case-select" className="text-xs text-fg-secondary">
-            Keywords
-          </label>
-          <select
+            options={DIALECT_OPTIONS}
+            onChange={fmt.setDialect}
+          />
+          <ToolbarSelect
             id="sql-keyword-case-select"
+            label="Keywords"
             value={fmt.keywordCase}
-            onChange={(e) => {
-              fmt.setKeywordCase(e.target.value as SqlKeywordCase);
-            }}
-            className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-fg focus:border-accent-500 focus:outline-none"
-          >
-            <option value="upper">UPPERCASE</option>
-            <option value="lower">lowercase</option>
-            <option value="preserve">Preserve</option>
-          </select>
-
-          <label htmlFor="sql-indent-select" className="text-xs text-fg-secondary">
-            Indent
-          </label>
-          <select
+            options={KEYWORD_CASE_OPTIONS}
+            onChange={fmt.setKeywordCase}
+          />
+          <ToolbarSelect
             id="sql-indent-select"
+            label="Indent"
             value={fmt.tabWidth}
-            onChange={(e) => {
-              fmt.setTabWidth(Number(e.target.value) as 2 | 4);
-            }}
-            className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-fg focus:border-accent-500 focus:outline-none"
-          >
-            <option value={2}>2 spaces</option>
-            <option value={4}>4 spaces</option>
-          </select>
-
-          <label htmlFor="sql-lines-select" className="text-xs text-fg-secondary">
-            Between queries
-          </label>
-          <select
+            options={INDENT_OPTIONS}
+            onChange={fmt.setTabWidth}
+          />
+          <ToolbarSelect
             id="sql-lines-select"
+            label="Between queries"
             value={fmt.linesBetweenQueries}
-            onChange={(e) => {
-              fmt.setLinesBetweenQueries(Number(e.target.value) as 1 | 2);
-            }}
-            className="rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-fg focus:border-accent-500 focus:outline-none"
-          >
-            <option value={1}>1 line</option>
-            <option value={2}>2 lines</option>
-          </select>
+            options={LINES_BETWEEN_OPTIONS}
+            onChange={fmt.setLinesBetweenQueries}
+          />
         </>
       }
       toolbarBadgesSlot={

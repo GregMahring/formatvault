@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { DiffPanel } from '@/components/DiffPanel';
 import { FormatterLayout } from '@/components/FormatterLayout';
 import { ToolPageContent } from '@/components/ToolPageContent';
+import { ToolbarSelect, type ToolbarSelectOption } from '@/components/ToolbarSelect';
 import { useJsFormatter } from '@/features/javascript/useJsFormatter';
 import type {
   JsIndent,
@@ -57,8 +58,38 @@ export function meta(_args: Route.MetaArgs) {
   });
 }
 
-const SELECT_CLASS =
-  'rounded border border-edge-emphasis bg-surface-raised px-2 py-1 text-xs text-fg focus:border-accent-500 focus:outline-none';
+const PARSER_OPTIONS: ToolbarSelectOption<JsParser>[] = [
+  { value: 'babel', label: 'JavaScript / JSX' },
+  { value: 'typescript', label: 'TypeScript / TSX' },
+];
+
+const INDENT_OPTIONS: ToolbarSelectOption<JsIndent>[] = [
+  { value: 2, label: '2 spaces' },
+  { value: 4, label: '4 spaces' },
+  { value: 'tab', label: 'Tabs' },
+];
+
+const WIDTH_OPTIONS: ToolbarSelectOption<JsPrintWidth>[] = [
+  { value: 80, label: '80' },
+  { value: 100, label: '100' },
+  { value: 120, label: '120' },
+];
+
+const QUOTE_OPTIONS: ToolbarSelectOption<'double' | 'single'>[] = [
+  { value: 'double', label: 'Double' },
+  { value: 'single', label: 'Single' },
+];
+
+const SEMI_OPTIONS: ToolbarSelectOption<'always' | 'omit'>[] = [
+  { value: 'always', label: 'Always' },
+  { value: 'omit', label: 'Omit' },
+];
+
+const TRAILING_COMMA_OPTIONS: ToolbarSelectOption<JsTrailingComma>[] = [
+  { value: 'all', label: 'All' },
+  { value: 'es5', label: 'ES5' },
+  { value: 'none', label: 'None' },
+];
 
 const TS_FILE = /\.(c|m)?tsx?$/i;
 
@@ -193,99 +224,52 @@ export default function JavaScriptFormatter() {
       }}
       toolbarOptionsSlot={
         <>
-          <label htmlFor="js-parser-select" className="text-xs text-fg-secondary">
-            Parser
-          </label>
-          <select
+          <ToolbarSelect
             id="js-parser-select"
+            label="Parser"
             value={fmt.parser}
-            onChange={(e) => {
-              fmt.setParser(e.target.value as JsParser);
-            }}
-            className={SELECT_CLASS}
-          >
-            <option value="babel">JavaScript / JSX</option>
-            <option value="typescript">TypeScript / TSX</option>
-          </select>
-
-          <label htmlFor="js-indent-select" className="text-xs text-fg-secondary">
-            Indent
-          </label>
-          <select
+            options={PARSER_OPTIONS}
+            onChange={fmt.setParser}
+          />
+          <ToolbarSelect
             id="js-indent-select"
+            label="Indent"
             value={fmt.indent}
-            onChange={(e) => {
-              const v = e.target.value;
-              fmt.setIndent(v === 'tab' ? 'tab' : (Number(v) as JsIndent));
-            }}
-            className={SELECT_CLASS}
-          >
-            <option value={2}>2 spaces</option>
-            <option value={4}>4 spaces</option>
-            <option value="tab">Tabs</option>
-          </select>
-
-          <label htmlFor="js-width-select" className="text-xs text-fg-secondary">
-            Width
-          </label>
-          <select
+            options={INDENT_OPTIONS}
+            onChange={fmt.setIndent}
+          />
+          <ToolbarSelect
             id="js-width-select"
+            label="Width"
             value={fmt.printWidth}
-            onChange={(e) => {
-              fmt.setPrintWidth(Number(e.target.value) as JsPrintWidth);
-            }}
-            className={SELECT_CLASS}
-          >
-            <option value={80}>80</option>
-            <option value={100}>100</option>
-            <option value={120}>120</option>
-          </select>
-
-          <label htmlFor="js-quotes-select" className="text-xs text-fg-secondary">
-            Quotes
-          </label>
-          <select
+            options={WIDTH_OPTIONS}
+            onChange={fmt.setPrintWidth}
+          />
+          <ToolbarSelect
             id="js-quotes-select"
+            label="Quotes"
             value={fmt.singleQuote ? 'single' : 'double'}
-            onChange={(e) => {
-              fmt.setSingleQuote(e.target.value === 'single');
+            options={QUOTE_OPTIONS}
+            onChange={(v) => {
+              fmt.setSingleQuote(v === 'single');
             }}
-            className={SELECT_CLASS}
-          >
-            <option value="double">Double</option>
-            <option value="single">Single</option>
-          </select>
-
-          <label htmlFor="js-semi-select" className="text-xs text-fg-secondary">
-            Semicolons
-          </label>
-          <select
+          />
+          <ToolbarSelect
             id="js-semi-select"
+            label="Semicolons"
             value={fmt.semi ? 'always' : 'omit'}
-            onChange={(e) => {
-              fmt.setSemi(e.target.value === 'always');
+            options={SEMI_OPTIONS}
+            onChange={(v) => {
+              fmt.setSemi(v === 'always');
             }}
-            className={SELECT_CLASS}
-          >
-            <option value="always">Always</option>
-            <option value="omit">Omit</option>
-          </select>
-
-          <label htmlFor="js-trailing-comma-select" className="text-xs text-fg-secondary">
-            Trailing commas
-          </label>
-          <select
+          />
+          <ToolbarSelect
             id="js-trailing-comma-select"
+            label="Trailing commas"
             value={fmt.trailingComma}
-            onChange={(e) => {
-              fmt.setTrailingComma(e.target.value as JsTrailingComma);
-            }}
-            className={SELECT_CLASS}
-          >
-            <option value="all">All</option>
-            <option value="es5">ES5</option>
-            <option value="none">None</option>
-          </select>
+            options={TRAILING_COMMA_OPTIONS}
+            onChange={fmt.setTrailingComma}
+          />
         </>
       }
       toolbarBadgesSlot={
