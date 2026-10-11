@@ -1,8 +1,6 @@
-import { Suspense } from 'react';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
 import { AppLayout } from '@/components/AppLayout';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { LoadingSpinner } from '@/components/LoadingSpinner';
 // ?inline embeds the processed CSS as a string so we can inject it via a <style>
 // tag in the SSR HTML rather than a render-blocking <link rel="stylesheet">.
 import appStyles from './app.css?inline';
@@ -73,15 +71,11 @@ export default function App() {
   return (
     <ErrorBoundary>
       <AppLayout>
-        <Suspense
-          fallback={
-            <div className="flex h-full items-center justify-center">
-              <LoadingSpinner label="Loading tool…" />
-            </div>
-          }
-        >
-          <Outlet />
-        </Suspense>
+        {/* No <Suspense> here: route modules aren't lazy, and a boundary around the
+            whole page gets outlined by Fizz (> progressiveChunkSize), so the server
+            sent only the fallback and a pre-hydration re-render client-rendered a
+            second copy of the page. */}
+        <Outlet />
       </AppLayout>
     </ErrorBoundary>
   );
