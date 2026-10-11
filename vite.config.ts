@@ -33,11 +33,10 @@ export default defineConfig({
         // manualChunks applies to the client bundle only.
         // React Router SSR externalises React modules, so we guard against SSR context.
         manualChunks(id) {
-          if (
-            id.includes('node_modules/react') ||
-            id.includes('node_modules/react-dom') ||
-            id.includes('node_modules/react-router')
-          ) {
+          // Exact package names — a bare 'node_modules/react' prefix also matched
+          // react-remove-scroll, react-style-singleton, etc. (Dialog/Menu-only deps)
+          // and put them on every page.
+          if (/node_modules\/(react|react-dom|react-router|scheduler)\//.test(id)) {
             return 'vendor-react';
           }
           if (id.includes('node_modules/zustand')) {
@@ -55,13 +54,6 @@ export default defineConfig({
             id.includes('node_modules/@uiw/')
           ) {
             return 'vendor-codemirror';
-          }
-          // Consolidate all Radix UI primitives into one shared chunk.
-          // Without this, Rollup scatters them across route chunks (e.g. the
-          // "button" chunk ends up 30KB because it absorbs @radix-ui/react-dialog,
-          // @radix-ui/react-tooltip, etc. from shared importers).
-          if (id.includes('node_modules/@radix-ui')) {
-            return 'vendor-radix';
           }
         },
       },

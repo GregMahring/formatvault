@@ -7,6 +7,18 @@ import { LoadingSpinner } from '@/components/LoadingSpinner';
 // tag in the SSR HTML rather than a render-blocking <link rel="stylesheet">.
 import appStyles from './app.css?inline';
 
+const APP_CSS_ID = 'app-css';
+
+// The production client reads the CSS back from the server-rendered <style>
+// instead of shipping a second ~56 KB copy in the JS (the import is
+// tree-shaken from the client build). Reusing the DOM content rather than an
+// empty string keeps hydration matching and survives a client re-render after
+// a hydration mismatch. Dev keeps the import so CSS hot-reload still works.
+const appCss =
+  import.meta.env.SSR || import.meta.env.DEV
+    ? appStyles
+    : (document.getElementById(APP_CSS_ID)?.textContent ?? '');
+
 /** Inline script to restore persisted theme before first paint — prevents flash of wrong theme. */
 const themeInitScript = `
 (function(){try{var s=JSON.parse(localStorage.getItem('formatvault-settings')||'{}');var t=s.state&&s.state.theme==='light'?'light':'dark';document.documentElement.classList.remove('dark','light');document.documentElement.classList.add(t);document.documentElement.style.colorScheme=t;}catch(e){}})();
@@ -27,7 +39,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         {/* Inline CSS — eliminates render-blocking external stylesheet and the
             network dependency chain. Safe: content is our own build output. */}
-        <style dangerouslySetInnerHTML={{ __html: appStyles }} />
+        <style id={APP_CSS_ID} dangerouslySetInnerHTML={{ __html: appCss }} />
         {/* Restore persisted theme before paint to avoid flash of wrong theme */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         {/* Brand fonts — JetBrains Mono, DM Sans, Geist
