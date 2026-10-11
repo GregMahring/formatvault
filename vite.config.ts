@@ -43,10 +43,16 @@ export default defineConfig({
           if (id.includes('node_modules/zustand')) {
             return 'vendor-state';
           }
+          // Only the CodeMirror core belongs in the shared chunk. Language packs
+          // (@codemirror/lang-*, legacy-modes and their @lezer grammars) are
+          // dynamically imported by CodeEditor — matching them here would merge
+          // every language into every editor page.
           if (
-            id.includes('node_modules/@codemirror') ||
-            id.includes('node_modules/@uiw/react-codemirror') ||
-            id.includes('node_modules/@lezer')
+            /node_modules\/@codemirror\/(state|view|language|commands|autocomplete|lint|search|theme-one-dark)\//.test(
+              id
+            ) ||
+            /node_modules\/@lezer\/(common|highlight|lr)\//.test(id) ||
+            id.includes('node_modules/@uiw/')
           ) {
             return 'vendor-codemirror';
           }
