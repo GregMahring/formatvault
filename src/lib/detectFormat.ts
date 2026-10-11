@@ -22,18 +22,9 @@ import { looksLikeEncoded } from '@/features/tools/urlCodec';
 import { parseToml } from '@/features/toml/tomlFormatter';
 import { validateXmlOnly } from '@/features/xml/xmlFormatter';
 
-export type DetectedFormat =
-  | 'json'
-  | 'json5'
-  | 'xml'
-  | 'csv'
-  | 'yaml'
-  | 'toml'
-  | 'sql'
-  | 'jwt'
-  | 'base64'
-  | 'url-encoded'
-  | 'unknown';
+import type { DetectedFormat } from './formatRoutes';
+
+export { type DetectedFormat, FORMAT_TO_ROUTE, getRouteForFormat } from './formatRoutes';
 
 export interface DetectionResult {
   /** The best-guess format */
@@ -42,29 +33,6 @@ export interface DetectionResult {
   alternatives: DetectedFormat[];
   /** high = only one match; medium = ambiguous (multiple matches); low = weak heuristic */
   confidence: 'high' | 'medium' | 'low';
-}
-
-/** Maps detected format to the corresponding tool route */
-export const FORMAT_TO_ROUTE: Record<Exclude<DetectedFormat, 'unknown' | 'json5'>, string> = {
-  json: '/json-formatter',
-  xml: '/xml-formatter',
-  csv: '/csv-formatter',
-  yaml: '/yaml-formatter',
-  toml: '/toml-formatter',
-  sql: '/sql-formatter',
-  jwt: '/jwt-decoder',
-  base64: '/base64-encoder',
-  'url-encoded': '/url-encoder',
-};
-
-/**
- * Get the route for a detected format.
- * JSON5 maps to the JSON formatter (with relaxed mode).
- */
-export function getRouteForFormat(format: DetectedFormat): string | null {
-  if (format === 'json5') return '/json-formatter';
-  if (format === 'unknown') return null;
-  return FORMAT_TO_ROUTE[format];
 }
 
 // ── Individual detectors ─────────────────────────────────────────────────────

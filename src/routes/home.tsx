@@ -24,7 +24,7 @@ import {
 import { Link } from 'react-router';
 import type { Route } from './+types/home';
 import { buildMeta } from '@/lib/meta';
-import { detectFormat, getRouteForFormat, type DetectedFormat } from '@/lib/detectFormat';
+import { getRouteForFormat, type DetectedFormat } from '@/lib/formatRoutes';
 import { useEditorStore } from '@/stores/editorStore';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
@@ -208,33 +208,54 @@ export default function Home() {
   const [convertOpen, setConvertOpen] = useState(false);
   // Track textarea ref so we can re-detect on direct typing
   const detectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Detection is async (the detectors load on demand), so a slow result for
+  // older input must not overwrite a newer one.
+  const detectSeqRef = useRef(0);
 
-  const handlePaste = useCallback((e: React.ClipboardEvent<HTMLTextAreaElement>) => {
-    const pasted = e.clipboardData.getData('text');
-    if (!pasted.trim()) return;
-    // Prevent the native paste too — otherwise the browser inserts the
-    // clipboard text a second time after this handler's setState re-renders
-    // the controlled value, doubling the pasted content.
-    e.preventDefault();
-    setPasteValue(pasted);
-    const result = detectFormat(pasted);
-    setDetected(result.primary !== 'unknown' ? result.primary : 'unknown');
+  const runDetection = useCallback((input: string) => {
+    const seq = ++detectSeqRef.current;
+    import('@/lib/detectFormat')
+      .then(({ detectFormat }) => {
+        if (seq !== detectSeqRef.current) return;
+        const result = detectFormat(input);
+        setDetected(result.primary !== 'unknown' ? result.primary : 'unknown');
+      })
+      .catch((err: unknown) => {
+        console.error('[home] Failed to load format detector:', err);
+      });
   }, []);
+
+  const handlePaste = useCallback(
+    (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+      const pasted = e.clipboardData.getData('text');
+      if (!pasted.trim()) return;
+      // Prevent the native paste too — otherwise the browser inserts the
+      // clipboard text a second time after this handler's setState re-renders
+      // the controlled value, doubling the pasted content.
+      e.preventDefault();
+      setPasteValue(pasted);
+      runDetection(pasted);
+    },
+    [runDetection]
+  );
 
   // Re-detect as user types (debounced)
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const val = e.target.value;
-    setPasteValue(val);
-    if (detectTimeoutRef.current) clearTimeout(detectTimeoutRef.current);
-    if (!val.trim()) {
-      setDetected(null);
-      return;
-    }
-    detectTimeoutRef.current = setTimeout(() => {
-      const result = detectFormat(val);
-      setDetected(result.primary !== 'unknown' ? result.primary : 'unknown');
-    }, 400);
-  }, []);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const val = e.target.value;
+      setPasteValue(val);
+      if (detectTimeoutRef.current) clearTimeout(detectTimeoutRef.current);
+      if (!val.trim()) {
+        detectSeqRef.current++;
+        setDetected(null);
+        return;
+      }
+      detectTimeoutRef.current = setTimeout(() => {
+        runDetection(val);
+      }, 400);
+    },
+    [runDetection]
+  );
 
   useEffect(
     () => () => {
