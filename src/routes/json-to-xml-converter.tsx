@@ -1,7 +1,7 @@
 import type { Route } from './+types/json-to-xml-converter';
 import { buildMeta } from '@/lib/meta';
 import { ConverterLayout } from '@/components/ConverterLayout';
-import { jsonToXml } from '@/features/convert/converters';
+import { jsonToXml } from '@/features/convert/jsonXml';
 import { ToolPageContent } from '@/components/ToolPageContent';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';

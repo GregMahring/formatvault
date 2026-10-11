@@ -1,7 +1,7 @@
 import type { Route } from './+types/toml-to-json-converter';
 import { buildMeta } from '@/lib/meta';
 import { ConverterLayout } from '@/components/ConverterLayout';
-import { tomlToJson } from '@/features/convert/converters';
+import { tomlToJson } from '@/features/convert/jsonToml';
 import { ToolPageContent } from '@/components/ToolPageContent';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';

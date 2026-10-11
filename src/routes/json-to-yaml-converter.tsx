@@ -1,7 +1,7 @@
 import type { Route } from './+types/json-to-yaml-converter';
 import { buildMeta } from '@/lib/meta';
 import { ConverterLayout } from '@/components/ConverterLayout';
-import { jsonToYaml } from '@/features/convert/converters';
+import { jsonToYaml } from '@/features/convert/jsonYaml';
 import { ToolPageContent } from '@/components/ToolPageContent';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';

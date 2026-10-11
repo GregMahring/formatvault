@@ -1,7 +1,7 @@
 import type { Route } from './+types/csv-to-json-converter';
 import { buildMeta } from '@/lib/meta';
 import { ConverterLayout } from '@/components/ConverterLayout';
-import { csvToJson } from '@/features/convert/converters';
+import { csvToJson } from '@/features/convert/jsonCsv';
 import { ToolPageContent } from '@/components/ToolPageContent';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';

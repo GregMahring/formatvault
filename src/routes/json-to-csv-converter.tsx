@@ -3,7 +3,8 @@ import type { Route } from './+types/json-to-csv-converter';
 import { buildMeta } from '@/lib/meta';
 import { ConverterLayout } from '@/components/ConverterLayout';
 import { ToolPageContent } from '@/components/ToolPageContent';
-import { jsonToCsv, type CsvOutputDelimiter } from '@/features/convert/converters';
+import { jsonToCsv } from '@/features/convert/jsonCsv';
+import type { CsvOutputDelimiter } from '@/features/convert/converters';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
 

@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { jsonToCsv, csvToJson, jsonToYaml, yamlToJson, csvToYaml, yamlToCsv } from './converters';
+import { jsonToCsv, csvToJson } from './jsonCsv';
+import { jsonToYaml, yamlToJson } from './jsonYaml';
+import { csvToYaml, yamlToCsv } from './csvYaml';
 
 describe('jsonToCsv', () => {
   it('converts array of objects to CSV', () => {

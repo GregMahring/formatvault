@@ -1,7 +1,7 @@
 import type { Route } from './+types/toml-to-yaml-converter';
 import { buildMeta } from '@/lib/meta';
 import { ConverterLayout } from '@/components/ConverterLayout';
-import { tomlToYaml } from '@/features/convert/converters';
+import { tomlToYaml } from '@/features/convert/tomlYaml';
 import { ToolPageContent } from '@/components/ToolPageContent';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';

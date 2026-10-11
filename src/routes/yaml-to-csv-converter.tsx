@@ -2,7 +2,8 @@ import { useState, useCallback } from 'react';
 import type { Route } from './+types/yaml-to-csv-converter';
 import { buildMeta } from '@/lib/meta';
 import { ConverterLayout } from '@/components/ConverterLayout';
-import { yamlToCsv, type CsvOutputDelimiter } from '@/features/convert/converters';
+import { yamlToCsv } from '@/features/convert/csvYaml';
+import type { CsvOutputDelimiter } from '@/features/convert/converters';
 import { ToolPageContent } from '@/components/ToolPageContent';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';

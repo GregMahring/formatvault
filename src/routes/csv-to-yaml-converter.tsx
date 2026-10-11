@@ -1,7 +1,7 @@
 import type { Route } from './+types/csv-to-yaml-converter';
 import { buildMeta } from '@/lib/meta';
 import { ConverterLayout } from '@/components/ConverterLayout';
-import { csvToYaml } from '@/features/convert/converters';
+import { csvToYaml } from '@/features/convert/csvYaml';
 import { ToolPageContent } from '@/components/ToolPageContent';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
