@@ -125,6 +125,10 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
           aria-label="Command palette"
         >
           <DialogPrimitive.Title className="sr-only">Command palette</DialogPrimitive.Title>
+          <DialogPrimitive.Description className="sr-only">
+            Search for a tool or action. Use the up and down arrow keys to move through results and
+            Enter to run one.
+          </DialogPrimitive.Description>
 
           {/* Search input */}
           <div className="flex items-center gap-2 border-b border-edge px-3">
@@ -137,6 +141,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                 setQuery(e.target.value);
               }}
               placeholder="Type a command..."
+              aria-label="Search commands"
               className="h-11 w-full bg-transparent text-sm text-fg placeholder:text-fg-secondary focus:outline-none"
               // eslint-disable-next-line jsx-a11y/no-autofocus -- intentional: palette must grab focus on open
               autoFocus
