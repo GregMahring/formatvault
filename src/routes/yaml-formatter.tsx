@@ -3,7 +3,7 @@ import type { Route } from './+types/yaml-formatter';
 import { buildMeta } from '@/lib/meta';
 import { Badge } from '@/components/ui/badge';
 import { DiffPanel } from '@/components/DiffPanel';
-import { MarkdownPreview } from '@/components/MarkdownPreview';
+import { LazyMarkdownPreview } from '@/components/LazyMarkdownPreview';
 import { TreeView } from '@/components/TreeView';
 import { FormatterLayout } from '@/components/FormatterLayout';
 import { ToolbarSelect, type ToolbarSelectOption } from '@/components/ToolbarSelect';
@@ -305,7 +305,7 @@ export default function YamlFormatter() {
         showTree && treeData !== undefined ? (
           <TreeView data={treeData} className="h-full" />
         ) : showMarkdown ? (
-          <MarkdownPreview source={fmt.output || fmt.input} className="h-full" />
+          <LazyMarkdownPreview source={fmt.output || fmt.input} className="h-full" />
         ) : undefined
       }
       rightPaneLabel={rightPaneLabel}

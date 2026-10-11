@@ -3,7 +3,7 @@ import type { Route } from './+types/csv-formatter';
 import { buildMeta } from '@/lib/meta';
 import { Badge } from '@/components/ui/badge';
 import { DiffPanel } from '@/components/DiffPanel';
-import { MarkdownPreview } from '@/components/MarkdownPreview';
+import { LazyMarkdownPreview } from '@/components/LazyMarkdownPreview';
 import { FormatterLayout } from '@/components/FormatterLayout';
 import { ToolbarSelect } from '@/components/ToolbarSelect';
 import { useCsvFormatter } from '@/features/csv/useCsvFormatter';
@@ -257,7 +257,7 @@ export default function CsvFormatter() {
       }
       rightPaneSlot={
         showMarkdown ? (
-          <MarkdownPreview source={fmt.output || fmt.input} className="h-full" />
+          <LazyMarkdownPreview source={fmt.output || fmt.input} className="h-full" />
         ) : undefined
       }
       rightPaneLabel="Markdown preview"

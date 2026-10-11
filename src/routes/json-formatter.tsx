@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { DiffPanel } from '@/components/DiffPanel';
-import { MarkdownPreview } from '@/components/MarkdownPreview';
+import { LazyMarkdownPreview } from '@/components/LazyMarkdownPreview';
 import { TreeView } from '@/components/TreeView';
 import { FormatterLayout } from '@/components/FormatterLayout';
 import { useJsonFormatter } from '@/features/json/useJsonFormatter';
@@ -476,7 +476,7 @@ export default function JsonFormatter() {
         showTree && treeData !== undefined ? (
           <TreeView data={treeData} className="h-full" />
         ) : showMarkdown ? (
-          <MarkdownPreview source={fmt.output || fmt.input} className="h-full" />
+          <LazyMarkdownPreview source={fmt.output || fmt.input} className="h-full" />
         ) : undefined
       }
       rightPaneLabel={rightPaneLabel}
