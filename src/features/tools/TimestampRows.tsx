@@ -28,7 +28,7 @@ export function ResultRow({ label, value }: ResultRowProps) {
           title={`Copy ${label}`}
         >
           {copied ? (
-            <Check className="h-3 w-3 text-green-400" aria-hidden="true" />
+            <Check className="h-3 w-3 text-success-fg" aria-hidden="true" />
           ) : (
             <Copy className="h-3 w-3" aria-hidden="true" />
           )}
@@ -64,7 +64,7 @@ export function TimestampCopyRow({ label, value }: TimestampCopyRowProps) {
         aria-label={`Copy ${label}`}
       >
         {copied ? (
-          <Check className="h-3 w-3 text-green-400" aria-hidden="true" />
+          <Check className="h-3 w-3 text-success-fg" aria-hidden="true" />
         ) : (
           <Copy className="h-3 w-3" aria-hidden="true" />
         )}

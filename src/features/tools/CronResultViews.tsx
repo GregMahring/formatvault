@@ -61,7 +61,7 @@ export function NextRunRow({ index, date }: NextRunRowProps) {
           title="Copy"
         >
           {copied ? (
-            <Check className="h-3 w-3 text-green-400" aria-hidden="true" />
+            <Check className="h-3 w-3 text-success-fg" aria-hidden="true" />
           ) : (
             <Copy className="h-3 w-3" aria-hidden="true" />
           )}

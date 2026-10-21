@@ -246,7 +246,7 @@ export default function JsonSchemaGenerator() {
       {hasError && (
         <div
           role="alert"
-          className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
+          className="flex items-start gap-2 border-b border-danger-fg/30 bg-danger-fg/10 px-4 py-2 text-xs text-danger-fg"
         >
           <span className="shrink-0 font-mono font-semibold">Error</span>
           <span className="flex-1">{schema.error}</span>

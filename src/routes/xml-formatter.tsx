@@ -261,7 +261,7 @@ export default function XmlFormatter() {
           {fmt.mode === 'validate' && !hasError && fmt.input.trim() && (
             <div
               role="status"
-              className="flex items-center gap-2 border-b border-green-900/40 bg-green-950/30 px-4 py-1.5 text-xs text-green-400"
+              className="flex items-center gap-2 border-b border-success-fg/30 bg-success-fg/10 px-4 py-1.5 text-xs text-success-fg"
             >
               <span>✓ Well-formed XML</span>
             </div>
@@ -269,7 +269,7 @@ export default function XmlFormatter() {
           {fileParser.result?.error && (
             <div
               role="alert"
-              className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
+              className="flex items-start gap-2 border-b border-danger-fg/30 bg-danger-fg/10 px-4 py-2 text-xs text-danger-fg"
             >
               <span className="shrink-0 font-mono font-semibold">File error</span>
               <span className="flex-1">{fileParser.result.error}</span>

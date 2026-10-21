@@ -54,7 +54,7 @@ export function PiiMaskToggle({ pii, className }: PiiMaskToggleProps) {
       className={cn(
         'flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] transition-colors',
         pii.enabled
-          ? 'bg-amber-900/40 text-amber-400 hover:bg-amber-900/60'
+          ? 'bg-warning-fg/15 text-warning-fg hover:bg-warning-fg/25'
           : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg',
         className
       )}
@@ -64,7 +64,7 @@ export function PiiMaskToggle({ pii, className }: PiiMaskToggleProps) {
       <Icon className="h-3 w-3" aria-hidden="true" />
       <span>Mask PII</span>
       {pii.enabled && pii.matchCount > 0 && (
-        <span className="ml-0.5 rounded-full bg-amber-800/60 px-1.5 py-px text-[9px] font-semibold tabular-nums text-amber-300">
+        <span className="ml-0.5 rounded-full bg-warning-fg/20 px-1.5 py-px text-[9px] font-semibold tabular-nums text-warning-fg">
           {String(pii.matchCount)}
         </span>
       )}

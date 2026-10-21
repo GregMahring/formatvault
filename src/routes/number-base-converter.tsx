@@ -95,7 +95,7 @@ function BaseRow({ label, prefix, placeholder, value, base, hasError, onChange }
             prefix
               ? 'rounded-r border border-edge-emphasis focus:ring-accent-500'
               : 'rounded border border-edge-emphasis focus:ring-accent-500',
-            hasError && value ? 'border-red-800 focus:ring-red-700' : ''
+            hasError && value ? 'border-danger-fg focus:ring-danger-fg' : ''
           )}
         />
       </div>
@@ -111,8 +111,8 @@ function BaseRow({ label, prefix, placeholder, value, base, hasError, onChange }
       >
         {copied ? (
           <>
-            <Check className="h-3 w-3 text-green-400" aria-hidden="true" />
-            <span className="text-green-400">Copied!</span>
+            <Check className="h-3 w-3 text-success-fg" aria-hidden="true" />
+            <span className="text-success-fg">Copied!</span>
           </>
         ) : (
           <>
@@ -266,7 +266,7 @@ export default function NumberBaseConverter() {
           </div>
 
           {error && (
-            <p role="alert" className="mt-2 text-xs text-red-400">
+            <p role="alert" className="mt-2 text-xs text-danger-fg">
               {error}
             </p>
           )}

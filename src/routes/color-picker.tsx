@@ -48,8 +48,8 @@ function ColorValueRow({ label, value }: ColorValueRowProps) {
       >
         {copied ? (
           <>
-            <Check className="h-3 w-3 text-green-400" aria-hidden="true" />
-            <span className="text-green-400">Copied!</span>
+            <Check className="h-3 w-3 text-success-fg" aria-hidden="true" />
+            <span className="text-success-fg">Copied!</span>
           </>
         ) : (
           <>
@@ -176,7 +176,7 @@ export default function ColorPicker() {
                 className={cn(
                   'w-full rounded border bg-surface-raised px-3 py-2 font-mono text-sm text-fg placeholder:text-fg-secondary focus:outline-none',
                   inputError
-                    ? 'border-red-800 focus:border-red-700'
+                    ? 'border-danger-fg focus:border-danger-fg'
                     : 'border-edge-emphasis focus:border-accent-500'
                 )}
                 spellCheck={false}
@@ -184,7 +184,7 @@ export default function ColorPicker() {
                 aria-label="Color input"
               />
               {inputError ? (
-                <p role="alert" className="text-xs text-red-400">
+                <p role="alert" className="text-xs text-danger-fg">
                   {inputError}
                 </p>
               ) : (

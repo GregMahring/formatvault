@@ -253,7 +253,7 @@ export default function CronExpressionExplainer() {
                     aria-label="Copy expression"
                   >
                     {expressionCopied ? (
-                      <Check className="h-3 w-3 text-green-400" aria-hidden="true" />
+                      <Check className="h-3 w-3 text-success-fg" aria-hidden="true" />
                     ) : (
                       <Copy className="h-3 w-3" aria-hidden="true" />
                     )}
@@ -269,7 +269,7 @@ export default function CronExpressionExplainer() {
         {error && (
           <div
             role="alert"
-            className="flex items-start gap-2 rounded border border-red-900/60 bg-red-950/40 px-3 py-2 text-xs text-red-400"
+            className="flex items-start gap-2 rounded border border-danger-fg/30 bg-danger-fg/10 px-3 py-2 text-xs text-danger-fg"
           >
             {error}
           </div>

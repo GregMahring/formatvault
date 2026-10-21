@@ -57,7 +57,7 @@ export function MarkdownPreview({ source, className }: MarkdownPreviewProps) {
             title="Copy markdown source"
           >
             {copied ? (
-              <CheckCheck className="h-3 w-3 text-green-400" aria-hidden="true" />
+              <CheckCheck className="h-3 w-3 text-success-fg" aria-hidden="true" />
             ) : (
               <Copy className="h-3 w-3" aria-hidden="true" />
             )}

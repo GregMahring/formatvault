@@ -44,9 +44,18 @@
   --color-label-indigo: var(--label-indigo); /* tool name labels */
   --color-label-cyan: var(--label-cyan); /* pane section labels */
   --color-accent-fg: var(--accent-fg); /* active toggle / selected chip text on accent tints */
-  --color-danger-fg: var(--danger-fg); /* error badge text on red tints */
-  --color-success-fg: var(--success-fg); /* success badge text on green tints */
-  --color-warning-fg: var(--warning-fg); /* warning badge text on amber tints */
+  /* Status colours. Text uses the token directly; tints derive from it
+     (bg-danger-fg/10, border-danger-fg/30) so they follow the theme too.
+     Every value is ≥4.5:1 on surface, surface-raised and its own 10–15% tint. */
+  --color-danger-fg: var(--danger-fg);
+  --color-success-fg: var(--success-fg);
+  --color-warning-fg: var(--warning-fg);
+  /* JSON tree value types — same rule as the status colours */
+  --color-type-string: var(--type-string);
+  --color-type-number: var(--type-number);
+  --color-type-boolean: var(--type-boolean);
+  --color-type-object: var(--type-object);
+  --color-type-array: var(--type-array);
 
   /* Logo color tokens — theme-adaptive via CSS variables set on .dark/.light */
   --color-logo-cyan: var(--logo-cyan);
@@ -102,6 +111,11 @@
     --danger-fg: #f87171; /* red-400 */
     --success-fg: #4ade80; /* green-400 */
     --warning-fg: #fbbf24; /* amber-400 */
+    --type-string: #4ade80; /* green-400 */
+    --type-number: #22d3ee; /* cyan-400 */
+    --type-boolean: #facc15; /* yellow-400 */
+    --type-object: #c084fc; /* purple-400 */
+    --type-array: #60a5fa; /* blue-400 */
     /* JWT anatomy — bright variants for dark bg */
     --jwt-header: #f87171; /* red-400 */
     --jwt-payload: #c084fc; /* purple-400 */
@@ -128,9 +142,14 @@
     --label-indigo: #5555cc; /* original brand-indigo, 5.4:1 on #f5f4f0 */
     --label-cyan: #006b78; /* 5.6:1 on #f5f4f0, ≥4.57:1 on the cyan tints behind inline code */
     --accent-fg: #333388; /* accent-700, ≥4.56:1 on the accent tints behind active toggles */
-    --danger-fg: #b91c1c; /* red-700, 5.3:1 on the red tint behind error badges */
-    --success-fg: #166534; /* green-800, ≥5.98:1 on the green tint behind success badges */
-    --warning-fg: #92400e; /* amber-800, ≥6.00:1 on the amber tint behind warning badges */
+    --danger-fg: #991b1b; /* red-800 */
+    --success-fg: #166534; /* green-800 */
+    --warning-fg: #92400e; /* amber-800 */
+    --type-string: #166534; /* green-800 */
+    --type-number: #155e75; /* cyan-800 */
+    --type-boolean: #854d0e; /* yellow-800 */
+    --type-object: #7e22ce; /* purple-700 */
+    --type-array: #1d4ed8; /* blue-700 */
     /* JWT anatomy — darkened variants for light bg (all ≥4.5:1 on #f5f4f0) */
     --jwt-header: #b91c1c; /* red-700, ~7:1 */
     --jwt-payload: #7c3aed; /* violet-600, ~6.5:1 */

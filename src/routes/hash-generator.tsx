@@ -35,7 +35,7 @@ function CopyButton({ text, label }: { text: string; label: string }) {
       disabled={!text}
       className={cn(
         'flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] transition-colors hover:bg-surface-elevated disabled:opacity-30',
-        copied ? 'text-green-400' : 'text-fg-secondary hover:text-fg'
+        copied ? 'text-success-fg' : 'text-fg-secondary hover:text-fg'
       )}
       aria-label={`Copy ${label}`}
       title={`Copy ${label}`}
@@ -188,7 +188,7 @@ export default function HashGenerator() {
       {hash.result !== null && isHashError(hash.result) && (
         <div
           role="alert"
-          className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
+          className="flex items-start gap-2 border-b border-danger-fg/30 bg-danger-fg/10 px-4 py-2 text-xs text-danger-fg"
         >
           <span className="shrink-0 font-mono font-semibold">Error</span>
           <span className="flex-1">{hash.result.error}</span>

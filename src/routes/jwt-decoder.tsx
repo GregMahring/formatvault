@@ -171,7 +171,7 @@ export default function JwtDecoder() {
         {error && (
           <div
             role="alert"
-            className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
+            className="flex items-start gap-2 border-b border-danger-fg/30 bg-danger-fg/10 px-4 py-2 text-xs text-danger-fg"
           >
             <span className="shrink-0 font-mono font-semibold">Error</span>
             <span className="flex-1">{error}</span>
@@ -207,7 +207,7 @@ export default function JwtDecoder() {
                   title="Copy token"
                 >
                   {copiedRaw ? (
-                    <CheckCheck className="h-3 w-3 text-green-400" aria-hidden="true" />
+                    <CheckCheck className="h-3 w-3 text-success-fg" aria-hidden="true" />
                   ) : (
                     <Copy className="h-3 w-3" aria-hidden="true" />
                   )}

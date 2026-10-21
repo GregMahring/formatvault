@@ -38,7 +38,11 @@ export interface TimestampRowProps {
 
 export function TimestampRow({ name, unix, highlight }: TimestampRowProps) {
   const color =
-    highlight === 'expired' ? 'text-red-400' : highlight === 'valid' ? 'text-green-400' : 'text-fg';
+    highlight === 'expired'
+      ? 'text-danger-fg'
+      : highlight === 'valid'
+        ? 'text-success-fg'
+        : 'text-fg';
   return (
     <tr className="border-b border-edge last:border-0">
       <td className="w-32 py-2 pr-4 align-top font-mono text-xs text-fg-secondary">{name}</td>
@@ -75,7 +79,7 @@ export function JsonBlock({ label, value }: JsonBlockProps) {
           aria-label={`Copy ${label}`}
         >
           {copied ? (
-            <CheckCheck className="h-3 w-3 text-green-400" aria-hidden="true" />
+            <CheckCheck className="h-3 w-3 text-success-fg" aria-hidden="true" />
           ) : (
             <Copy className="h-3 w-3" aria-hidden="true" />
           )}

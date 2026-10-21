@@ -137,7 +137,7 @@ export default function RegexTester() {
             className={cn(
               'w-48 rounded-none border-b bg-transparent px-1 py-0.5 font-mono text-sm focus:outline-none',
               result.error
-                ? 'border-red-600 text-red-300 placeholder-red-900'
+                ? 'border-danger-fg text-danger-fg placeholder:text-fg-tertiary'
                 : 'border-edge-emphasis text-fg placeholder:text-fg-secondary focus:border-accent-500'
             )}
           />
@@ -205,7 +205,7 @@ export default function RegexTester() {
       {result.error && (
         <div
           role="alert"
-          className="flex items-start gap-2 border-b border-red-900/60 bg-red-950/40 px-4 py-2 text-xs text-red-400"
+          className="flex items-start gap-2 border-b border-danger-fg/30 bg-danger-fg/10 px-4 py-2 text-xs text-danger-fg"
         >
           <span className="shrink-0 font-mono font-semibold">Error</span>
           <span className="flex-1">{result.error}</span>
@@ -275,7 +275,7 @@ export default function RegexTester() {
                 {/* Highlighted text */}
                 <div
                   className="border-b border-edge bg-surface-raised p-4 font-mono text-sm leading-relaxed text-fg-secondary
-                    [&_mark]:rounded-sm [&_mark]:bg-yellow-400/25 [&_mark]:text-yellow-200 [&_mark]:ring-1 [&_mark]:ring-yellow-400/40"
+                    [&_mark]:rounded-sm [&_mark]:bg-warning-fg/25 [&_mark]:text-fg [&_mark]:ring-1 [&_mark]:ring-warning-fg/40"
                   // DOMPurify-sanitized HTML — safe per ADR-0008
                   dangerouslySetInnerHTML={{ __html: safeHighlightHtml }}
                 />
@@ -326,7 +326,7 @@ export default function RegexTester() {
 
             {/* Error state — no matches shown */}
             {result.error && (
-              <div className="flex h-full items-center justify-center text-xs text-red-600">
+              <div className="flex h-full items-center justify-center text-xs text-danger-fg">
                 Fix the pattern error above
               </div>
             )}

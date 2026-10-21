@@ -76,8 +76,8 @@ export function DiffPanel({ original, modified, className }: DiffPanelProps) {
       <div className="flex items-center gap-3 border-b border-edge px-4 py-1.5 text-xs">
         {hasChanges ? (
           <>
-            {added > 0 && <span className="text-green-400">+{String(added)} added</span>}
-            {removed > 0 && <span className="text-red-400">−{String(removed)} removed</span>}
+            {added > 0 && <span className="text-success-fg">+{String(added)} added</span>}
+            {removed > 0 && <span className="text-danger-fg">−{String(removed)} removed</span>}
             <span className="text-fg-tertiary">{String(unchanged)} unchanged</span>
           </>
         ) : (
@@ -106,8 +106,8 @@ export function DiffPanel({ original, modified, className }: DiffPanelProps) {
                 key={idx}
                 className={cn(
                   'border-b border-gray-900',
-                  line.kind === 'added' && 'bg-green-950/40',
-                  line.kind === 'removed' && 'bg-red-950/40'
+                  line.kind === 'added' && 'bg-success-fg/10',
+                  line.kind === 'removed' && 'bg-danger-fg/10'
                 )}
               >
                 {/* Gutter */}
@@ -118,8 +118,8 @@ export function DiffPanel({ original, modified, className }: DiffPanelProps) {
                 <td
                   className={cn(
                     'w-4 select-none text-center',
-                    line.kind === 'added' && 'text-green-500',
-                    line.kind === 'removed' && 'text-red-500',
+                    line.kind === 'added' && 'text-success-fg',
+                    line.kind === 'removed' && 'text-danger-fg',
                     line.kind === 'unchanged' && 'text-gray-700'
                   )}
                 >
@@ -129,8 +129,8 @@ export function DiffPanel({ original, modified, className }: DiffPanelProps) {
                 <td
                   className={cn(
                     'px-2 py-0.5 whitespace-pre',
-                    line.kind === 'added' && 'text-green-300',
-                    line.kind === 'removed' && 'text-red-300',
+                    line.kind === 'added' && 'text-success-fg',
+                    line.kind === 'removed' && 'text-danger-fg',
                     line.kind === 'unchanged' && 'text-fg-tertiary'
                   )}
                 >

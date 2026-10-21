@@ -12,15 +12,15 @@ export function ValidationResults({ result, className }: ValidationResultsProps)
     return (
       <div
         className={cn(
-          'flex items-center gap-2 rounded-md border border-green-900/60 bg-green-950/30 px-4 py-3',
+          'flex items-center gap-2 rounded-md border border-success-fg/30 bg-success-fg/10 px-4 py-3',
           className
         )}
         role="status"
       >
-        <CheckCircle2 className="h-5 w-5 shrink-0 text-green-500" aria-hidden="true" />
+        <CheckCircle2 className="h-5 w-5 shrink-0 text-success-fg" aria-hidden="true" />
         <div>
-          <p className="text-sm font-semibold text-green-400">Valid</p>
-          <p className="text-xs text-green-600">The JSON data conforms to the schema.</p>
+          <p className="text-sm font-semibold text-success-fg">Valid</p>
+          <p className="text-xs text-success-fg">The JSON data conforms to the schema.</p>
         </div>
       </div>
     );
@@ -28,9 +28,9 @@ export function ValidationResults({ result, className }: ValidationResultsProps)
 
   return (
     <div className={cn('flex flex-col gap-2', className)} role="alert">
-      <div className="flex items-center gap-2 rounded-md border border-red-900/60 bg-red-950/30 px-4 py-2">
-        <XCircle className="h-4 w-4 shrink-0 text-red-500" aria-hidden="true" />
-        <p className="text-sm font-semibold text-red-400">
+      <div className="flex items-center gap-2 rounded-md border border-danger-fg/30 bg-danger-fg/10 px-4 py-2">
+        <XCircle className="h-4 w-4 shrink-0 text-danger-fg" aria-hidden="true" />
+        <p className="text-sm font-semibold text-danger-fg">
           Invalid — {String(result.errors.length)} error{result.errors.length !== 1 ? 's' : ''}
         </p>
       </div>
@@ -41,9 +41,9 @@ export function ValidationResults({ result, className }: ValidationResultsProps)
             key={`${err.path}-${err.keyword}-${String(i)}`}
             className="flex items-start gap-2 border-b border-gray-900 px-3 py-2 last:border-0"
           >
-            <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0 text-red-500" aria-hidden="true" />
+            <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0 text-danger-fg" aria-hidden="true" />
             <div className="min-w-0 flex-1">
-              <span className="font-mono text-xs text-red-400">{err.path || '/'}</span>
+              <span className="font-mono text-xs text-danger-fg">{err.path || '/'}</span>
               <p className="text-xs text-fg-secondary">{err.message}</p>
             </div>
             <span className="shrink-0 rounded bg-surface-elevated px-1.5 py-0.5 text-[10px] text-fg-secondary">

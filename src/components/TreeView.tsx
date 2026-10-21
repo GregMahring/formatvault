@@ -70,7 +70,7 @@ export function TreeView({ data, className }: TreeViewProps) {
 
       {/* Warning for very large trees */}
       {isTooLarge && (
-        <div className="flex items-center gap-2 border-b border-yellow-900/40 bg-yellow-950/30 px-3 py-1.5 text-xs text-yellow-400">
+        <div className="flex items-center gap-2 border-b border-warning-fg/30 bg-warning-fg/10 px-3 py-1.5 text-xs text-warning-fg">
           <AlertTriangle className="h-3 w-3 shrink-0" aria-hidden="true" />
           <span>
             This document has {String(tree.totalNodes)} nodes. Performance may be degraded. Consider

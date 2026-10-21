@@ -43,7 +43,7 @@ export function PaneActions({
         disabled={disabled || empty}
         className={cn(
           'flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] transition-colors hover:bg-surface-elevated disabled:opacity-30',
-          copied ? 'text-green-400' : 'text-fg-secondary hover:text-fg'
+          copied ? 'text-success-fg' : 'text-fg-secondary hover:text-fg'
         )}
         aria-label="Copy to clipboard"
         title="Copy to clipboard"

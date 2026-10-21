@@ -18,21 +18,21 @@ export interface TreeNodeProps {
 }
 
 const TYPE_COLORS: Record<ValueType, string> = {
-  string: 'text-green-400',
-  number: 'text-cyan-400',
-  boolean: 'text-yellow-400',
+  string: 'text-type-string',
+  number: 'text-type-number',
+  boolean: 'text-type-boolean',
   null: 'text-fg-tertiary',
   object: 'text-fg-secondary',
   array: 'text-fg-secondary',
 };
 
 const TYPE_BADGES: Record<ValueType, string> = {
-  string: 'bg-green-900/30 text-green-500',
-  number: 'bg-cyan-900/30 text-cyan-500',
-  boolean: 'bg-yellow-900/30 text-yellow-500',
+  string: 'bg-type-string/15 text-type-string',
+  number: 'bg-type-number/15 text-type-number',
+  boolean: 'bg-type-boolean/15 text-type-boolean',
   null: 'bg-surface-elevated text-fg-secondary',
-  object: 'bg-purple-900/30 text-purple-500',
-  array: 'bg-blue-900/30 text-blue-500',
+  object: 'bg-type-object/15 text-type-object',
+  array: 'bg-type-array/15 text-type-array',
 };
 
 export const TreeNodeComponent = memo(function TreeNodeComponent({
@@ -146,7 +146,7 @@ export const TreeNodeComponent = memo(function TreeNodeComponent({
         aria-label={`Copy path ${path}`}
       >
         {copied ? (
-          <Check className="h-3 w-3 text-green-500" aria-hidden="true" />
+          <Check className="h-3 w-3 text-success-fg" aria-hidden="true" />
         ) : (
           <Copy className="h-3 w-3" aria-hidden="true" />
         )}

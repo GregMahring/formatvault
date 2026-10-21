@@ -13,7 +13,7 @@ function sizeChange(from: number, to: number): string {
 
 function Change({ from, to }: { from: number; to: number }) {
   return (
-    <span className={to <= from ? 'text-emerald-400' : 'text-yellow-400'}>
+    <span className={to <= from ? 'text-success-fg' : 'text-warning-fg'}>
       {sizeChange(from, to)}
     </span>
   );
