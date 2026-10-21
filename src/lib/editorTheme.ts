@@ -7,9 +7,13 @@
  *   brand-cyan     (#00d4e8) — strings, attributes
  *   fg             (#e8e6f0) — default text
  *   fg-secondary   (#9896b0) — operators, punctuation
- *   fg-muted       (#4a4870) — comments, gutter numbers
  *
  * Light palette maps the same roles to the light-mode tokens.
+ *
+ * Every colour that renders text (syntax, punctuation, comments, line numbers,
+ * fold placeholder) is ≥4.5:1 on the editor background and the active-line
+ * highlight (WCAG 1.4.3). Comments and punctuation recede by being the dimmest
+ * colours that still pass, not by dropping below AA.
  */
 
 import { EditorView } from '@codemirror/view';
@@ -27,25 +31,25 @@ const dark = {
   bgMatchingBracket: 'rgba(0,212,232,0.2)',
   gutter: '#0d0d22',
   gutterBorder: '#1a1a3a',
-  gutterFg: '#3d3b5c',
-  gutterActiveFg: '#7c7a9a',
+  gutterFg: '#8381a6', // 4.75:1 — dimmest text, still AA
+  gutterActiveFg: '#a8a6c4',
   cursor: '#00d4e8', // brand cyan — bright, easy to spot
   fg: '#cdd6f4', // slightly warm white, easier on eyes than pure white
   fgSecondary: '#9896b0',
-  fgMuted: '#4a4870',
+  fgMuted: '#8a88b0',
   // syntax
   keyword: '#a78bfa', // violet — const/let/if/return/function (classic terminal)
   builtin: '#7c7cff', // bright indigo — built-ins, constructors
   string: '#00d4e8', // brand cyan — strings
   stringSpecial: '#67e8f9', // light cyan — regex, template literals, escape seqs
   number: '#fb923c', // warm orange — great contrast on dark bg, classic terminal
-  comment: '#4a4870', // muted indigo-gray, italic
-  meta: '#6a6882',
+  comment: '#8a88b0', // muted indigo-gray, italic — 5.2:1
+  meta: '#8e8ca8',
   tag: '#7c7cff', // bright indigo — XML/HTML tag names
   attribute: '#00d4e8', // brand cyan — attribute names
   property: '#a5b4fc', // soft indigo — object keys, CSS props
   operator: '#89dceb', // soft cyan — operators blend without disappearing
-  punctuation: '#6a6882', // muted — braces/brackets recede
+  punctuation: '#8e8ca8', // muted — braces/brackets recede, 5.4:1
   variableName: '#cdd6f4', // same as fg — variables are default text
   functionName: '#67e8f9', // light cyan — function names pop distinctly
   typeName: '#c4b5fd', // lavender — types, classes, interfaces
@@ -62,30 +66,30 @@ const light = {
   bgMatchingBracket: 'rgba(0,145,175,0.15)',
   gutter: '#fafafa',
   gutterBorder: '#d4d0c8',
-  gutterFg: '#9896b0',
+  gutterFg: '#6a667d',
   gutterActiveFg: '#4a4660',
   cursor: '#5555cc',
   fg: '#1a1820',
   fgSecondary: '#4a4660',
-  fgMuted: '#8a8698',
+  fgMuted: '#6b6880',
   // syntax — same roles, adjusted for white bg contrast
   keyword: '#6d28d9', // violet-700
   builtin: '#4f46e5', // indigo-600
   string: '#0e7490', // cyan-800
   stringSpecial: '#0369a1', // sky-700
   number: '#c2410c', // orange-700
-  comment: '#9ca3af', // gray-400, italic
-  meta: '#6b7280',
+  comment: '#6b6880', // italic — 4.8:1
+  meta: '#5f6672',
   tag: '#4f46e5', // indigo
   attribute: '#0e7490', // cyan
   property: '#4338ca', // indigo-700
   operator: '#0369a1', // sky-700
-  punctuation: '#9ca3af',
+  punctuation: '#5f6672',
   variableName: '#1a1820',
   functionName: '#0369a1', // sky-700
   typeName: '#7c3aed', // violet-600
   className: '#7c3aed',
-  invalid: '#dc2626',
+  invalid: '#b91c1c', // red-700
   link: '#0e7490',
 };
 
