@@ -214,8 +214,8 @@ export default function Privacy() {
         Page view analytics via{' '}
         <ExternalLink href="https://plausible.io">plausible.io</ExternalLink>. Cookieless, no
         personal data stored, GDPR/CCPA compliant, EU-hosted. The script is loaded from{' '}
-        <Code>plausible.io/js/script.js</Code> and sends a single event per page navigation
-        containing only the page path and the data listed under "What we collect" above.
+        <Code>plausible.io/js/</Code> and sends a single event per page navigation containing only
+        the page path and the data listed under "What we collect" above.
       </p>
 
       <h3 className="mb-2 mt-6 text-sm font-semibold uppercase tracking-wider text-fg-secondary">

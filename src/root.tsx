@@ -28,6 +28,12 @@ const fontSwapScript = `
 (function(){var l=document.getElementById('fv-fonts');if(!l)return;function s(){l.media='all'}if(l.sheet)s();else l.addEventListener('load',s);})();
 `.trim();
 
+// Queues plausible() calls made before the async script loads, then initialises it.
+const plausibleInitScript = `
+window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+plausible.init()
+`.trim();
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -54,7 +60,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         />
         <script dangerouslySetInnerHTML={{ __html: fontSwapScript }} />
         {/* Plausible Analytics — privacy-respecting, no cookies, no PII */}
-        <script defer data-domain="formatvault.dev" src="https://plausible.io/js/script.js" />
+        <script async src="https://plausible.io/js/pa-XWzgPtsJy68bhoHvN6UdA.js" />
+        <script dangerouslySetInnerHTML={{ __html: plausibleInitScript }} />
         <Meta />
         <Links />
       </head>
