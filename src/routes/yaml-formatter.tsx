@@ -241,7 +241,7 @@ export default function YamlFormatter() {
             className={cn(
               'rounded px-2 py-1 text-xs transition-colors',
               showDiff
-                ? 'bg-accent-700/40 text-accent-300'
+                ? 'bg-accent-700/40 text-accent-fg'
                 : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg'
             )}
             onClick={() => {
@@ -258,7 +258,7 @@ export default function YamlFormatter() {
             className={cn(
               'rounded px-2 py-1 text-xs transition-colors',
               showMarkdown
-                ? 'bg-accent-700/40 text-accent-300'
+                ? 'bg-accent-700/40 text-accent-fg'
                 : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg'
             )}
             onClick={() => {
@@ -276,7 +276,7 @@ export default function YamlFormatter() {
             className={cn(
               'rounded px-2 py-1 text-xs transition-colors',
               showTree
-                ? 'bg-accent-700/40 text-accent-300'
+                ? 'bg-accent-700/40 text-accent-fg'
                 : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg'
             )}
             onClick={() => {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useId } from 'react';
 import ReactCodeMirror, { type Extension } from '@uiw/react-codemirror';
 import { EditorView } from '@codemirror/view';
 import { cn } from '@/lib/utils';
@@ -84,6 +84,7 @@ export function CodeEditor({
 }: CodeEditorProps) {
   const { editorFontSize, theme } = useSettingsStore();
   const [langExtension, setLangExtension] = useState<Extension | null>(null);
+  const tabHintId = useId();
 
   // Load language pack once when language prop changes
   useEffect(() => {
@@ -104,12 +105,17 @@ export function CodeEditor({
           fontSize: `${String(editorFontSize)}px`,
         },
       }),
-      EditorView.contentAttributes.of({ 'aria-label': label }),
+      // Read-only output isn't contenteditable, so without a tabindex it can't be reached
+      // or keyboard-scrolled at all (WCAG 2.1.1). On editable editors it changes nothing
+      // (contenteditable is already focusable) but lets audit tools recognise that.
+      EditorView.contentAttributes.of({ 'aria-label': label, tabindex: '0' }),
     ];
+    // Editable editors capture Tab for indentation, so announce the way out (WCAG 2.1.2)
     if (readOnly) exts.push(EditorView.editable.of(false));
+    else exts.push(EditorView.contentAttributes.of({ 'aria-describedby': tabHintId }));
     if (langExtension) exts.push(langExtension);
     return exts;
-  }, [editorFontSize, readOnly, langExtension, label]);
+  }, [editorFontSize, readOnly, langExtension, label, tabHintId]);
 
   const handleChange = useCallback(
     (val: string) => {
@@ -156,6 +162,11 @@ export function CodeEditor({
       role="group"
       aria-label={label}
     >
+      {!readOnly && (
+        <span id={tabHintId} className="sr-only">
+          Tab inserts an indent. Press Escape, then Tab, to move focus out of the editor.
+        </span>
+      )}
       {height !== undefined ? (
         // absolute inset-0 gives the positioned parent's flex-1 height as a
         // definite anchor. % heights inside resolve correctly without depending

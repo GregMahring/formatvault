@@ -100,7 +100,7 @@ export function MarkdownPreview({ source, className }: MarkdownPreviewProps) {
             dangerouslySetInnerHTML={{ __html: html }}
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-xs text-fg-muted">
+          <div className="flex h-full items-center justify-center text-xs text-fg-tertiary">
             {source.trim() ? 'Nothing to preview' : 'No markdown content to preview'}
           </div>
         )}

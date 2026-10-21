@@ -65,7 +65,7 @@ export function TreeView({ data, className }: TreeViewProps) {
           <ChevronsDownUp className="h-3.5 w-3.5" aria-hidden="true" />
         </button>
 
-        <span className="text-[10px] text-fg-muted">{String(tree.totalNodes)} nodes</span>
+        <span className="text-[10px] text-fg-tertiary">{String(tree.totalNodes)} nodes</span>
       </div>
 
       {/* Warning for very large trees */}

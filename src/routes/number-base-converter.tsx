@@ -288,7 +288,7 @@ export default function NumberBaseConverter() {
                 className={cn(
                   'rounded border px-2.5 py-1 text-xs transition-colors',
                   displayValues[10] === String(preset.value)
-                    ? 'border-accent-700 bg-accent-600/20 text-accent-300'
+                    ? 'border-accent-700 bg-accent-600/20 text-accent-fg'
                     : 'border-edge-emphasis bg-surface-raised text-fg-secondary hover:border-edge-emphasis hover:text-fg'
                 )}
               >

@@ -108,7 +108,7 @@ export function CronBuilder({ state, onChange }: CronBuilderProps) {
               className={cn(
                 'rounded border px-2.5 py-1 text-xs transition-colors',
                 state.mode === mode
-                  ? 'border-accent-600 bg-accent-600/20 text-accent-300'
+                  ? 'border-accent-600 bg-accent-600/20 text-accent-fg'
                   : 'border-edge-emphasis bg-surface-raised text-fg-secondary hover:border-edge-emphasis hover:text-fg'
               )}
             >

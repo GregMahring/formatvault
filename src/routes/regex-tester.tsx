@@ -158,7 +158,7 @@ export default function RegexTester() {
               className={cn(
                 'rounded px-2 py-1 font-mono text-xs font-medium transition-colors',
                 flags[key]
-                  ? 'bg-accent-600/30 text-accent-300 ring-1 ring-accent-500/50'
+                  ? 'bg-accent-600/30 text-accent-fg ring-1 ring-accent-500/50'
                   : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg'
               )}
             >
@@ -222,7 +222,7 @@ export default function RegexTester() {
             </span>
           </div>
           <textarea
-            className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg placeholder:text-fg-secondary focus:outline-none"
+            className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg placeholder:text-fg-secondary focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-accent-500"
             placeholder="Paste or type text to test against…"
             value={input}
             onChange={(e) => {

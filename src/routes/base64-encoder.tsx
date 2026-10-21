@@ -230,7 +230,7 @@ export default function Base64Encoder() {
               </span>
             </div>
             <textarea
-              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg placeholder:text-fg-secondary focus:outline-none"
+              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg placeholder:text-fg-secondary focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-accent-500"
               placeholder={
                 mode === 'encode' ? 'Paste or type text to encode…' : 'Paste Base64 to decode…'
               }
@@ -243,7 +243,7 @@ export default function Base64Encoder() {
             />
             {/* Character/byte stats */}
             {input && (
-              <div className="border-t border-edge px-3 py-1.5 text-[10px] text-fg-muted">
+              <div className="border-t border-edge px-3 py-1.5 text-[10px] text-fg-tertiary">
                 {String(input.length)} chars · {String(new TextEncoder().encode(input).length)}{' '}
                 bytes
               </div>
@@ -265,7 +265,7 @@ export default function Base64Encoder() {
               </div>
             </div>
             <textarea
-              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg placeholder:text-fg-secondary focus:outline-none"
+              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg placeholder:text-fg-secondary focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-accent-500"
               placeholder={mode === 'encode' ? 'Encoded output…' : 'Decoded output…'}
               value={pii.displayContent}
               readOnly
@@ -273,7 +273,7 @@ export default function Base64Encoder() {
               aria-live="polite"
             />
             {output && (
-              <div className="border-t border-edge px-3 py-1.5 text-[10px] text-fg-muted">
+              <div className="border-t border-edge px-3 py-1.5 text-[10px] text-fg-tertiary">
                 {String(output.length)} chars
               </div>
             )}

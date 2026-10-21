@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { FileUploadZone } from '@/components/FileUploadZone';
 import { PaneActions } from '@/components/PaneActions';
 import { PiiMaskToggle } from '@/components/PiiMaskToggle';
-import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
+import { LazyKeyboardShortcutsModal } from '@/components/LazyKeyboardShortcutsModal';
 import { ProgressBar } from '@/components/ProgressBar';
 import { usePiiMasking } from '@/hooks/usePiiMasking';
 import { type Shortcut } from '@/hooks/useKeyboardShortcuts';
@@ -301,7 +301,7 @@ export function FormatterLayout({
           )}
         </div>
 
-        <KeyboardShortcutsModal
+        <LazyKeyboardShortcutsModal
           shortcuts={shortcuts}
           isOpen={showShortcuts}
           onClose={onCloseShortcuts}

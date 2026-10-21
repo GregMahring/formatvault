@@ -15,7 +15,7 @@ export interface AdSidebarProps {
 export function AdSidebar({ side, className }: AdSidebarProps) {
   return (
     <aside
-      aria-label="Advertisements"
+      aria-label={side === 'left' ? 'Advertisements, left' : 'Advertisements, right'}
       className={cn(
         'hidden lg:flex',
         'w-40 shrink-0 flex-col gap-4 px-3 py-4',

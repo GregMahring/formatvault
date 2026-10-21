@@ -30,7 +30,7 @@ const TYPE_BADGES: Record<ValueType, string> = {
   string: 'bg-green-900/30 text-green-500',
   number: 'bg-cyan-900/30 text-cyan-500',
   boolean: 'bg-yellow-900/30 text-yellow-500',
-  null: 'bg-surface-elevated text-fg-muted',
+  null: 'bg-surface-elevated text-fg-secondary',
   object: 'bg-purple-900/30 text-purple-500',
   array: 'bg-blue-900/30 text-blue-500',
 };

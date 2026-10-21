@@ -40,7 +40,7 @@ function ExternalLink({ href, children }: { href: string; children: ReactNode })
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-brand-indigo underline-offset-2 hover:underline"
+      className="text-label-indigo underline underline-offset-2"
     >
       {children}
     </a>
@@ -55,7 +55,7 @@ export default function Privacy() {
   return (
     <div className="mx-auto w-full max-w-2xl px-6 py-16">
       <h1 className="mb-2 text-3xl font-bold text-fg">Privacy Policy</h1>
-      <p className="mb-10 text-sm text-fg-muted">Last updated: 2026-03-23</p>
+      <p className="mb-10 text-sm text-fg-tertiary">Last updated: 2026-03-23</p>
 
       {/* Short version callout — brand-indigo tinted, mirrors the homepage badge style */}
       <div className="mb-10 rounded-lg border border-[#5555cc]/30 bg-[#5555cc]/8 px-5 py-4">
@@ -261,7 +261,7 @@ export default function Privacy() {
         Questions about this policy? Email{' '}
         <a
           href="mailto:privacy@formatvault.dev"
-          className="text-brand-indigo underline-offset-2 hover:underline"
+          className="text-label-indigo underline underline-offset-2"
         >
           privacy@formatvault.dev
         </a>

@@ -121,7 +121,7 @@ export default function HashGenerator() {
               className={cn(
                 'rounded px-2.5 py-1 text-xs font-medium transition-colors',
                 hash.algorithm === value
-                  ? 'bg-accent-600/30 text-accent-300 ring-1 ring-accent-500/50'
+                  ? 'bg-accent-600/30 text-accent-fg ring-1 ring-accent-500/50'
                   : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg'
               )}
             >

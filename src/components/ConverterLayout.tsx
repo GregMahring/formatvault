@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { FileUploadZone } from '@/components/FileUploadZone';
 import { PaneActions } from '@/components/PaneActions';
 import { PiiMaskToggle } from '@/components/PiiMaskToggle';
-import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
+import { LazyKeyboardShortcutsModal } from '@/components/LazyKeyboardShortcutsModal';
 import { ProgressBar } from '@/components/ProgressBar';
 import { useFileParser } from '@/hooks/useFileParser';
 import { useKeyboardShortcuts, type Shortcut } from '@/hooks/useKeyboardShortcuts';
@@ -346,7 +346,7 @@ export function ConverterLayout({
           </SplitPane>
         </div>
 
-        <KeyboardShortcutsModal
+        <LazyKeyboardShortcutsModal
           shortcuts={shortcuts}
           isOpen={showShortcuts}
           onClose={() => {

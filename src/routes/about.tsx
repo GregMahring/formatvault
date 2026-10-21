@@ -59,7 +59,7 @@ export default function About() {
   return (
     <div className="mx-auto w-full max-w-2xl px-6 py-16">
       <h1 className="mb-2 text-3xl font-bold text-fg">About formatvault</h1>
-      <p className="mb-10 text-sm text-fg-muted">
+      <p className="mb-10 text-sm text-fg-tertiary">
         Private developer tools. No uploads. No accounts.
       </p>
 
@@ -234,7 +234,7 @@ export default function About() {
       <p className="leading-relaxed text-fg-secondary">
         For a detailed breakdown of what analytics data we do collect (page view counts, no PII),
         see the{' '}
-        <NavLink to="/privacy" className="text-brand-indigo underline-offset-2 hover:underline">
+        <NavLink to="/privacy" className="text-label-indigo underline underline-offset-2">
           Privacy Policy
         </NavLink>
         .
@@ -246,7 +246,7 @@ export default function About() {
         Questions, bug reports, or tool requests — email{' '}
         <a
           href="mailto:feedback@formatvault.dev"
-          className="text-brand-indigo underline-offset-2 hover:underline"
+          className="text-label-indigo underline underline-offset-2"
         >
           feedback@formatvault.dev
         </a>

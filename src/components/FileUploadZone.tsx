@@ -102,7 +102,7 @@ export function FileUploadZone({
       {isDragOver && (
         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 rounded-md border-2 border-dashed border-accent-500 bg-surface/90 backdrop-blur-sm">
           <Upload className="h-8 w-8 text-accent-400" aria-hidden="true" />
-          <span className="text-sm font-medium text-accent-300">Drop file to upload</span>
+          <span className="text-sm font-medium text-accent-fg">Drop file to upload</span>
         </div>
       )}
 

@@ -62,7 +62,9 @@ export function DiffPanel({ original, modified, className }: DiffPanelProps) {
 
   if (!original && !modified) {
     return (
-      <div className={cn('flex items-center justify-center p-8 text-xs text-fg-muted', className)}>
+      <div
+        className={cn('flex items-center justify-center p-8 text-xs text-fg-tertiary', className)}
+      >
         Diff will appear here once both panes have content.
       </div>
     );
@@ -76,7 +78,7 @@ export function DiffPanel({ original, modified, className }: DiffPanelProps) {
           <>
             {added > 0 && <span className="text-green-400">+{String(added)} added</span>}
             {removed > 0 && <span className="text-red-400">−{String(removed)} removed</span>}
-            <span className="text-fg-muted">{String(unchanged)} unchanged</span>
+            <span className="text-fg-tertiary">{String(unchanged)} unchanged</span>
           </>
         ) : (
           <span className="text-fg-tertiary">No differences</span>
@@ -140,7 +142,7 @@ export function DiffPanel({ original, modified, className }: DiffPanelProps) {
         </table>
 
         {visibleLines.length === 0 && (
-          <div className="p-4 text-center text-xs text-fg-muted">
+          <div className="p-4 text-center text-xs text-fg-tertiary">
             {showContext ? 'Empty diff' : 'No changes — enable "Show context" to see all lines'}
           </div>
         )}

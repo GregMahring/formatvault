@@ -216,7 +216,7 @@ export default function JwtDecoder() {
               </div>
             </div>
             <textarea
-              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-xs text-fg placeholder:text-fg-secondary focus:outline-none"
+              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-xs text-fg placeholder:text-fg-secondary focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-accent-500"
               placeholder="Paste a JWT token here…&#10;&#10;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U"
               value={input}
               onChange={(e) => {

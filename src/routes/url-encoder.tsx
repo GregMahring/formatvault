@@ -235,7 +235,7 @@ export default function UrlEncoderPage() {
               </span>
             </div>
             <textarea
-              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg placeholder:text-fg-secondary focus:outline-none"
+              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg placeholder:text-fg-secondary focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-accent-500"
               placeholder={
                 mode === 'encode'
                   ? 'Paste or type text to encode…\n\ne.g. hello world & more'
@@ -265,7 +265,7 @@ export default function UrlEncoderPage() {
               </div>
             </div>
             <textarea
-              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg placeholder:text-fg-secondary focus:outline-none"
+              className="flex-1 resize-none bg-surface-raised p-4 font-mono text-sm text-fg placeholder:text-fg-secondary focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-accent-500"
               placeholder={mode === 'encode' ? 'Encoded output…' : 'Decoded output…'}
               value={pii.displayContent}
               readOnly
@@ -284,13 +284,13 @@ export default function UrlEncoderPage() {
                 <table className="min-w-[200px] text-xs">
                   <thead>
                     <tr>
-                      <th className="pb-1 text-left font-semibold text-fg-muted pr-4">
+                      <th className="pb-1 text-left font-semibold text-fg-tertiary pr-4">
                         Input params
                       </th>
                     </tr>
                     <tr className="border-b border-edge">
-                      <th className="pb-1 text-left font-medium text-fg-muted pr-4">Key</th>
-                      <th className="pb-1 text-left font-medium text-fg-muted">Value</th>
+                      <th className="pb-1 text-left font-medium text-fg-tertiary pr-4">Key</th>
+                      <th className="pb-1 text-left font-medium text-fg-tertiary">Value</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -309,13 +309,13 @@ export default function UrlEncoderPage() {
                 <table className="min-w-[200px] text-xs">
                   <thead>
                     <tr>
-                      <th className="pb-1 text-left font-semibold text-fg-muted pr-4">
+                      <th className="pb-1 text-left font-semibold text-fg-tertiary pr-4">
                         Output params
                       </th>
                     </tr>
                     <tr className="border-b border-edge">
-                      <th className="pb-1 text-left font-medium text-fg-muted pr-4">Key</th>
-                      <th className="pb-1 text-left font-medium text-fg-muted">Value</th>
+                      <th className="pb-1 text-left font-medium text-fg-tertiary pr-4">Key</th>
+                      <th className="pb-1 text-left font-medium text-fg-tertiary">Value</th>
                     </tr>
                   </thead>
                   <tbody>

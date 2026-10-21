@@ -4,6 +4,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { cn } from '@/lib/utils';
 import { type Command, type CommandGroup, useCommandStore } from '@/stores/commandStore';
 import { scoreCommand } from '@/lib/fuzzyMatch';
+import { useReturnFocus } from '@/hooks/useReturnFocus';
 
 const GROUP_ORDER: CommandGroup[] = ['Actions', 'Navigation', 'Settings'];
 
@@ -46,6 +47,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const returnFocus = useReturnFocus();
 
   const grouped = useMemo(() => groupAndFilter(commands, query), [commands, query]);
   const flat = useMemo(() => flattenGroups(grouped), [grouped]);
@@ -122,6 +124,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         <DialogPrimitive.Content
           className="fixed left-[50%] top-[20%] z-50 w-full max-w-md translate-x-[-50%] overflow-hidden rounded-lg border border-edge bg-surface shadow-2xl"
           onKeyDown={handleKeyDown}
+          {...returnFocus}
           aria-label="Command palette"
         >
           <DialogPrimitive.Title className="sr-only">Command palette</DialogPrimitive.Title>
@@ -143,8 +146,6 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
               placeholder="Type a command..."
               aria-label="Search commands"
               className="h-11 w-full bg-transparent text-sm text-fg placeholder:text-fg-secondary focus:outline-none"
-              // eslint-disable-next-line jsx-a11y/no-autofocus -- intentional: palette must grab focus on open
-              autoFocus
               autoComplete="off"
               spellCheck={false}
             />
@@ -161,7 +162,9 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
             aria-label="Commands"
           >
             {flat.length === 0 && (
-              <div className="px-3 py-6 text-center text-sm text-fg-muted">No commands found</div>
+              <div className="px-3 py-6 text-center text-sm text-fg-tertiary">
+                No commands found
+              </div>
             )}
 
             {grouped.map(({ group, commands: groupCmds }) => (
@@ -204,7 +207,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                       )}
                       <span className="flex-1 truncate">{cmd.label}</span>
                       {cmd.shortcut && (
-                        <kbd className="shrink-0 rounded border border-edge-emphasis bg-surface-raised px-1.5 py-0.5 text-[10px] font-medium text-fg-muted">
+                        <kbd className="shrink-0 rounded border border-edge-emphasis bg-surface-raised px-1.5 py-0.5 text-[10px] font-medium text-fg-tertiary">
                           {cmd.shortcut}
                         </kbd>
                       )}

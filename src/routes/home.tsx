@@ -358,7 +358,7 @@ export default function Home() {
 
           {detected === 'unknown' && (
             <div className="mt-3">
-              <p className="mb-2 text-xs text-fg-muted">
+              <p className="mb-2 text-xs text-fg-tertiary">
                 Couldn't auto-detect the format. Pick a tool:
               </p>
               <div className="flex flex-wrap gap-2">

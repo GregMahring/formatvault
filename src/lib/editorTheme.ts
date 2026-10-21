@@ -151,7 +151,8 @@ function buildTheme(p: typeof dark, isDark: boolean): Extension {
           color: p.fg,
         },
       },
-      '.cm-focused': { outline: 'none' },
+      // Visible focus indicator (WCAG 2.4.7): brand indigo is ≥3:1 against both editor backgrounds
+      '&.cm-focused': { outline: '1px solid #5555cc', outlineOffset: '-1px' },
     },
     { dark: isDark }
   );

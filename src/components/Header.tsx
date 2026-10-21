@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useId, useRef } from 'react';
 import { NavLink, useLocation } from 'react-router';
 import { Moon, Sun, ChevronDown, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -19,10 +19,21 @@ interface NavGroupProps {
 
 // ── Desktop dropdown ──────────────────────────────────────────────────────────
 
+// A disclosure (button + list of links), not an ARIA menu: menus promise arrow-key
+// navigation, while a list of links works with plain Tab like the rest of the page.
 function NavGroup({ label, items }: NavGroupProps) {
   const [open, setOpen] = useState(false);
+  const listId = useId();
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const location = useLocation();
   const isActive = items.some((item) => location.pathname.startsWith(item.to));
+
+  const closeOnEscape = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape' && open) {
+      setOpen(false);
+      triggerRef.current?.focus();
+    }
+  };
 
   return (
     <div
@@ -33,13 +44,23 @@ function NavGroup({ label, items }: NavGroupProps) {
       onMouseLeave={() => {
         setOpen(false);
       }}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) setOpen(false);
+      }}
     >
       <button
+        ref={triggerRef}
         type="button"
+        onKeyDown={closeOnEscape}
         aria-expanded={open}
-        aria-haspopup="menu"
+        aria-controls={listId}
+        // Keyboard activation (detail 0) toggles. A mouse click keeps a hover-opened
+        // list open instead of closing it the moment the pointer arrives.
+        onClick={(e) => {
+          setOpen((o) => (e.detail === 0 ? !o : true));
+        }}
         className={cn(
-          'flex items-center gap-1 rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+          'flex items-center gap-1 rounded-md px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500',
           isActive || open
             ? 'bg-surface-elevated text-fg'
             : 'text-fg-secondary hover:bg-surface-elevated/60 hover:text-fg'
@@ -54,31 +75,32 @@ function NavGroup({ label, items }: NavGroupProps) {
 
       {open && (
         <div className="absolute left-0 top-full z-50 pt-1">
-          <div
-            role="menu"
+          <ul
+            id={listId}
             className="min-w-[200px] rounded-md border border-edge bg-surface-raised py-1 shadow-xl shadow-black/20"
           >
             {items.map(({ to, label: itemLabel }) => (
-              <NavLink
-                key={to}
-                to={to}
-                role="menuitem"
-                onClick={() => {
-                  setOpen(false);
-                }}
-                className={({ isActive: linkActive }) =>
-                  cn(
-                    'block px-3 py-1.5 font-mono text-xs transition-colors',
-                    linkActive
-                      ? 'text-brand-indigo'
-                      : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg'
-                  )
-                }
-              >
-                {itemLabel}
-              </NavLink>
+              <li key={to}>
+                <NavLink
+                  to={to}
+                  onKeyDown={closeOnEscape}
+                  onClick={() => {
+                    setOpen(false);
+                  }}
+                  className={({ isActive: linkActive }) =>
+                    cn(
+                      'block px-3 py-1.5 font-mono text-xs transition-colors focus-visible:bg-surface-elevated focus-visible:text-fg focus-visible:outline-none',
+                      linkActive
+                        ? 'text-label-indigo'
+                        : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg'
+                    )
+                  }
+                >
+                  {itemLabel}
+                </NavLink>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       )}
     </div>
@@ -102,7 +124,7 @@ function MobileNavGroup({ label, items, onClose }: NavGroupProps & { onClose: ()
           setExpanded((v) => !v);
         }}
       >
-        <span className={isActive ? 'text-brand-indigo' : 'text-fg-secondary'}>{label}</span>
+        <span className={isActive ? 'text-label-indigo' : 'text-fg-secondary'}>{label}</span>
         <ChevronDown
           className={cn(
             'h-4 w-4 text-fg-secondary transition-transform duration-150',
@@ -121,7 +143,7 @@ function MobileNavGroup({ label, items, onClose }: NavGroupProps & { onClose: ()
               className={({ isActive: linkActive }) =>
                 cn(
                   'block px-6 py-1.5 font-mono text-xs transition-colors',
-                  linkActive ? 'text-brand-indigo' : 'text-fg-secondary hover:text-fg'
+                  linkActive ? 'text-label-indigo' : 'text-fg-secondary hover:text-fg'
                 )
               }
             >
