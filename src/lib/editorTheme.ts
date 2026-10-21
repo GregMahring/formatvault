@@ -211,3 +211,6 @@ function buildTheme(p: typeof dark, isDark: boolean): Extension {
 
 export const formatvaultDark: Extension = buildTheme(dark, true);
 export const formatvaultLight: Extension = buildTheme(light, false);
+
+/** Raw palettes, exported so the contrast test can check every colour. */
+export const editorPalettes = { dark, light } as const;
