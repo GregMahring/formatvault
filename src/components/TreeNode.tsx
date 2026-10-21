@@ -81,7 +81,8 @@ export const TreeNodeComponent = memo(function TreeNodeComponent({
   return (
     <div
       className={cn(
-        'group flex items-center gap-1 border-b border-edge py-0.5 pr-2 text-xs hover:bg-surface-elevated/40',
+        // min-h-6: 24px rows meet the WCAG 2.5.8 target size
+        'group flex min-h-6 items-center gap-1 border-b border-edge pr-2 text-xs hover:bg-surface-elevated/40 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-accent-500',
         searchMatch && 'bg-accent-900/20'
       )}
       style={{ paddingLeft: `${String(depth * 16 + 8)}px` }}
@@ -96,7 +97,10 @@ export const TreeNodeComponent = memo(function TreeNodeComponent({
       <span className="flex h-4 w-4 shrink-0 items-center justify-center">
         {hasChildren ? (
           <ChevronRight
-            className={cn('h-3 w-3 text-fg-muted transition-transform', isExpanded && 'rotate-90')}
+            className={cn(
+              'h-3 w-3 text-fg-tertiary transition-transform',
+              isExpanded && 'rotate-90'
+            )}
             aria-hidden="true"
           />
         ) : null}
@@ -130,7 +134,7 @@ export const TreeNodeComponent = memo(function TreeNodeComponent({
       {/* Type badge */}
       <span
         className={cn(
-          'ml-auto shrink-0 rounded px-1 py-0 text-[10px] leading-4 opacity-0 transition-opacity group-hover:opacity-100',
+          'ml-auto shrink-0 rounded px-1 py-0 text-[10px] leading-4 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100',
           TYPE_BADGES[type]
         )}
       >
@@ -140,7 +144,8 @@ export const TreeNodeComponent = memo(function TreeNodeComponent({
       {/* Copy path button */}
       <button
         type="button"
-        className="shrink-0 rounded p-0.5 text-fg-muted opacity-0 transition-opacity hover:bg-surface-elevated hover:text-fg-secondary group-hover:opacity-100"
+        // 24px target (WCAG 2.5.8); shown on keyboard focus too, not just hover
+        className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-fg-tertiary opacity-0 transition-opacity hover:bg-surface-elevated hover:text-fg-secondary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-500 group-focus-within:opacity-100 group-hover:opacity-100"
         onClick={handleCopy}
         title={`Copy path: ${path}`}
         aria-label={`Copy path ${path}`}
