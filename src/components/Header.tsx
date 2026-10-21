@@ -89,7 +89,7 @@ function NavGroup({ label, items }: NavGroupProps) {
                   }}
                   className={({ isActive: linkActive }) =>
                     cn(
-                      'block px-3 py-1.5 font-mono text-xs transition-colors focus-visible:bg-surface-elevated focus-visible:text-fg focus-visible:outline-none',
+                      'block px-3 py-1.5 font-mono text-xs transition-colors focus-visible:bg-surface-elevated focus-visible:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-500',
                       linkActive
                         ? 'text-label-indigo'
                         : 'text-fg-secondary hover:bg-surface-elevated hover:text-fg'

@@ -188,7 +188,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                         'flex w-full items-center gap-3 rounded-md px-2 py-2 text-left text-sm transition-colors',
                         isSelected
                           ? 'bg-surface-elevated text-fg'
-                          : 'text-fg-secondary hover:bg-surface-raised hover:text-gray-200'
+                          : 'text-fg-secondary hover:bg-surface-raised hover:text-fg'
                       )}
                       onClick={() => {
                         executeCommand(cmd);

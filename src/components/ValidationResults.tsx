@@ -39,7 +39,7 @@ export function ValidationResults({ result, className }: ValidationResultsProps)
         {result.errors.map((err, i) => (
           <li
             key={`${err.path}-${err.keyword}-${String(i)}`}
-            className="flex items-start gap-2 border-b border-gray-900 px-3 py-2 last:border-0"
+            className="flex items-start gap-2 border-b border-edge px-3 py-2 last:border-0"
           >
             <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0 text-danger-fg" aria-hidden="true" />
             <div className="min-w-0 flex-1">

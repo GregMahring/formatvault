@@ -105,13 +105,13 @@ export function DiffPanel({ original, modified, className }: DiffPanelProps) {
               <tr
                 key={idx}
                 className={cn(
-                  'border-b border-gray-900',
+                  'border-b border-edge',
                   line.kind === 'added' && 'bg-success-fg/10',
                   line.kind === 'removed' && 'bg-danger-fg/10'
                 )}
               >
                 {/* Gutter */}
-                <td className="w-8 select-none px-2 text-right text-gray-700">
+                <td className="w-8 select-none px-2 text-right text-fg-tertiary">
                   {String(line.lineNum)}
                 </td>
                 {/* Change marker */}
@@ -120,7 +120,7 @@ export function DiffPanel({ original, modified, className }: DiffPanelProps) {
                     'w-4 select-none text-center',
                     line.kind === 'added' && 'text-success-fg',
                     line.kind === 'removed' && 'text-danger-fg',
-                    line.kind === 'unchanged' && 'text-gray-700'
+                    line.kind === 'unchanged' && 'text-fg-tertiary'
                   )}
                 >
                   {line.kind === 'added' ? '+' : line.kind === 'removed' ? '−' : ' '}
