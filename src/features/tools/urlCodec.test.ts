@@ -42,6 +42,27 @@ describe('encodeUrl (full URL mode)', () => {
     expect(result).toContain('&');
     expect(result).toContain('hello%20world');
   });
+
+  it('keeps the scheme, host and path separators of a full URL', () => {
+    expect(
+      assertOutput(encodeUrl('https://example.com/a path/ü?q=hello world&x=1#frag', 'full'))
+    ).toBe('https://example.com/a%20path/%C3%BC?q=hello%20world&x=1#frag');
+  });
+
+  it('keeps userinfo, port and reserved path characters', () => {
+    const url = 'https://user@example.com:8080/p;v=1?a=b+c';
+    expect(assertOutput(encodeUrl(url, 'full'))).toBe(url);
+  });
+
+  it('does not double-encode existing escapes', () => {
+    expect(assertOutput(encodeUrl('https://example.com/already%20encoded/new space', 'full'))).toBe(
+      'https://example.com/already%20encoded/new%20space'
+    );
+  });
+
+  it('still encodes a % that is not part of an escape', () => {
+    expect(assertOutput(encodeUrl('100% sure', 'full'))).toBe('100%25%20sure');
+  });
 });
 
 describe('decodeUrl', () => {

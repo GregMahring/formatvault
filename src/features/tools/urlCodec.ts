@@ -32,13 +32,12 @@ export function encodeUrl(input: string, variant: UrlEncodeVariant = 'component'
     const output =
       variant === 'component'
         ? encodeURIComponent(input)
-        : // Preserve scheme, host, path, query structure — only encode each component
+        : // encodeURI keeps the reserved characters (; , / ? : @ & = + $ #) so the
+          // URL's structure survives. Existing %XX escapes are passed through so a
+          // partly encoded URL isn't double-encoded (%20 → %2520).
           input
-            .split(/([?&#=+])/)
-            .map((part, i) =>
-              // Odd indices are the delimiters we split on — pass through unchanged
-              i % 2 === 1 ? part : encodeURIComponent(part)
-            )
+            .split(/(%[0-9A-Fa-f]{2})/)
+            .map((part, i) => (i % 2 === 1 ? part : encodeURI(part)))
             .join('');
     return { output, error: null };
   } catch (err) {

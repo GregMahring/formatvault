@@ -21,7 +21,7 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 const FAQ = [
   {
     q: 'What is the difference between component and full URL encoding?',
-    a: 'Component mode encodes every reserved character, which is what you want for a single query parameter value or path segment. Full URL mode leaves the query delimiters ? & = # and + in place and encodes the text between them.',
+    a: 'Component mode encodes every reserved character, which is what you want for a single query parameter value or path segment. Full URL mode keeps the characters that give a URL its structure — such as : / ? # & and = — and encodes everything else, such as spaces and non-ASCII characters. Existing %XX escapes are left as they are.',
   },
   {
     q: 'Why does my decoded output still contain + signs?',
@@ -391,8 +391,8 @@ export default function UrlEncoderPage() {
             <p>
               Encoding uses the standard encodeURIComponent function, which percent-encodes every
               character outside the unreserved set as UTF-8 bytes — so emoji and accented characters
-              are handled correctly. Full URL mode applies it piece by piece around the query
-              delimiters.
+              are handled correctly. Full URL mode uses encodeURI instead, which leaves the
+              URL&apos;s scheme, host, path, and query delimiters intact.
             </p>
             <p>
               Decoding reverses the process with decodeURIComponent and reports malformed sequences
