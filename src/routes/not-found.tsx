@@ -1,13 +1,22 @@
-import { Link } from 'react-router';
+import { data, Link } from 'react-router';
 import { buildMeta } from '@/lib/meta';
 
+// Without an explicit status the catch-all answers 200, which search engines
+// treat as a soft 404: junk URLs get crawled and can be indexed as thin pages.
+export function loader() {
+  return data(null, { status: 404 });
+}
+
 export function meta() {
-  return buildMeta({
-    title: '404 — Page Not Found',
-    description:
-      "The page you're looking for doesn't exist. Browse formatvault's free developer tools for JSON, CSV, YAML, SQL formatting, conversion, and more — all private, no upload required.",
-    path: '/404',
-  });
+  return [
+    ...buildMeta({
+      title: '404 — Page Not Found',
+      description:
+        "The page you're looking for doesn't exist. Browse formatvault's free developer tools for JSON, CSV, YAML, SQL formatting, conversion, and more — all private, no upload required.",
+      path: '/404',
+    }),
+    { name: 'robots', content: 'noindex' },
+  ];
 }
 
 export default function NotFound() {

@@ -17,10 +17,34 @@ import {
 } from '@/features/tools/cronExplainer';
 import { CronBuilder } from '@/features/tools/CronBuilder';
 import { NextRunRow, FieldTable } from '@/features/tools/CronResultViews';
+import { ToolPageContent } from '@/components/ToolPageContent';
 import { cn } from '@/lib/utils';
 import { CalendarClock, Copy, Check, Keyboard } from 'lucide-react';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
+
+const FAQ = [
+  {
+    q: 'Which cron syntax is supported?',
+    a: 'Standard five-field cron: minute, hour, day of month, month, and day of week. Lists (1,15), ranges (1-5), steps (*/15), month and weekday names (JAN, MON), and the presets @hourly, @daily, @midnight, @weekly, @monthly, @yearly, and @annually all work.',
+  },
+  {
+    q: 'Does it support six-field cron with seconds, or Quartz syntax?',
+    a: 'No. Expressions with a seconds field, and Quartz extensions such as L, W, and #, are not supported. Remove the seconds field to check the rest of a six-field schedule.',
+  },
+  {
+    q: 'What time zone are the next run times shown in?',
+    a: "Your browser's local time zone. If your server runs cron in UTC, the actual run times will be offset by your UTC offset.",
+  },
+  {
+    q: 'Why does my job run on more days than I expected?',
+    a: 'When both day of month and day of week are restricted, standard cron runs the job when either one matches, not both. For example, 0 9 1 * MON runs on the 1st of every month and on every Monday.',
+  },
+  {
+    q: 'What about @reboot?',
+    a: '@reboot runs once when the cron daemon starts, so there is no schedule to calculate next runs from. It is recognised and explained but has no run times.',
+  },
+];
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
@@ -28,6 +52,7 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Explain cron expressions in plain English and see next run times privately in your browser — no data sent anywhere. Field breakdown, visual builder, and common presets. 100% client-side.',
     path: '/cron-expression-explainer',
+    faqItems: FAQ,
   });
 }
 
@@ -98,240 +123,280 @@ export default function CronExpressionExplainer() {
   const { copy: copyExpression, copied: expressionCopied } = useCopyToClipboard();
 
   return (
-    <div className="flex h-full flex-col">
-      {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <CalendarClock className="h-4 w-4 text-fg-secondary" aria-hidden="true" />
-        <h1 className="text-sm font-semibold text-label-indigo">Cron Expression Explainer</h1>
+    <>
+      {/* shrink-0: the layout's scroll container would otherwise squeeze the tool to fit the content below it. */}
+      <div className="flex h-full shrink-0 flex-col">
+        {/* Toolbar */}
+        <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
+          <CalendarClock className="h-4 w-4 text-fg-secondary" aria-hidden="true" />
+          <h1 className="text-sm font-semibold text-label-indigo">Cron Expression Explainer</h1>
 
-        {/* Tab toggle */}
-        <div className="ml-3 flex rounded border border-edge bg-surface-raised p-0.5">
-          {(['explain', 'build'] as ActiveTab[]).map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              onClick={() => {
-                setActiveTab(tab);
-              }}
-              className={cn(
-                'rounded px-3 py-0.5 text-xs font-medium transition-colors',
-                activeTab === tab
-                  ? 'bg-surface-elevated text-fg'
-                  : 'text-fg-secondary hover:text-fg'
-              )}
-            >
-              {tab === 'explain' ? 'Explain' : 'Build'}
-            </button>
-          ))}
+          {/* Tab toggle */}
+          <div className="ml-3 flex rounded border border-edge bg-surface-raised p-0.5">
+            {(['explain', 'build'] as ActiveTab[]).map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => {
+                  setActiveTab(tab);
+                }}
+                className={cn(
+                  'rounded px-3 py-0.5 text-xs font-medium transition-colors',
+                  activeTab === tab
+                    ? 'bg-surface-elevated text-fg'
+                    : 'text-fg-secondary hover:text-fg'
+                )}
+              >
+                {tab === 'explain' ? 'Explain' : 'Build'}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex-1" />
+
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-7 px-3 text-xs text-fg-secondary"
+            onClick={clear}
+            disabled={activeTab === 'explain' ? !explainInput : false}
+          >
+            Clear
+          </Button>
+          <button
+            type="button"
+            className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
+            onClick={() => {
+              setShowShortcuts(true);
+            }}
+            aria-label="Keyboard shortcuts"
+            title="Keyboard shortcuts (?)"
+          >
+            <Keyboard className="h-3.5 w-3.5" aria-hidden="true" />
+          </button>
         </div>
 
-        <div className="flex-1" />
+        {/* Main content */}
+        <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-6">
+          {/* ── Explain tab ───────────────────────────────────────────── */}
+          {activeTab === 'explain' && (
+            <section>
+              <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-label-cyan">
+                Expression
+              </h2>
 
-        <Button
-          size="sm"
-          variant="ghost"
-          className="h-7 px-3 text-xs text-fg-secondary"
-          onClick={clear}
-          disabled={activeTab === 'explain' ? !explainInput : false}
-        >
-          Clear
-        </Button>
-        <button
-          type="button"
-          className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
-          onClick={() => {
-            setShowShortcuts(true);
-          }}
-          aria-label="Keyboard shortcuts"
-          title="Keyboard shortcuts (?)"
-        >
-          <Keyboard className="h-3.5 w-3.5" aria-hidden="true" />
-        </button>
-      </div>
-
-      {/* Main content */}
-      <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-6">
-        {/* ── Explain tab ───────────────────────────────────────────── */}
-        {activeTab === 'explain' && (
-          <section>
-            <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-label-cyan">
-              Expression
-            </h2>
-
-            <div className="flex items-center gap-2">
-              <div className="flex items-center">
-                <span className="select-none rounded-l border border-r-0 border-edge-emphasis bg-surface-raised px-2.5 py-1.5 font-mono text-sm text-fg-secondary">
-                  ⏱
-                </span>
-                <input
-                  type="text"
-                  value={explainInput}
-                  onChange={(e) => {
-                    setExplainInput(e.target.value);
-                  }}
-                  placeholder="* * * * *"
-                  className="w-64 rounded-none rounded-r border border-edge-emphasis bg-surface-raised px-3 py-1.5 font-mono text-sm text-fg placeholder:text-fg-secondary focus:border-accent-500 focus:outline-none"
-                  aria-label="Cron expression"
-                  spellCheck={false}
-                  autoComplete="off"
-                />
-              </div>
-              <div className="hidden items-center gap-3 sm:flex">
-                {['min', 'hr', 'dom', 'mon', 'dow'].map((f) => (
-                  <span key={f} className="text-[10px] text-fg-secondary">
-                    {f}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center">
+                  <span className="select-none rounded-l border border-r-0 border-edge-emphasis bg-surface-raised px-2.5 py-1.5 font-mono text-sm text-fg-secondary">
+                    ⏱
                   </span>
-                ))}
+                  <input
+                    type="text"
+                    value={explainInput}
+                    onChange={(e) => {
+                      setExplainInput(e.target.value);
+                    }}
+                    placeholder="* * * * *"
+                    className="w-64 rounded-none rounded-r border border-edge-emphasis bg-surface-raised px-3 py-1.5 font-mono text-sm text-fg placeholder:text-fg-secondary focus:border-accent-500 focus:outline-none"
+                    aria-label="Cron expression"
+                    spellCheck={false}
+                    autoComplete="off"
+                  />
+                </div>
+                <div className="hidden items-center gap-3 sm:flex">
+                  {['min', 'hr', 'dom', 'mon', 'dow'].map((f) => (
+                    <span key={f} className="text-[10px] text-fg-secondary">
+                      {f}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              {CRON_PRESETS.map((preset) => (
-                <button
-                  key={preset.value}
-                  type="button"
-                  onClick={() => {
-                    setExplainInput(preset.value);
-                  }}
-                  className={cn(
-                    'rounded border border-edge bg-surface-raised px-2 py-0.5 text-[11px] transition-colors hover:border-edge-emphasis hover:text-fg',
-                    explainInput === preset.value
-                      ? 'border-accent-700 text-accent-400'
-                      : 'text-fg-secondary'
-                  )}
-                  title={preset.description}
-                >
-                  {preset.label}
-                </button>
-              ))}
-            </div>
-
-            {!explainInput.trim() && (
-              <p className="mt-4 text-xs text-fg-secondary">
-                Enter a cron expression or pick a preset. Supports{' '}
-                <code className="rounded border border-edge bg-surface-raised px-1 text-[10px] text-fg-secondary">
-                  @shortcuts
-                </code>
-                , named months{' '}
-                <code className="rounded border border-edge bg-surface-raised px-1 text-[10px] text-fg-secondary">
-                  jan–dec
-                </code>
-                , and day names{' '}
-                <code className="rounded border border-edge bg-surface-raised px-1 text-[10px] text-fg-secondary">
-                  mon–sun
-                </code>
-                .
-              </p>
-            )}
-          </section>
-        )}
-
-        {/* ── Build tab ─────────────────────────────────────────────── */}
-        {activeTab === 'build' && (
-          <section>
-            <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
-              Builder
-            </h2>
-            <div className="rounded-lg border border-edge bg-surface-raised/60 p-4">
-              <CronBuilder state={builderState} onChange={setBuilderState} />
-
-              {/* Generated expression */}
-              <div className="mt-5 border-t border-edge pt-4">
-                <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-fg-secondary">
-                  Generated expression
-                </p>
-                <div className="flex items-center gap-2">
-                  <code className="flex-1 rounded border border-edge-emphasis bg-surface px-3 py-1.5 font-mono text-sm text-accent-fg">
-                    {derivedExpression}
-                  </code>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {CRON_PRESETS.map((preset) => (
                   <button
+                    key={preset.value}
                     type="button"
                     onClick={() => {
-                      void copyExpression(derivedExpression);
+                      setExplainInput(preset.value);
                     }}
-                    className="flex items-center gap-1.5 rounded border border-edge-emphasis bg-surface-elevated px-2.5 py-1.5 text-xs text-fg-secondary transition-colors hover:border-edge-emphasis hover:text-fg"
-                    aria-label="Copy expression"
-                  >
-                    {expressionCopied ? (
-                      <Check className="h-3 w-3 text-success-fg" aria-hidden="true" />
-                    ) : (
-                      <Copy className="h-3 w-3" aria-hidden="true" />
+                    className={cn(
+                      'rounded border border-edge bg-surface-raised px-2 py-0.5 text-[11px] transition-colors hover:border-edge-emphasis hover:text-fg',
+                      explainInput === preset.value
+                        ? 'border-accent-700 text-accent-400'
+                        : 'text-fg-secondary'
                     )}
-                    {expressionCopied ? 'Copied!' : 'Copy'}
+                    title={preset.description}
+                  >
+                    {preset.label}
                   </button>
-                </div>
+                ))}
               </div>
-            </div>
-          </section>
-        )}
 
-        {/* ── Error ─────────────────────────────────────────────────── */}
-        {error && (
-          <div
-            role="alert"
-            className="flex items-start gap-2 rounded border border-danger-fg/30 bg-danger-fg/10 px-3 py-2 text-xs text-danger-fg"
-          >
-            {error}
-          </div>
-        )}
+              {!explainInput.trim() && (
+                <p className="mt-4 text-xs text-fg-secondary">
+                  Enter a cron expression or pick a preset. Supports{' '}
+                  <code className="rounded border border-edge bg-surface-raised px-1 text-[10px] text-fg-secondary">
+                    @shortcuts
+                  </code>
+                  , named months{' '}
+                  <code className="rounded border border-edge bg-surface-raised px-1 text-[10px] text-fg-secondary">
+                    jan–dec
+                  </code>
+                  , and day names{' '}
+                  <code className="rounded border border-edge bg-surface-raised px-1 text-[10px] text-fg-secondary">
+                    mon–sun
+                  </code>
+                  .
+                </p>
+              )}
+            </section>
+          )}
 
-        {/* ── Results (shared) ──────────────────────────────────────── */}
-        {expression && (
-          <>
+          {/* ── Build tab ─────────────────────────────────────────────── */}
+          {activeTab === 'build' && (
             <section>
-              <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
-                In plain English
+              <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
+                Builder
               </h2>
-              <div className="rounded-lg border border-edge bg-surface-raised px-4 py-3">
-                <p className="text-base font-semibold text-fg">{expression.summary}</p>
+              <div className="rounded-lg border border-edge bg-surface-raised/60 p-4">
+                <CronBuilder state={builderState} onChange={setBuilderState} />
+
+                {/* Generated expression */}
+                <div className="mt-5 border-t border-edge pt-4">
+                  <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-fg-secondary">
+                    Generated expression
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <code className="flex-1 rounded border border-edge-emphasis bg-surface px-3 py-1.5 font-mono text-sm text-accent-fg">
+                      {derivedExpression}
+                    </code>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        void copyExpression(derivedExpression);
+                      }}
+                      className="flex items-center gap-1.5 rounded border border-edge-emphasis bg-surface-elevated px-2.5 py-1.5 text-xs text-fg-secondary transition-colors hover:border-edge-emphasis hover:text-fg"
+                      aria-label="Copy expression"
+                    >
+                      {expressionCopied ? (
+                        <Check className="h-3 w-3 text-success-fg" aria-hidden="true" />
+                      ) : (
+                        <Copy className="h-3 w-3" aria-hidden="true" />
+                      )}
+                      {expressionCopied ? 'Copied!' : 'Copy'}
+                    </button>
+                  </div>
+                </div>
               </div>
             </section>
+          )}
 
-            <div className="grid gap-6 lg:grid-cols-2">
+          {/* ── Error ─────────────────────────────────────────────────── */}
+          {error && (
+            <div
+              role="alert"
+              className="flex items-start gap-2 rounded border border-danger-fg/30 bg-danger-fg/10 px-3 py-2 text-xs text-danger-fg"
+            >
+              {error}
+            </div>
+          )}
+
+          {/* ── Results (shared) ──────────────────────────────────────── */}
+          {expression && (
+            <>
               <section>
-                <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
-                  Field breakdown
+                <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
+                  In plain English
                 </h2>
-                <div className="overflow-hidden rounded-lg border border-edge bg-surface-raised px-4 py-2">
-                  <FieldTable expr={expression} />
+                <div className="rounded-lg border border-edge bg-surface-raised px-4 py-3">
+                  <p className="text-base font-semibold text-fg">{expression.summary}</p>
                 </div>
               </section>
 
-              <section>
-                <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
-                  Next 5 runs
-                  <span className="ml-2 text-[10px] font-normal text-fg-secondary">
-                    (local time)
-                  </span>
-                </h2>
-                {nextRuns && nextRuns.length > 0 ? (
-                  <div className="overflow-hidden rounded-lg border border-edge bg-surface-raised px-4 py-1">
-                    <table className="w-full">
-                      <tbody>
-                        {nextRuns.map((date, i) => (
-                          <NextRunRow key={date.getTime()} index={i + 1} date={date} />
-                        ))}
-                      </tbody>
-                    </table>
+              <div className="grid gap-6 lg:grid-cols-2">
+                <section>
+                  <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
+                    Field breakdown
+                  </h2>
+                  <div className="overflow-hidden rounded-lg border border-edge bg-surface-raised px-4 py-2">
+                    <FieldTable expr={expression} />
                   </div>
-                ) : (
-                  <div className="rounded-lg border border-edge bg-surface-raised px-4 py-3 text-xs text-fg-secondary">
-                    No upcoming runs found in the next 5 years.
-                  </div>
-                )}
-              </section>
-            </div>
-          </>
-        )}
-      </div>
+                </section>
 
-      <KeyboardShortcutsModal
-        shortcuts={shortcuts}
-        isOpen={showShortcuts}
-        onClose={() => {
-          setShowShortcuts(false);
-        }}
+                <section>
+                  <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
+                    Next 5 runs
+                    <span className="ml-2 text-[10px] font-normal text-fg-secondary">
+                      (local time)
+                    </span>
+                  </h2>
+                  {nextRuns && nextRuns.length > 0 ? (
+                    <div className="overflow-hidden rounded-lg border border-edge bg-surface-raised px-4 py-1">
+                      <table className="w-full">
+                        <tbody>
+                          {nextRuns.map((date, i) => (
+                            <NextRunRow key={date.getTime()} index={i + 1} date={date} />
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <div className="rounded-lg border border-edge bg-surface-raised px-4 py-3 text-xs text-fg-secondary">
+                      No upcoming runs found in the next 5 years.
+                    </div>
+                  )}
+                </section>
+              </div>
+            </>
+          )}
+        </div>
+
+        <KeyboardShortcutsModal
+          shortcuts={shortcuts}
+          isOpen={showShortcuts}
+          onClose={() => {
+            setShowShortcuts(false);
+          }}
+        />
+      </div>
+      <ToolPageContent
+        toolName="cron expression explainer"
+        why={
+          <div className="space-y-3 text-fg-secondary">
+            <p>
+              Cron syntax is compact and easy to get subtly wrong: a job that should run weekly runs
+              daily, or one meant for 9am runs at 9pm UTC. Seeing the schedule in plain English,
+              together with the next run times, catches those mistakes before they reach production.
+            </p>
+            <p>
+              Crontabs and CI configs can reveal internal job names and infrastructure details.
+              formatvault parses expressions entirely in your browser — nothing is sent to a server.
+            </p>
+          </div>
+        }
+        howItWorks={
+          <div className="space-y-3 text-fg-secondary">
+            <p>
+              Each of the five fields is parsed into the set of values it matches, then described in
+              plain English and broken down field by field. Next run times are found by stepping
+              forward through the calendar from now until the expression matches.
+            </p>
+            <p>
+              The Build tab works the other way round: choose minutes, hours, days, and months from
+              controls and the expression is generated for you.
+            </p>
+          </div>
+        }
+        useCases={[
+          'Checking a crontab entry before adding it to a server',
+          'Reviewing schedules in GitHub Actions, Kubernetes CronJobs, or Vercel cron config',
+          'Confirming exactly when a backup or report job will next run',
+          'Building an expression for an unusual schedule without memorising the syntax',
+          'Explaining an inherited cron job to a teammate in plain English',
+        ]}
+        faq={FAQ}
       />
-    </div>
+    </>
   );
 }

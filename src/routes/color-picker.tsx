@@ -9,10 +9,34 @@ import { type Command } from '@/stores/commandStore';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
 import { cssHex, cssRgb, cssHsl, cssOklch } from '@/features/tools/colorConverter';
 import { useColorPicker } from '@/features/tools/useColorPicker';
+import { ToolPageContent } from '@/components/ToolPageContent';
 import { cn } from '@/lib/utils';
 import { Pipette, Copy, Check, Keyboard } from 'lucide-react';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
+
+const FAQ = [
+  {
+    q: 'Which color formats can I enter?',
+    a: 'Hex (#rgb, #rrggbb, or #rrggbbaa), rgb(), hsl(), and oklch(). You can also pick a color visually with the swatch.',
+  },
+  {
+    q: 'Which formats does it output?',
+    a: 'HEX, RGB, HSL, and OKLCH, each as a CSS-ready value you can copy with one click.',
+  },
+  {
+    q: 'What is OKLCH and why would I use it?',
+    a: 'OKLCH describes a color by lightness, chroma, and hue in a perceptually uniform space. Changing lightness by the same amount looks like the same change across different hues, which makes it well suited to building consistent palettes and design tokens. All modern browsers support oklch() in CSS.',
+  },
+  {
+    q: 'Why does a converted color look slightly different?',
+    a: 'Values are rounded for readability, and some OKLCH colors fall outside the sRGB range that HEX, RGB, and HSL can express. Those colors are clamped to the nearest displayable sRGB color.',
+  },
+  {
+    q: 'Does it work offline?',
+    a: 'Yes, once the page has loaded. All conversions are plain math in your browser.',
+  },
+];
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
@@ -20,6 +44,7 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Pick and convert colors between HEX, RGB, HSL, and OKLCH formats privately in your browser — no data sent to any server. Copy CSS-ready values instantly.',
     path: '/color-picker',
+    faqItems: FAQ,
   });
 }
 
@@ -105,126 +130,165 @@ export default function ColorPicker() {
   useRegisterCommands(commands);
 
   return (
-    <div className="flex h-full flex-col">
-      {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <Pipette className="h-4 w-4 text-fg-secondary" aria-hidden="true" />
-        <h1 className="text-sm font-semibold text-label-indigo">Color Picker</h1>
+    <>
+      {/* shrink-0: the layout's scroll container would otherwise squeeze the tool to fit the content below it. */}
+      <div className="flex h-full shrink-0 flex-col">
+        {/* Toolbar */}
+        <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
+          <Pipette className="h-4 w-4 text-fg-secondary" aria-hidden="true" />
+          <h1 className="text-sm font-semibold text-label-indigo">Color Picker</h1>
 
-        <div className="flex-1" />
+          <div className="flex-1" />
 
-        <Button
-          size="sm"
-          variant="ghost"
-          className="h-7 px-3 text-xs text-fg-secondary"
-          onClick={clear}
-          disabled={!textInput && !color}
-        >
-          Clear
-        </Button>
-        <button
-          type="button"
-          className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
-          onClick={() => {
-            setShowShortcuts(true);
-          }}
-          aria-label="Keyboard shortcuts"
-          title="Keyboard shortcuts (?)"
-        >
-          <Keyboard className="h-3.5 w-3.5" aria-hidden="true" />
-        </button>
-      </div>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-7 px-3 text-xs text-fg-secondary"
+            onClick={clear}
+            disabled={!textInput && !color}
+          >
+            Clear
+          </Button>
+          <button
+            type="button"
+            className="rounded p-1 text-fg-secondary hover:bg-surface-elevated hover:text-fg"
+            onClick={() => {
+              setShowShortcuts(true);
+            }}
+            aria-label="Keyboard shortcuts"
+            title="Keyboard shortcuts (?)"
+          >
+            <Keyboard className="h-3.5 w-3.5" aria-hidden="true" />
+          </button>
+        </div>
 
-      {/* Main content */}
-      <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-6">
-        {/* ── Input section ─────────────────────────────────────────── */}
-        <section>
-          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-label-cyan">
-            Color
-          </h2>
-
-          <div className="flex items-start gap-4">
-            {/* Swatch + native picker */}
-            <div
-              className={cn(
-                'relative h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded-lg border border-edge-emphasis transition-colors',
-                !color && 'bg-surface-elevated'
-              )}
-              style={color ? { backgroundColor: color.hex } : undefined}
-              title="Click to open color picker"
-            >
-              <input
-                type="color"
-                value={pickerHex}
-                onChange={(e) => {
-                  onPickerChange(e.target.value);
-                }}
-                className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-                aria-label="Pick a color visually"
-              />
-            </div>
-
-            {/* Text input */}
-            <div className="flex flex-1 flex-col gap-1.5">
-              <input
-                type="text"
-                value={textInput}
-                onChange={(e) => {
-                  applyText(e.target.value);
-                }}
-                placeholder="#3b82f6, rgb(59, 130, 246), hsl(217, 91%, 60%), oklch(…)"
-                className={cn(
-                  'w-full rounded border bg-surface-raised px-3 py-2 font-mono text-sm text-fg placeholder:text-fg-secondary focus:outline-none',
-                  inputError
-                    ? 'border-danger-fg focus:border-danger-fg'
-                    : 'border-edge-emphasis focus:border-accent-500'
-                )}
-                spellCheck={false}
-                autoComplete="off"
-                aria-label="Color input"
-              />
-              {inputError ? (
-                <p role="alert" className="text-xs text-danger-fg">
-                  {inputError}
-                </p>
-              ) : (
-                <p className="text-xs text-fg-secondary">
-                  Accepts hex, rgb(), hsl(), or oklch(). Click the swatch to use the native picker.
-                </p>
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* ── Output section ────────────────────────────────────────── */}
-        {color ? (
+        {/* Main content */}
+        <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto p-6">
+          {/* ── Input section ─────────────────────────────────────────── */}
           <section>
-            <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
-              CSS Values
+            <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-label-cyan">
+              Color
             </h2>
-            <div className="overflow-hidden rounded-lg border border-edge bg-surface-raised px-4">
-              <ColorValueRow label="HEX" value={cssHex(color)} />
-              <ColorValueRow label="RGB" value={cssRgb(color)} />
-              <ColorValueRow label="HSL" value={cssHsl(color)} />
-              <ColorValueRow label="OKLCH" value={cssOklch(color)} />
+
+            <div className="flex items-start gap-4">
+              {/* Swatch + native picker */}
+              <div
+                className={cn(
+                  'relative h-16 w-16 shrink-0 cursor-pointer overflow-hidden rounded-lg border border-edge-emphasis transition-colors',
+                  !color && 'bg-surface-elevated'
+                )}
+                style={color ? { backgroundColor: color.hex } : undefined}
+                title="Click to open color picker"
+              >
+                <input
+                  type="color"
+                  value={pickerHex}
+                  onChange={(e) => {
+                    onPickerChange(e.target.value);
+                  }}
+                  className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                  aria-label="Pick a color visually"
+                />
+              </div>
+
+              {/* Text input */}
+              <div className="flex flex-1 flex-col gap-1.5">
+                <input
+                  type="text"
+                  value={textInput}
+                  onChange={(e) => {
+                    applyText(e.target.value);
+                  }}
+                  placeholder="#3b82f6, rgb(59, 130, 246), hsl(217, 91%, 60%), oklch(…)"
+                  className={cn(
+                    'w-full rounded border bg-surface-raised px-3 py-2 font-mono text-sm text-fg placeholder:text-fg-secondary focus:outline-none',
+                    inputError
+                      ? 'border-danger-fg focus:border-danger-fg'
+                      : 'border-edge-emphasis focus:border-accent-500'
+                  )}
+                  spellCheck={false}
+                  autoComplete="off"
+                  aria-label="Color input"
+                />
+                {inputError ? (
+                  <p role="alert" className="text-xs text-danger-fg">
+                    {inputError}
+                  </p>
+                ) : (
+                  <p className="text-xs text-fg-secondary">
+                    Accepts hex, rgb(), hsl(), or oklch(). Click the swatch to use the native
+                    picker.
+                  </p>
+                )}
+              </div>
             </div>
           </section>
-        ) : (
-          !inputError && (
-            <p className="text-xs text-fg-secondary">
-              Enter a color above or click the swatch to get started.
-            </p>
-          )
-        )}
-      </div>
 
-      <KeyboardShortcutsModal
-        shortcuts={shortcuts}
-        isOpen={showShortcuts}
-        onClose={() => {
-          setShowShortcuts(false);
-        }}
+          {/* ── Output section ────────────────────────────────────────── */}
+          {color ? (
+            <section>
+              <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-fg-secondary">
+                CSS Values
+              </h2>
+              <div className="overflow-hidden rounded-lg border border-edge bg-surface-raised px-4">
+                <ColorValueRow label="HEX" value={cssHex(color)} />
+                <ColorValueRow label="RGB" value={cssRgb(color)} />
+                <ColorValueRow label="HSL" value={cssHsl(color)} />
+                <ColorValueRow label="OKLCH" value={cssOklch(color)} />
+              </div>
+            </section>
+          ) : (
+            !inputError && (
+              <p className="text-xs text-fg-secondary">
+                Enter a color above or click the swatch to get started.
+              </p>
+            )
+          )}
+        </div>
+
+        <KeyboardShortcutsModal
+          shortcuts={shortcuts}
+          isOpen={showShortcuts}
+          onClose={() => {
+            setShowShortcuts(false);
+          }}
+        />
+      </div>
+      <ToolPageContent
+        toolName="color picker"
+        why={
+          <div className="space-y-3 text-fg-secondary">
+            <p>
+              Converting colors seems harmless, but brand palettes and unreleased designs are often
+              confidential. Every conversion here is plain math in your browser, so nothing about
+              your palette is sent anywhere.
+            </p>
+            <p>
+              It also avoids the clutter of many online color tools: enter a color in any common CSS
+              format and copy the format you need.
+            </p>
+          </div>
+        }
+        howItWorks={
+          <div className="space-y-3 text-fg-secondary">
+            <p>
+              Your input is parsed into an sRGB color, then converted to each output format. OKLCH
+              conversion goes through the OKLab color space using the standard published matrices.
+            </p>
+            <p>
+              Every output is formatted as valid CSS, so you can paste it straight into a
+              stylesheet, a Tailwind config, or a design token file.
+            </p>
+          </div>
+        }
+        useCases={[
+          'Converting a hex value from a design file into hsl() or oklch() for CSS',
+          'Moving a palette to OKLCH for more predictable lightness steps',
+          'Checking the RGB values behind a hex color for a canvas or WebGL project',
+          'Translating colors between design tools that use different formats',
+        ]}
+        faq={FAQ}
       />
-    </div>
+    </>
   );
 }

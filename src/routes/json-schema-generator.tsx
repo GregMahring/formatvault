@@ -16,10 +16,34 @@ import { usePiiMasking } from '@/hooks/usePiiMasking';
 import { useRegisterCommands } from '@/hooks/useRegisterCommands';
 import { type Command } from '@/stores/commandStore';
 import { usePreloadedInput } from '@/hooks/usePreloadedInput';
+import { ToolPageContent } from '@/components/ToolPageContent';
 import { cn } from '@/lib/utils';
 import { Keyboard } from 'lucide-react';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
+
+const FAQ = [
+  {
+    q: 'Which JSON Schema draft does the generator produce?',
+    a: 'Draft-07. It is the most widely supported draft — Ajv, VS Code, and most validation libraries accept it — and the generated schema includes the matching $schema identifier.',
+  },
+  {
+    q: 'How does it decide which fields are required?',
+    a: 'Every property present in your sample is marked as required, because a single sample cannot show which fields are optional. Remove optional fields from the required array before using the schema.',
+  },
+  {
+    q: 'Can I validate JSON against a schema I already have?',
+    a: 'Yes. Switch to the Validate tab and paste your schema. Validation uses Ajv and reports every error at once, each with the JSON path where it occurred and the rule that failed.',
+  },
+  {
+    q: 'Is it safe to paste real API responses?',
+    a: 'Yes. Schema generation and validation both run in your browser. Your JSON and your schema are never sent to a server.',
+  },
+  {
+    q: 'Why is the generated schema stricter or looser than I expected?',
+    a: 'The schema is inferred from one example, so it can only describe what that example contains. Treat it as a starting point: add enums, formats, minimum and maximum values, or pattern rules by hand.',
+  },
+];
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
@@ -27,6 +51,7 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Generate JSON Schema from data and validate JSON against schemas privately in your browser — no data uploaded. Supports Draft-07. Instant results, 100% client-side.',
     path: '/json-schema-generator',
+    faqItems: FAQ,
   });
 }
 
@@ -144,7 +169,7 @@ export default function JsonSchemaGenerator() {
     <div className="flex flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
-        <h1 className="text-sm font-semibold text-label-indigo">JSON Schema</h1>
+        <h1 className="text-sm font-semibold text-label-indigo">JSON Schema Generator</h1>
 
         <div className="h-4 w-px bg-surface-elevated" aria-hidden="true" />
 
@@ -336,6 +361,49 @@ export default function JsonSchemaGenerator() {
         onClose={() => {
           setShowShortcuts(false);
         }}
+      />
+
+      <ToolPageContent
+        toolName="JSON Schema generator"
+        why={
+          <div className="space-y-3 text-fg-secondary">
+            <p>
+              The fastest way to write a JSON Schema is to start from a real payload — usually an
+              API response, a webhook body, or a production config file. Those samples tend to hold
+              exactly the data you should not paste into a third-party website: customer records,
+              internal IDs, and tokens.
+            </p>
+            <p>
+              formatvault generates and validates schemas entirely in your browser. The sample you
+              paste never leaves your device, so you can work from real data instead of hand-editing
+              a sanitised copy first.
+            </p>
+          </div>
+        }
+        howItWorks={
+          <div className="space-y-3 text-fg-secondary">
+            <p>
+              In Generate mode, your JSON is analysed to infer a Draft-07 schema: objects become{' '}
+              <em>properties</em>, arrays become <em>items</em>, and each value&apos;s type is
+              recorded. The schema updates as you type.
+            </p>
+            <p>
+              In Validate mode, Ajv — a widely used JavaScript JSON Schema validator — compiles your
+              schema and checks your JSON against it, listing every error with its path. Use{' '}
+              <strong>Validate with this schema</strong> to move straight from a generated schema to
+              testing other payloads against it.
+            </p>
+          </div>
+        }
+        useCases={[
+          'Bootstrapping a schema for an API contract from an existing response',
+          'Validating webhook payloads before writing the handler that consumes them',
+          'Adding editor autocompletion and validation for a JSON config file',
+          'Checking that test fixtures still match the shape your code expects',
+          'Documenting the structure of a third-party API that publishes no schema',
+          'Verifying that LLM structured output conforms to the schema you asked for',
+        ]}
+        faq={FAQ}
       />
     </div>
   );

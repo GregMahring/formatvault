@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { TOOL_ROUTES, NAV_GROUPS, getRoutesByGroup, type RouteGroup } from './routes';
+import {
+  TOOL_ROUTES,
+  NAV_GROUPS,
+  RELATED_TOOL_IDS,
+  getRelatedRoutes,
+  getRoutesByGroup,
+  type RouteGroup,
+} from './routes';
 
 // All group values that the registry declares
 const ALL_GROUPS: RouteGroup[] = ['Formatters', 'Converters', 'Utilities'];
@@ -187,5 +194,36 @@ describe('NAV_GROUPS', () => {
       const paths = navGroup.items.map((i) => i.to);
       expect(new Set(paths).size).toBe(paths.length);
     }
+  });
+});
+
+describe('related tools', () => {
+  it('every tool has at least two related tools', () => {
+    for (const route of TOOL_ROUTES) {
+      expect(RELATED_TOOL_IDS[route.id]?.length ?? 0).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it('every related id is a real tool and never the tool itself', () => {
+    const ids = new Set(TOOL_ROUTES.map((r) => r.id));
+    for (const [id, related] of Object.entries(RELATED_TOOL_IDS)) {
+      expect(ids.has(id)).toBe(true);
+      for (const relatedId of related) {
+        expect(ids.has(relatedId)).toBe(true);
+        expect(relatedId).not.toBe(id);
+      }
+    }
+  });
+
+  it('resolves paths the router also matches: trailing slash and any case', () => {
+    const expected = getRelatedRoutes('/yaml-formatter').map((r) => r.id);
+    expect(expected.length).toBeGreaterThan(0);
+    expect(getRelatedRoutes('/yaml-formatter/').map((r) => r.id)).toEqual(expected);
+    expect(getRelatedRoutes('/YAML-Formatter').map((r) => r.id)).toEqual(expected);
+  });
+
+  it('returns nothing for non-tool pages', () => {
+    expect(getRelatedRoutes('/')).toEqual([]);
+    expect(getRelatedRoutes('/about')).toEqual([]);
   });
 });

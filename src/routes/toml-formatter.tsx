@@ -11,9 +11,33 @@ import { useTreeData } from '@/hooks/useTreeData';
 import { useFormatterPage } from '@/hooks/useFormatterPage';
 import { type Shortcut } from '@/hooks/useKeyboardShortcuts';
 import { type Command } from '@/stores/commandStore';
+import { ToolPageContent } from '@/components/ToolPageContent';
 import { cn } from '@/lib/utils';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
+
+const FAQ = [
+  {
+    q: 'Which version of TOML is supported?',
+    a: 'TOML v1.0, including inline tables, arrays of tables, multi-line strings, and offset date-times. Files such as Cargo.toml, pyproject.toml, and wrangler.toml all parse as standard TOML.',
+  },
+  {
+    q: 'Are comments preserved when formatting?',
+    a: 'No. Formatting parses your TOML into data and writes it back out in a consistent style, and comments are not part of that data. Use the formatter to validate and normalise structure, and keep your original file if its comments matter.',
+  },
+  {
+    q: 'How do I find a syntax error in a large TOML file?',
+    a: 'Parse errors report the line number where the parser failed, and the editor highlights that line. Common causes are duplicate keys, a table defined twice, and unquoted strings.',
+  },
+  {
+    q: 'Is it safe to paste config files that contain secrets?',
+    a: 'Yes. Parsing and formatting happen in your browser, so your TOML is never sent to a server. That matters for files that hold API tokens, database URLs, or registry credentials.',
+  },
+  {
+    q: 'Does it work offline?',
+    a: 'Yes, once the page has loaded. The TOML parser is bundled with the app and needs no network access.',
+  },
+];
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
@@ -21,6 +45,7 @@ export function meta(_args: Route.MetaArgs) {
     description:
       'Format and validate TOML config files privately in your browser — no data uploaded. Line-level error reporting. Supports Cargo.toml, pyproject.toml, and all standard TOML.',
     path: '/toml-formatter',
+    faqItems: FAQ,
   });
 }
 
@@ -164,6 +189,45 @@ export default function TomlFormatter() {
         ) : undefined
       }
       rightPaneLabel="Tree view"
-    />
+    >
+      <ToolPageContent
+        toolName="TOML formatter"
+        why={
+          <div className="space-y-3 text-fg-secondary">
+            <p>
+              TOML is the config format behind Rust&apos;s Cargo, Python&apos;s pyproject.toml,
+              Cloudflare&apos;s wrangler.toml, Hugo, and Netlify. Those files often carry registry
+              tokens, database URLs, and internal hostnames alongside the settings you are trying to
+              debug.
+            </p>
+            <p>
+              formatvault validates and formats TOML entirely in your browser, so you can check a
+              config file without sending its contents to anyone else&apos;s server.
+            </p>
+          </div>
+        }
+        howItWorks={
+          <div className="space-y-3 text-fg-secondary">
+            <p>
+              Your input is parsed with a spec-compliant TOML v1.0 parser. If parsing fails, the
+              error names the line so you can jump straight to it. If it succeeds, the data is
+              written back out with consistent spacing, quoting, and table layout.
+            </p>
+            <p>
+              The tree view shows the parsed structure as collapsible nodes, which makes deeply
+              nested tables and arrays of tables much easier to follow than the raw file.
+            </p>
+          </div>
+        }
+        useCases={[
+          'Checking a Cargo.toml or pyproject.toml that a build tool refuses to read',
+          'Validating wrangler.toml or netlify.toml before a deploy',
+          'Finding duplicate keys or tables that were defined twice',
+          'Normalising the formatting of a hand-edited config file',
+          'Exploring arrays of tables with the tree view',
+        ]}
+        faq={FAQ}
+      />
+    </FormatterLayout>
   );
 }

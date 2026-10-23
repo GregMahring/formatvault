@@ -25,6 +25,7 @@ import { Link } from 'react-router';
 import type { Route } from './+types/home';
 import { buildMeta } from '@/lib/meta';
 import { getRouteForFormat, type DetectedFormat } from '@/lib/formatRoutes';
+import { NAV_GROUPS, getRoutesByGroup } from '@/lib/routes';
 import { useEditorStore } from '@/stores/editorStore';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
@@ -68,9 +69,9 @@ const TOOLS = [
     to: '/converters',
     icon: ArrowLeftRight,
     label: 'Converters',
-    description: 'Convert between JSON, CSV, YAML and TypeScript — seven conversion pairs',
+    description: 'Convert between JSON, CSV, YAML, TOML, XML and TypeScript',
     accent: 'text-purple-400',
-    badge: '7 pairs' as string | null,
+    badge: `${String(getRoutesByGroup('Converters').length)} pairs` as string | null,
   },
   {
     to: '/json-schema-generator',
@@ -487,6 +488,32 @@ export default function Home() {
           </li>
         ))}
       </ul>
+
+      {/* Full tool index — the cards above are a curated subset and the header
+          nav is a closed dropdown in the SSR HTML, so this is what lets
+          crawlers reach every tool from the home page. */}
+      <h2 className="mb-4 mt-12 text-xs font-semibold uppercase tracking-widest text-fg-secondary">
+        All tools
+      </h2>
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+        {NAV_GROUPS.map(({ label: group }) => (
+          <nav key={group} aria-label={`All ${group.toLowerCase()}`}>
+            <h3 className="mb-2 text-sm font-semibold text-fg">{group}</h3>
+            <ul className="space-y-1.5">
+              {getRoutesByGroup(group).map(({ id, label, path }) => (
+                <li key={id}>
+                  <Link
+                    to={path}
+                    className="text-sm text-fg-secondary transition-colors hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5555cc]"
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))}
+      </div>
 
       {/* Privacy callout */}
       <div className="mt-12 flex flex-col items-center gap-2 rounded-lg border border-edge bg-surface-raised/40 px-6 py-5 text-center">

@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react';
+import { Link, useLocation } from 'react-router';
+import { getRelatedRoutes } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 
 export interface ToolSection {
@@ -41,6 +43,8 @@ export function ToolPageContent({
   faq,
   toolName,
 }: ToolPageContentProps) {
+  const related = getRelatedRoutes(useLocation().pathname);
+
   return (
     <div className="border-t border-edge bg-surface">
       <div className="mx-auto max-w-4xl space-y-10 px-4 py-12 sm:px-6">
@@ -71,6 +75,24 @@ export function ToolPageContent({
             ))}
           </dl>
         </Section>
+
+        {related.length > 0 && (
+          <Section title="Related tools">
+            <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              {related.map(({ id, label, path, icon: Icon }) => (
+                <li key={id}>
+                  <Link
+                    to={path}
+                    className="flex items-center gap-3 rounded-lg border border-edge bg-surface-raised px-4 py-3 text-sm font-medium text-fg-secondary transition-colors hover:border-brand-indigo/40 hover:bg-surface-elevated/60 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-indigo"
+                  >
+                    <Icon className="h-4 w-4 shrink-0 text-label-cyan" aria-hidden="true" />
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </Section>
+        )}
       </div>
     </div>
   );

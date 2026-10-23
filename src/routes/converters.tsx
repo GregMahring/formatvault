@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 import { ArrowRight } from 'lucide-react';
 import type { Route } from './+types/converters';
 import { buildMeta } from '@/lib/meta';
+import { getRoutesByGroup } from '@/lib/routes';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
 
@@ -9,28 +10,26 @@ export function meta(_args: Route.MetaArgs) {
   return buildMeta({
     title: 'Data Format Converters — No Upload, 100% Private',
     description:
-      'Convert between JSON, CSV, YAML and TOML privately in your browser — no data uploaded. All format pairs plus JSON→TypeScript. Free, no account required.',
+      'Convert between JSON, CSV, YAML, TOML and XML privately in your browser — no data uploaded. 13 conversion pairs including JSON→TypeScript. Free, no account required.',
     path: '/converters',
     schemaType: 'WebPage',
   });
 }
 
-const CONVERTERS = [
-  { from: 'JSON', to: 'CSV', path: '/json-to-csv-converter' },
-  { from: 'JSON', to: 'YAML', path: '/json-to-yaml-converter' },
-  { from: 'CSV', to: 'JSON', path: '/csv-to-json-converter' },
-  { from: 'CSV', to: 'YAML', path: '/csv-to-yaml-converter' },
-  { from: 'YAML', to: 'JSON', path: '/yaml-to-json-converter' },
-  { from: 'YAML', to: 'CSV', path: '/yaml-to-csv-converter' },
-  { from: 'JSON', to: 'TypeScript', path: '/json-to-typescript' },
-] as const;
+// Derived from the route registry so a new converter can't be left off this
+// hub page — it previously listed 7 of the 13 pairs.
+const CONVERTERS = getRoutesByGroup('Converters').map(({ label, path }) => {
+  const [from = label, to = ''] = label.split(' → ');
+  return { from, to, path };
+});
 
 export default function Converters() {
   return (
     <div className="mx-auto w-full max-w-3xl px-6 py-16">
       <h1 className="mb-2 text-3xl font-bold text-fg">Data Format Converters</h1>
       <p className="mb-10 text-fg-secondary">
-        Convert between JSON, CSV and YAML — all processing happens in your browser.
+        Convert between JSON, CSV, YAML, TOML and XML, or generate TypeScript types from JSON — all
+        processing happens in your browser.
       </p>
 
       <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">

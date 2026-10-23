@@ -200,6 +200,14 @@ export const TOOL_ROUTES: readonly ToolRoute[] = [
     keywords: ['convert', 'transform', 'yaml', 'toml'],
   },
   {
+    id: 'yaml-to-csv-converter',
+    label: 'YAML → CSV',
+    path: '/yaml-to-csv-converter',
+    group: 'Converters',
+    icon: ArrowLeftRight,
+    keywords: ['convert', 'transform', 'yaml', 'csv'],
+  },
+  {
     id: 'toml-to-json-converter',
     label: 'TOML → JSON',
     path: '/toml-to-json-converter',
@@ -319,3 +327,160 @@ export const NAV_GROUPS = GROUP_ORDER.map((group) => ({
     label: r.navLabel ?? r.label,
   })),
 }));
+
+/**
+ * Hand-picked "Related tools" for each tool page, keyed by route id.
+ * The server-rendered header nav is a closed dropdown, so these links are the
+ * main crawlable path between tool pages — every tool needs an entry.
+ */
+export const RELATED_TOOL_IDS: Readonly<Record<string, readonly string[]>> = {
+  'json-formatter': [
+    'json-schema-generator',
+    'json-to-typescript',
+    'json-to-csv-converter',
+    'json-to-yaml-converter',
+    'jwt-decoder',
+  ],
+  'xml-formatter': [
+    'xml-to-json-converter',
+    'json-to-xml-converter',
+    'json-formatter',
+    'yaml-formatter',
+  ],
+  'csv-formatter': [
+    'csv-to-json-converter',
+    'csv-to-yaml-converter',
+    'json-to-csv-converter',
+    'json-formatter',
+  ],
+  'yaml-formatter': [
+    'yaml-to-json-converter',
+    'yaml-to-toml-converter',
+    'json-to-yaml-converter',
+    'toml-formatter',
+    'json-formatter',
+  ],
+  'toml-formatter': [
+    'toml-to-json-converter',
+    'toml-to-yaml-converter',
+    'json-to-toml-converter',
+    'yaml-formatter',
+  ],
+  'sql-formatter': ['json-formatter', 'csv-formatter', 'regex-tester', 'javascript-formatter'],
+  'javascript-formatter': ['javascript-minifier', 'css-minifier', 'json-formatter', 'regex-tester'],
+  'javascript-minifier': [
+    'javascript-formatter',
+    'css-minifier',
+    'hash-generator',
+    'base64-encoder',
+  ],
+  'css-minifier': ['javascript-minifier', 'javascript-formatter', 'color-picker'],
+
+  'xml-to-json-converter': [
+    'json-to-xml-converter',
+    'xml-formatter',
+    'json-formatter',
+    'yaml-to-json-converter',
+  ],
+  'json-to-xml-converter': [
+    'xml-to-json-converter',
+    'xml-formatter',
+    'json-formatter',
+    'json-to-yaml-converter',
+  ],
+  'json-to-csv-converter': [
+    'csv-to-json-converter',
+    'csv-formatter',
+    'json-formatter',
+    'yaml-to-csv-converter',
+  ],
+  'json-to-yaml-converter': [
+    'yaml-to-json-converter',
+    'yaml-formatter',
+    'json-formatter',
+    'json-to-toml-converter',
+  ],
+  'json-to-toml-converter': [
+    'toml-to-json-converter',
+    'toml-formatter',
+    'json-formatter',
+    'json-to-yaml-converter',
+  ],
+  'json-to-typescript': ['json-schema-generator', 'json-formatter', 'json-to-yaml-converter'],
+  'csv-to-json-converter': [
+    'json-to-csv-converter',
+    'csv-formatter',
+    'json-formatter',
+    'csv-to-yaml-converter',
+  ],
+  'csv-to-yaml-converter': [
+    'yaml-to-csv-converter',
+    'csv-formatter',
+    'yaml-formatter',
+    'csv-to-json-converter',
+  ],
+  'yaml-to-json-converter': [
+    'json-to-yaml-converter',
+    'yaml-formatter',
+    'json-formatter',
+    'yaml-to-toml-converter',
+  ],
+  'yaml-to-toml-converter': [
+    'toml-to-yaml-converter',
+    'yaml-formatter',
+    'toml-formatter',
+    'yaml-to-json-converter',
+  ],
+  'yaml-to-csv-converter': [
+    'csv-to-yaml-converter',
+    'yaml-formatter',
+    'csv-formatter',
+    'yaml-to-json-converter',
+  ],
+  'toml-to-json-converter': [
+    'json-to-toml-converter',
+    'toml-formatter',
+    'json-formatter',
+    'toml-to-yaml-converter',
+  ],
+  'toml-to-yaml-converter': [
+    'yaml-to-toml-converter',
+    'toml-formatter',
+    'yaml-formatter',
+    'toml-to-json-converter',
+  ],
+
+  'regex-tester': [
+    'url-encoder',
+    'javascript-formatter',
+    'json-formatter',
+    'cron-expression-explainer',
+  ],
+  'jwt-decoder': ['base64-encoder', 'json-formatter', 'unix-timestamp-converter', 'hash-generator'],
+  'base64-encoder': ['url-encoder', 'jwt-decoder', 'hash-generator', 'number-base-converter'],
+  'url-encoder': ['base64-encoder', 'jwt-decoder', 'regex-tester', 'json-formatter'],
+  'unix-timestamp-converter': ['cron-expression-explainer', 'jwt-decoder', 'number-base-converter'],
+  'cron-expression-explainer': ['unix-timestamp-converter', 'regex-tester', 'yaml-formatter'],
+  'color-picker': ['css-minifier', 'number-base-converter', 'base64-encoder'],
+  'number-base-converter': [
+    'color-picker',
+    'hash-generator',
+    'base64-encoder',
+    'unix-timestamp-converter',
+  ],
+  'hash-generator': ['base64-encoder', 'jwt-decoder', 'number-base-converter', 'url-encoder'],
+  'json-schema-generator': [
+    'json-formatter',
+    'json-to-typescript',
+    'yaml-to-json-converter',
+    'json-to-yaml-converter',
+  ],
+};
+
+/** Related tools for the page at `pathname`, or an empty list for non-tool pages. */
+export function getRelatedRoutes(pathname: string): readonly ToolRoute[] {
+  // The router matches paths case-insensitively and with a trailing slash.
+  const id = pathname.replace(/^\/|\/$/g, '').toLowerCase();
+  const relatedIds = RELATED_TOOL_IDS[id] ?? [];
+  return relatedIds.flatMap((relatedId) => TOOL_ROUTES.find((r) => r.id === relatedId) ?? []);
+}
