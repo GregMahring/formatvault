@@ -104,7 +104,8 @@ export default function Base64Encoder() {
 
   return (
     <>
-      <div className="flex h-full flex-col">
+      {/* shrink-0: the layout's scroll container would otherwise squeeze the tool to fit the content below it. */}
+      <div className="flex h-full shrink-0 flex-col">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2 border-b border-edge bg-surface px-4 py-2">
           <h1 className="text-sm font-semibold text-label-indigo">Base64 Encoder / Decoder</h1>
