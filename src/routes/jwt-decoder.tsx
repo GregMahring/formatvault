@@ -11,41 +11,59 @@ import { PiiMaskToggle } from '@/components/PiiMaskToggle';
 import { usePreloadedInput } from '@/hooks/usePreloadedInput';
 import { type Command } from '@/stores/commandStore';
 import { KeyboardShortcutsModal } from '@/components/KeyboardShortcutsModal';
-import { decodeJwtToken, isJwtError } from '@/features/tools/jwtDecoder';
+import { decodeJwtToken, isJwtError, stripBearerPrefix } from '@/features/tools/jwtDecoder';
 import { JsonBlock, TimingSection } from '@/features/tools/JwtViewer';
 import { ToolPageContent } from '@/components/ToolPageContent';
 import { Keyboard, Copy, ClipboardPaste, CheckCheck } from 'lucide-react';
 
 export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoundary';
 
+const JWT_FAQ = [
+  {
+    q: 'Is it safe to paste my JWT here?',
+    a: 'Yes. The token is decoded entirely in your browser — no part of the token is sent over the network. Open DevTools → Network to confirm zero outbound requests.',
+  },
+  {
+    q: 'Does this verify the signature?',
+    a: "No. Signature verification requires the secret or public key used to sign the token. This tool only decodes and displays the header and payload. Never trust a token's claims in production without verifying the signature server-side.",
+  },
+  {
+    q: 'Why does the expiry say my token is already expired?',
+    a: 'JWT timestamps are Unix epoch seconds (not milliseconds). The decoder converts exp and iat to human-readable local time automatically. If it shows expired, the token genuinely has a past expiry — check your token refresh logic.',
+  },
+  {
+    q: 'What algorithms does this support?',
+    a: 'The decoder works with any JWT regardless of the signing algorithm (HS256, RS256, ES256, etc.) because decoding the payload does not require the key. The alg field in the header tells you which algorithm was used to sign it.',
+  },
+  {
+    q: 'Can I decode tokens that contain sensitive user data?',
+    a: 'Yes — that is exactly the use case this tool is designed for. Because nothing leaves your browser, you can safely decode tokens containing PII, user IDs, or internal role assignments without exposing them to a third party.',
+  },
+  {
+    q: 'How do I decode a bearer token or access token?',
+    a: 'Copy the value of the Authorization header and paste it in. The "Bearer " prefix, or the whole "Authorization: Bearer …" line, is stripped automatically. Most OAuth 2.0 access tokens from providers like Auth0, Okta, Cognito and Microsoft Entra ID are JWTs. If yours is a short random string without two dots, it is an opaque token that only the issuing server can look up.',
+  },
+  {
+    q: 'Can I decode a refresh token?',
+    a: 'Only if it is a JWT. Many providers issue refresh tokens as opaque random strings with no readable claims. Only the authorization server that issued them can inspect those. If your refresh token starts with eyJ and has two dots, paste it in.',
+  },
+  {
+    q: 'What is the difference between an ID token and an access token?',
+    a: 'In OpenID Connect, the ID token is always a JWT that describes who the user is (sub, name, email) and is meant for your app. The access token is what your app sends to an API. Its aud claim names that API, and it may or may not be a JWT. Both decode the same way here.',
+  },
+  {
+    q: 'Is decoding a JWT the same as decrypting it?',
+    a: 'No. A standard signed JWT (JWS) is only base64url-encoded, so anyone holding it can read the claims. The signature prevents tampering, not reading. An encrypted JWT (JWE) has five dot-separated parts instead of three and needs the decryption key. This tool will tell you when it sees one, but cannot read it.',
+  },
+];
+
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
     title: 'JWT Decoder — Token Never Sent to a Server',
     description:
-      'Decode JWT tokens privately in your browser — your token is never transmitted to any server. View header, payload and expiry claims. 100% client-side, decode only.',
+      'Decode JWT access, ID and bearer tokens privately in your browser — the token is never sent to a server. View header, payload and expiry claims. Decode only, no verification.',
     path: '/jwt-decoder',
-    faqItems: [
-      {
-        q: 'Is it safe to paste my JWT here?',
-        a: 'Yes. The token is decoded entirely in your browser — no part of the token is sent over the network. Open DevTools → Network to confirm zero outbound requests.',
-      },
-      {
-        q: 'Does this verify the signature?',
-        a: "No. Signature verification requires the secret or public key used to sign the token. This tool only decodes and displays the header and payload. Never trust a token's claims in production without verifying the signature server-side.",
-      },
-      {
-        q: 'Why does the expiry say my token is already expired?',
-        a: 'JWT timestamps are Unix epoch seconds (not milliseconds). The decoder converts exp and iat to human-readable local time automatically. If it shows expired, the token genuinely has a past expiry — check your token refresh logic.',
-      },
-      {
-        q: 'What algorithms does this support?',
-        a: 'The decoder works with any JWT regardless of the signing algorithm (HS256, RS256, ES256, etc.) because decoding the payload does not require the key. The alg field in the header tells you which algorithm was used to sign it.',
-      },
-      {
-        q: 'Can I decode tokens that contain sensitive user data?',
-        a: 'Yes — that is exactly the use case this tool is designed for. Because nothing leaves your browser, you can safely decode tokens containing PII, user IDs, or internal role assignments without exposing them to a third party.',
-      },
-    ],
+    faqItems: JWT_FAQ,
   });
 }
 
@@ -217,7 +235,7 @@ export default function JwtDecoder() {
             </div>
             <textarea
               className="flex-1 resize-none bg-surface-raised p-4 font-mono text-xs text-fg placeholder:text-fg-secondary focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-accent-500"
-              placeholder="Paste a JWT token here…&#10;&#10;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U"
+              placeholder="Paste a JWT or Bearer token here…&#10;&#10;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U"
               value={input}
               onChange={(e) => {
                 setInput(e.target.value);
@@ -229,8 +247,7 @@ export default function JwtDecoder() {
             {input.trim() && (
               <div className="border-t border-edge px-3 py-2">
                 <div className="flex flex-wrap gap-1 font-mono text-[10px]">
-                  {input
-                    .trim()
+                  {stripBearerPrefix(input)
                     .split('.')
                     .map((part, i) => {
                       const colors = ['text-jwt-header', 'text-jwt-payload', 'text-jwt-sig'];
@@ -344,6 +361,11 @@ export default function JwtDecoder() {
               resulting JSON.
             </p>
             <p>
+              Most tokens you meet in practice are JWTs: OAuth 2.0 access tokens, OpenID Connect ID
+              tokens, and the Bearer value in an API&apos;s Authorization header. Paste the header
+              value as-is. The Bearer prefix is removed before decoding.
+            </p>
+            <p>
               The signature is displayed as-is but{' '}
               <strong className="font-medium text-fg">never verified</strong> — signature
               verification requires the secret key and is intentionally out of scope. This tool is
@@ -359,28 +381,7 @@ export default function JwtDecoder() {
           'Reading tokens in CI/CD pipelines or during incident response without using a web service',
           'Teaching JWT structure to developers new to token-based authentication',
         ]}
-        faq={[
-          {
-            q: 'Is it safe to paste my JWT here?',
-            a: 'Yes. The token is decoded entirely in your browser using the Web Crypto API — no part of the token is sent over the network. Open DevTools → Network to confirm zero outbound requests.',
-          },
-          {
-            q: 'Does this verify the signature?',
-            a: "No. Signature verification requires the secret or public key used to sign the token. This tool only decodes and displays the header and payload. Never trust a token's claims in production without verifying the signature server-side.",
-          },
-          {
-            q: 'Why does the expiry say my token is already expired?',
-            a: 'JWT timestamps are Unix epoch seconds (not milliseconds). The decoder converts exp and iat to human-readable local time automatically. If it shows expired, the token genuinely has a past expiry — check your token refresh logic.',
-          },
-          {
-            q: 'What algorithms does this support?',
-            a: 'The decoder works with any JWT regardless of the signing algorithm (HS256, RS256, ES256, etc.) because decoding the payload does not require the key. The alg field in the header tells you which algorithm was used to sign it.',
-          },
-          {
-            q: 'Can I decode tokens that contain sensitive user data?',
-            a: 'Yes — that is exactly the use case this tool is designed for. Because nothing leaves your browser, you can safely decode tokens containing PII, user IDs, or internal role assignments without exposing them to a third party.',
-          },
-        ]}
+        faq={JWT_FAQ}
       />
     </>
   );

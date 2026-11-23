@@ -69,4 +69,17 @@ describe('decodeJwtToken', () => {
     const result = decodeJwtToken(`  ${VALID_JWT}  `);
     expect(isJwtError(result)).toBe(false);
   });
+
+  it('strips a leading Bearer prefix', () => {
+    expect(assertDecoded(`Bearer ${VALID_JWT}`).payload.sub).toBe('1234567890');
+  });
+
+  it('strips a full Authorization header line', () => {
+    expect(assertDecoded(`Authorization: bearer ${VALID_JWT}`).payload.sub).toBe('1234567890');
+  });
+
+  it('explains that 5-part tokens are encrypted (JWE)', () => {
+    const result = decodeJwtToken('a.b.c.d.e');
+    expect(isJwtError(result) && result.error).toMatch(/encrypted JWT \(JWE/);
+  });
 });

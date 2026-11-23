@@ -46,11 +46,22 @@ export function isJwtError(r: JwtResult): r is JwtDecodeError {
 }
 
 /** Decode a raw JWT string into its parts. Never verifies the signature. */
+/** People often paste the whole Authorization header value, not just the token. */
+export function stripBearerPrefix(raw: string): string {
+  return raw.trim().replace(/^(?:authorization:\s*)?bearer\s+/i, '');
+}
+
 export function decodeJwtToken(raw: string): JwtResult {
-  const token = raw.trim();
+  const token = stripBearerPrefix(raw);
   if (!token) return { error: 'Enter a JWT token to decode.' };
 
   const parts = token.split('.');
+  if (parts.length === 5) {
+    return {
+      error:
+        'This looks like an encrypted JWT (JWE, 5 parts). Its payload can only be read with the decryption key, so it cannot be decoded here.',
+    };
+  }
   if (parts.length !== 3) {
     return {
       error: `Invalid JWT: expected 3 parts separated by '.', got ${String(parts.length)}.`,
