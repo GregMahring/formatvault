@@ -29,6 +29,8 @@ function Section({ title, children, className }: SectionProps) {
 }
 
 interface ToolPageContentProps {
+  /** Optional opening section, e.g. "What is a cron expression?" — rendered first, as an H2. */
+  intro?: ToolSection;
   why: ReactNode;
   howItWorks: ReactNode;
   useCases: string[];
@@ -37,6 +39,7 @@ interface ToolPageContentProps {
 }
 
 export function ToolPageContent({
+  intro,
   why,
   howItWorks,
   useCases,
@@ -48,6 +51,7 @@ export function ToolPageContent({
   return (
     <div className="border-t border-edge bg-surface">
       <div className="mx-auto max-w-4xl space-y-10 px-4 py-12 sm:px-6">
+        {intro && <Section title={intro.heading}>{intro.content}</Section>}
         <Section title={`Why use a private ${toolName}?`}>{why}</Section>
 
         <Section title="How it works">{howItWorks}</Section>

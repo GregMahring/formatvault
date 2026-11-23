@@ -25,6 +25,10 @@ export { RouteErrorBoundary as ErrorBoundary } from '@/components/RouteErrorBoun
 
 const FAQ = [
   {
+    q: 'What is a cron expression?',
+    a: 'A cron expression is a five-field string that tells a scheduler when to run a job: minute, hour, day of month, month, and day of week, separated by spaces. For example, 30 9 * * MON-FRI runs at 09:30 every weekday, and */15 * * * * runs every 15 minutes.',
+  },
+  {
     q: 'Which cron syntax is supported?',
     a: 'Standard five-field cron: minute, hour, day of month, month, and day of week. Lists (1,15), ranges (1-5), steps (*/15), month and weekday names (JAN, MON), and the presets @hourly, @daily, @midnight, @weekly, @monthly, @yearly, and @annually all work.',
   },
@@ -45,6 +49,63 @@ const FAQ = [
     a: '@reboot runs once when the cron daemon starts, so there is no schedule to calculate next runs from. It is recognised and explained but has no run times.',
   },
 ];
+
+const CRON_FIELDS = [
+  { position: 1, field: 'Minute', allowed: '0–59' },
+  { position: 2, field: 'Hour', allowed: '0–23' },
+  { position: 3, field: 'Day of month', allowed: '1–31' },
+  { position: 4, field: 'Month', allowed: '1–12 or JAN–DEC' },
+  { position: 5, field: 'Day of week', allowed: '0–7 or SUN–SAT (0 and 7 are both Sunday)' },
+];
+
+// nowrap: a cron expression split across lines reads as two separate expressions.
+const INLINE_CODE =
+  'whitespace-nowrap rounded px-1 py-0.5 font-mono text-[0.85em] text-label-cyan bg-label-cyan/8';
+
+const INTRO = {
+  heading: 'What is a cron expression?',
+  content: (
+    <div className="space-y-4 text-fg-secondary">
+      <p>
+        A cron expression is a short schedule string used by Unix cron and by tools built on it —
+        Kubernetes CronJobs, GitHub Actions, and most CI and cloud schedulers. It has five fields
+        separated by spaces. Each field narrows down when the job runs, and{' '}
+        <code className={INLINE_CODE}>*</code> means &ldquo;every&rdquo;.
+      </p>
+      <table className="w-full text-left text-sm">
+        <caption className="sr-only">The five fields of a cron expression</caption>
+        <thead>
+          <tr className="border-b border-edge">
+            <th scope="col" className="py-2 pr-4 font-medium text-fg">
+              Position
+            </th>
+            <th scope="col" className="py-2 pr-4 font-medium text-fg">
+              Field
+            </th>
+            <th scope="col" className="py-2 font-medium text-fg">
+              Allowed values
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {CRON_FIELDS.map(({ position, field, allowed }) => (
+            <tr key={field} className="border-b border-edge last:border-0">
+              <td className="py-2 pr-4 font-mono">{position}</td>
+              <td className="py-2 pr-4">{field}</td>
+              <td className="py-2 font-mono">{allowed}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p>
+        For example, <code className={INLINE_CODE}>30 9 * * MON-FRI</code> means &ldquo;At 09:30, on
+        Mon, Tue, Wed, Thu, Fri&rdquo;, and <code className={INLINE_CODE}>*/15 * * * *</code> means
+        &ldquo;Every 15 minutes&rdquo;. Paste any expression above to get the same plain-English
+        translation and its next run times.
+      </p>
+    </div>
+  ),
+};
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
@@ -362,6 +423,7 @@ export default function CronExpressionExplainer() {
       </div>
       <ToolPageContent
         toolName="cron expression explainer"
+        intro={INTRO}
         why={
           <div className="space-y-3 text-fg-secondary">
             <p>
