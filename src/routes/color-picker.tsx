@@ -40,9 +40,9 @@ const FAQ = [
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'Color Picker & Converter — HEX, RGB, HSL, No Upload',
+    title: 'Color Picker & Converter — HEX, RGB, HSL, OKLCH',
     description:
-      'Pick and convert colors between HEX, RGB, HSL, and OKLCH formats privately in your browser — no data sent to any server. Copy CSS-ready values instantly.',
+      'Pick colors and convert between HEX, RGB, HSL and OKLCH. Copy CSS-ready values with one click. Free, runs entirely in your browser.',
     path: '/color-picker',
     faqItems: FAQ,
   });

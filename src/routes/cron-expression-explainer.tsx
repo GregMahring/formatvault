@@ -48,9 +48,9 @@ const FAQ = [
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'Cron Expression Explainer — No Upload, 100% Private',
+    title: 'Cron Expression Explainer in Plain English',
     description:
-      'Explain cron expressions in plain English and see next run times privately in your browser — no data sent anywhere. Field breakdown, visual builder, and common presets. 100% client-side.',
+      'Translate cron expressions into plain English and see the next run times. Field-by-field breakdown, visual builder and common presets. Free, runs in your browser.',
     path: '/cron-expression-explainer',
     faqItems: FAQ,
   });

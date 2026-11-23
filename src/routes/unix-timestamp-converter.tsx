@@ -40,9 +40,9 @@ const FAQ = [
 
 export function meta(_args: Route.MetaArgs) {
   return buildMeta({
-    title: 'Unix Timestamp Converter — No Upload, 100% Private',
+    title: 'Unix Timestamp Converter — Epoch to Date',
     description:
-      'Convert Unix timestamps to human-readable dates and back privately in your browser — no data sent anywhere. Auto-detects seconds vs milliseconds. Shows UTC, ISO 8601, and relative time.',
+      'Convert Unix epoch timestamps to human-readable dates and back. Auto-detects seconds vs milliseconds and shows UTC, ISO 8601 and relative time. Free, runs in your browser.',
     path: '/unix-timestamp-converter',
     faqItems: FAQ,
   });
